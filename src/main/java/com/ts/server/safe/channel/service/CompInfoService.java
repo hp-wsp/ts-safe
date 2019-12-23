@@ -1,9 +1,9 @@
-package com.ts.server.safe.company.service;
+package com.ts.server.safe.channel.service;
 
 import com.ts.server.safe.BaseException;
 import com.ts.server.safe.common.id.IdGenerators;
-import com.ts.server.safe.company.dao.CompInfoDao;
-import com.ts.server.safe.company.domain.CompInfo;
+import com.ts.server.safe.channel.dao.CompInfoDao;
+import com.ts.server.safe.channel.domain.CompInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;

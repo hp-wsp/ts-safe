@@ -29,7 +29,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping("/sys/manager")
 @ApiACL({"ROLE_SYS"})
-@Api(value = "/sys/manager", tags = "管理员管理API接口")
+@Api(value = "/sys/manager", tags = "S-管理员管理API接口")
 public class ManagerSysController {
 
     private final ManagerService service;

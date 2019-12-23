@@ -1,25 +1,29 @@
-package com.ts.server.safe.company.controller.man.form;
+package com.ts.server.safe.channel.domain;
 
-import com.ts.server.safe.company.domain.CompInfo;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import javax.validation.constraints.NotBlank;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * 新增公司
+ * 公司基础信息
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class CompInfoSaveForm {
-    @ApiModelProperty(value = "企业名称", required = true)
-    @NotBlank
+public class CompInfo {
+    @ApiModelProperty("编号")
+    private String id;
+    @ApiModelProperty("服务商编号")
+    private String channelId;
+    @ApiModelProperty("企业名称")
     private String name;
-    @ApiModelProperty(value = "省份")
+    @ApiModelProperty("省份")
     private String province;
-    @ApiModelProperty(value = "城市")
+    @ApiModelProperty("城市")
     private String city;
-    @ApiModelProperty(value = "国家")
+    @ApiModelProperty("国家")
     private String country;
     @ApiModelProperty("企业地址")
     private String address;
@@ -29,8 +33,7 @@ public class CompInfoSaveForm {
     private String regDate;
     @ApiModelProperty("经营状态")
     private int busStatus;
-    @ApiModelProperty(value = "法人", required = true)
-    @NotBlank
+    @ApiModelProperty("法人")
     private String legalPerson;
     @ApiModelProperty("法人电话")
     private String legalPhone;
@@ -42,16 +45,13 @@ public class CompInfoSaveForm {
     private String safePhone;
     @ApiModelProperty("安全管理员手机")
     private String safeMobile;
-    @ApiModelProperty(value = "联系人", required = true)
-    @NotBlank
+    @ApiModelProperty("联系")
     private String contact;
     @ApiModelProperty("电话")
     private String phone;
-    @ApiModelProperty(value = "手机", required = true)
-    @NotBlank
+    @ApiModelProperty("手机")
     private String mobile;
-    @ApiModelProperty(value = "社会信用代码", required = true)
-    @NotBlank
+    @ApiModelProperty("社会信用代码")
     private String creditCode;
     @ApiModelProperty("邮编")
     private String postCode;
@@ -73,6 +73,26 @@ public class CompInfoSaveForm {
     private String profile;
     @ApiModelProperty("附图")
     private List<String> images;
+    @ApiModelProperty("更新时间")
+    private Date updateTime;
+    @ApiModelProperty("创建时间")
+    private Date createTime;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getChannelId() {
+        return channelId;
+    }
+
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
+    }
 
     public String getName() {
         return name;
@@ -298,38 +318,101 @@ public class CompInfoSaveForm {
         this.images = images;
     }
 
-    public CompInfo toDomain(){
-        CompInfo t = new CompInfo();
+    public Date getUpdateTime() {
+        return updateTime;
+    }
 
-        t.setName(name);
-        t.setProvince(province);
-        t.setCity(city);
-        t.setCountry(country);
-        t.setAddress(address);
-        t.setRegAddress(regAddress);
-        t.setRegDate(regDate);
-        t.setBusStatus(busStatus);
-        t.setLegalPerson(legalPerson);
-        t.setLegalPhone(legalPhone);
-        t.setLegalMobile(legalMobile);
-        t.setSafePerson(safePerson);
-        t.setSafePhone(safePhone);
-        t.setSafeMobile(safeMobile);
-        t.setContact(contact);
-        t.setPhone(phone);
-        t.setMobile(mobile);
-        t.setCreditCode(creditCode);
-        t.setPostCode(postCode);
-        t.setIndCtgIds(indCtgIds);
-        t.setIndCtgNames(indCtgNames);
-        t.setIndPhone(indPhone);
-        t.setEntScale(entScale);
-        t.setIndOfCompany(indOfCompany);
-        t.setMemFun(memFun);
-        t.setManProduct(manProduct);
-        t.setProfile(profile);
-        t.setImages(images);
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
-        return t;
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CompInfo compInfo = (CompInfo) o;
+        return busStatus == compInfo.busStatus &&
+                entScale == compInfo.entScale &&
+                Objects.equals(id, compInfo.id) &&
+                Objects.equals(channelId, compInfo.channelId) &&
+                Objects.equals(name, compInfo.name) &&
+                Objects.equals(province, compInfo.province) &&
+                Objects.equals(city, compInfo.city) &&
+                Objects.equals(country, compInfo.country) &&
+                Objects.equals(address, compInfo.address) &&
+                Objects.equals(regAddress, compInfo.regAddress) &&
+                Objects.equals(regDate, compInfo.regDate) &&
+                Objects.equals(legalPerson, compInfo.legalPerson) &&
+                Objects.equals(legalPhone, compInfo.legalPhone) &&
+                Objects.equals(legalMobile, compInfo.legalMobile) &&
+                Objects.equals(safePerson, compInfo.safePerson) &&
+                Objects.equals(safePhone, compInfo.safePhone) &&
+                Objects.equals(safeMobile, compInfo.safeMobile) &&
+                Objects.equals(contact, compInfo.contact) &&
+                Objects.equals(phone, compInfo.phone) &&
+                Objects.equals(mobile, compInfo.mobile) &&
+                Objects.equals(creditCode, compInfo.creditCode) &&
+                Objects.equals(postCode, compInfo.postCode) &&
+                Objects.equals(indCtgIds, compInfo.indCtgIds) &&
+                Objects.equals(indCtgNames, compInfo.indCtgNames) &&
+                Objects.equals(indPhone, compInfo.indPhone) &&
+                Objects.equals(indOfCompany, compInfo.indOfCompany) &&
+                Objects.equals(memFun, compInfo.memFun) &&
+                Objects.equals(manProduct, compInfo.manProduct) &&
+                Objects.equals(profile, compInfo.profile) &&
+                Objects.equals(images, compInfo.images) &&
+                Objects.equals(updateTime, compInfo.updateTime) &&
+                Objects.equals(createTime, compInfo.createTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, channelId, name, province, city, country, address, regAddress, regDate, busStatus, legalPerson, legalPhone, legalMobile, safePerson, safePhone, safeMobile, contact, phone, mobile, creditCode, postCode, indCtgIds, indCtgNames, indPhone, entScale, indOfCompany, memFun, manProduct, profile, images, updateTime, createTime);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("channelId", channelId)
+                .append("name", name)
+                .append("province", province)
+                .append("city", city)
+                .append("country", country)
+                .append("address", address)
+                .append("regAddress", regAddress)
+                .append("regDate", regDate)
+                .append("busStatus", busStatus)
+                .append("legalPerson", legalPerson)
+                .append("legalPhone", legalPhone)
+                .append("legalMobile", legalMobile)
+                .append("safePerson", safePerson)
+                .append("safePhone", safePhone)
+                .append("safeMobile", safeMobile)
+                .append("contact", contact)
+                .append("phone", phone)
+                .append("mobile", mobile)
+                .append("creditCode", creditCode)
+                .append("postCode", postCode)
+                .append("indCtgIds", indCtgIds)
+                .append("indCtgNames", indCtgNames)
+                .append("indPhone", indPhone)
+                .append("entScale", entScale)
+                .append("indOfCompany", indOfCompany)
+                .append("memFun", memFun)
+                .append("manProduct", manProduct)
+                .append("profile", profile)
+                .append("images", images)
+                .append("updateTime", updateTime)
+                .append("createTime", createTime)
+                .toString();
     }
 }

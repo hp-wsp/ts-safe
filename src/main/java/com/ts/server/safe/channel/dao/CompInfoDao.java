@@ -1,7 +1,7 @@
-package com.ts.server.safe.company.dao;
+package com.ts.server.safe.channel.dao;
 
 import com.ts.server.safe.common.utils.DaoUtils;
-import com.ts.server.safe.company.domain.CompInfo;
+import com.ts.server.safe.channel.domain.CompInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

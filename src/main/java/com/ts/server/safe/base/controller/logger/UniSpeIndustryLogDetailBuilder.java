@@ -2,21 +2,20 @@ package com.ts.server.safe.base.controller.logger;
 
 import com.ts.server.safe.controller.vo.OkVo;
 import com.ts.server.safe.controller.vo.ResultVo;
-import com.ts.server.safe.base.controller.sys.form.UniSuperviseUpdateForm;
-import com.ts.server.safe.base.domain.UniSupervise;
+import com.ts.server.safe.base.controller.sys.form.UniSpeIndustryUpdateForm;
+import com.ts.server.safe.base.domain.UniSpeIndustry;
 import com.ts.server.safe.logger.aop.annotation.ApiLogDetailBuilder;
 import org.aspectj.lang.JoinPoint;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
- * 构建监管分类日志
+ * 构建特种行业日志
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class SuperviseCtgLogDetailBuilder {
-
+public class UniSpeIndustryLogDetailBuilder {
     /**
-     * 构建删除监管分类日志
+     * 构建删除特种行业日志
      */
     public final static class DeleteBuilder implements ApiLogDetailBuilder {
         @Override
@@ -30,15 +29,15 @@ public class SuperviseCtgLogDetailBuilder {
     };
 
     /**
-     * 构建新增监管分类日志
+     * 构建新增特种行业日志
      */
     public final static class SaveBuilder implements ApiLogDetailBuilder {
         @Override
         @SuppressWarnings("unchecked")
         public String build(JoinPoint joinPoint, ServletRequestAttributes attributes, Object returnObj) {
             joinPoint.getSignature();
-            ResultVo<UniSupervise> result = (ResultVo<UniSupervise>)returnObj;
-            UniSupervise t = result.getRs();
+            ResultVo<UniSpeIndustry> result = (ResultVo<UniSpeIndustry>)returnObj;
+            UniSpeIndustry t = result.getRs();
             return String.format("编号:%s;名称:%s", t.getId(), t.getName());
         }
     }
@@ -49,7 +48,7 @@ public class SuperviseCtgLogDetailBuilder {
     public final static class UpdateBuilder implements ApiLogDetailBuilder {
         @Override
         public String build(JoinPoint joinPoint, ServletRequestAttributes attributes, Object returnObj) {
-            UniSuperviseUpdateForm form = (UniSuperviseUpdateForm) joinPoint.getArgs()[0];
+            UniSpeIndustryUpdateForm form = (UniSpeIndustryUpdateForm) joinPoint.getArgs()[0];
             return String.format("编号:%s;详情:%s", form.getId(), form.toDomain().toString());
         }
     }

@@ -1,10 +1,10 @@
-package com.ts.server.safe.company.controller.man;
+package com.ts.server.safe.channel.controller.man;
 
-import com.ts.server.safe.company.controller.logger.CompInfoLogDetailBuilder;
-import com.ts.server.safe.company.controller.man.form.CompInfoSaveForm;
-import com.ts.server.safe.company.controller.man.form.CompInfoUpdateForm;
-import com.ts.server.safe.company.domain.CompInfo;
-import com.ts.server.safe.company.service.CompInfoService;
+import com.ts.server.safe.channel.controller.logger.CompInfoLogDetailBuilder;
+import com.ts.server.safe.channel.controller.man.form.CompInfoSaveForm;
+import com.ts.server.safe.channel.controller.man.form.CompInfoUpdateForm;
+import com.ts.server.safe.channel.domain.CompInfo;
+import com.ts.server.safe.channel.service.CompInfoService;
 import com.ts.server.safe.controller.credential.ManCredential;
 import com.ts.server.safe.controller.vo.OkVo;
 import com.ts.server.safe.controller.vo.ResultPageVo;

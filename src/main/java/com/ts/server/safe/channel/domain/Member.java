@@ -24,6 +24,10 @@ public class Member {
     private String name;
     @ApiModelProperty(value = "联系电话")
     private String phone;
+    @ApiModelProperty(value = "出生年月日")
+    private String birthday;
+    @ApiModelProperty(value = "擅长领域")
+    private String profession;
     @ApiModelProperty(value = "登录密码")
     @JsonIgnore
     private String password;
@@ -82,6 +86,22 @@ public class Member {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getProfession() {
+        return profession;
+    }
+
+    public void setProfession(String profession) {
+        this.profession = profession;
     }
 
     public String getPassword() {
@@ -143,6 +163,8 @@ public class Member {
                 Objects.equals(username, member.username) &&
                 Objects.equals(name, member.name) &&
                 Objects.equals(phone, member.phone) &&
+                Objects.equals(birthday, member.birthday) &&
+                Objects.equals(profession, member.profession) &&
                 Objects.equals(password, member.password) &&
                 Arrays.equals(roles, member.roles) &&
                 status == member.status &&
@@ -152,7 +174,9 @@ public class Member {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, channelId, username, name, phone, password, root, roles, status, updateTime, createTime);
+        int result = Objects.hash(id, channelId, username, name, phone, birthday, profession, password, root, status, updateTime, createTime);
+        result = 31 * result + Arrays.hashCode(roles);
+        return result;
     }
 
     @Override
@@ -163,6 +187,8 @@ public class Member {
                 .append("username", username)
                 .append("name", name)
                 .append("phone", phone)
+                .append("birthday", birthday)
+                .append("profession", profession)
                 .append("password", password)
                 .append("root", root)
                 .append("roles", roles)

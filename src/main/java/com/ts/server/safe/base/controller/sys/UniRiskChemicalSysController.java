@@ -3,7 +3,7 @@ package com.ts.server.safe.base.controller.sys;
 import com.ts.server.safe.controller.vo.OkVo;
 import com.ts.server.safe.controller.vo.ResultPageVo;
 import com.ts.server.safe.controller.vo.ResultVo;
-import com.ts.server.safe.base.controller.logger.RiskChemistryLogDetailBuilder;
+import com.ts.server.safe.base.controller.logger.UniRiskChemicalLogDetailBuilder;
 import com.ts.server.safe.base.controller.sys.form.UniRiskChemicalSaveForm;
 import com.ts.server.safe.base.controller.sys.form.UniRiskChemicalUpdateForm;
 import com.ts.server.safe.base.domain.UniRiskChemical;
@@ -36,21 +36,21 @@ public class UniRiskChemicalSysController {
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @EnableApiLogger(name = "新增危化品目录", buildDetail = RiskChemistryLogDetailBuilder.SaveBuilder.class)
+    @EnableApiLogger(name = "新增危化品目录", buildDetail = UniRiskChemicalLogDetailBuilder.SaveBuilder.class)
     @ApiOperation("新增危化品目录")
     public ResultVo<UniRiskChemical> save(@Valid @RequestBody UniRiskChemicalSaveForm form){
         return ResultVo.success(service.save(form.toDomain()));
     }
 
     @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @EnableApiLogger(name = "修改危化品目录", buildDetail = RiskChemistryLogDetailBuilder.UpdateBuilder.class)
+    @EnableApiLogger(name = "修改危化品目录", buildDetail = UniRiskChemicalLogDetailBuilder.UpdateBuilder.class)
     @ApiOperation("修改危化品目录")
     public ResultVo<UniRiskChemical> update(@Valid @RequestBody UniRiskChemicalUpdateForm form){
         return ResultVo.success(service.update(form.toDomain()));
     }
 
     @DeleteMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
-    @EnableApiLogger(name = "删除危化品目录", buildDetail = RiskChemistryLogDetailBuilder.DeleteBuilder.class)
+    @EnableApiLogger(name = "删除危化品目录", buildDetail = UniRiskChemicalLogDetailBuilder.DeleteBuilder.class)
     @ApiOperation("删除危化品目录")
     public ResultVo<OkVo> delete(@PathVariable("id")String id){
         return ResultVo.success(new OkVo(service.delete(id)));

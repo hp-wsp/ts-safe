@@ -6,14 +6,14 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotBlank;
 
 /**
- * 新增检查表提交数据
+ * 修改检查表提交数据
  *
- * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
+ * <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class UniCheckTableSaveForm {
-    @ApiModelProperty(value = "检查类型编号", required = true)
+public class UniCheckTableUpdateForm {
+    @ApiModelProperty(value = "编号", required = true)
     @NotBlank
-    private String supId;
+    private String id;
     @ApiModelProperty(value = "检查内容", required = true)
     @NotBlank
     private String content;
@@ -30,12 +30,12 @@ public class UniCheckTableSaveForm {
     @ApiModelProperty("显示排序")
     private int showOrder;
 
-    public String getSupId() {
-        return supId;
+    public String getId() {
+        return id;
     }
 
-    public void setSupId(String supId) {
-        this.supId = supId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getContent() {
@@ -97,12 +97,12 @@ public class UniCheckTableSaveForm {
     public UniCheckTable toDomain(){
         UniCheckTable t = new UniCheckTable();
 
-        t.setSupId(supId);
+        t.setId(id);
         t.setContent(content);
         t.setConDetail(conDetail);
         t.setLawName(lawName);
-        t.setLawContent(lawContent);
         t.setLawItem(lawItem);
+        t.setLawContent(lawContent);
         t.setCheckType(checkType);
         t.setShowOrder(showOrder);
 

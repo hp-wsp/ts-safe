@@ -3,7 +3,7 @@ package com.ts.server.safe.base.controller.sys;
 import com.ts.server.safe.controller.vo.OkVo;
 import com.ts.server.safe.controller.vo.ResultPageVo;
 import com.ts.server.safe.controller.vo.ResultVo;
-import com.ts.server.safe.base.controller.logger.SuperviseCtgLogDetailBuilder;
+import com.ts.server.safe.base.controller.logger.UniSuperviseLogDetailBuilder;
 import com.ts.server.safe.base.controller.sys.form.UniSuperviseSaveForm;
 import com.ts.server.safe.base.controller.sys.form.UniSuperviseUpdateForm;
 import com.ts.server.safe.base.domain.UniSupervise;
@@ -29,8 +29,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @ApiACL("ROLE_SYS")
-@RequestMapping("/sys/superviseCtg")
-@Api(value = "/sys/superviseCtg", tags = "S-管理监管分类API")
+@RequestMapping("/sys/supervise")
+@Api(value = "/sys/supervise", tags = "S-管理监管分类API")
 public class UniSuperviseSysController {
     private final UniSuperviseService service;
 
@@ -40,21 +40,21 @@ public class UniSuperviseSysController {
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @EnableApiLogger(name = "新增监管分类", buildDetail = SuperviseCtgLogDetailBuilder.SaveBuilder.class)
+    @EnableApiLogger(name = "新增监管分类", buildDetail = UniSuperviseLogDetailBuilder.SaveBuilder.class)
     @ApiOperation("新增监管分类")
     public ResultVo<UniSupervise> save(@Valid @RequestBody UniSuperviseSaveForm form){
         return ResultVo.success(service.save(form.toDomain()));
     }
 
     @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @EnableApiLogger(name = "修改监管分类", buildDetail = SuperviseCtgLogDetailBuilder.UpdateBuilder.class)
+    @EnableApiLogger(name = "修改监管分类", buildDetail = UniSuperviseLogDetailBuilder.UpdateBuilder.class)
     @ApiOperation("修改监管分类")
     public ResultVo<UniSupervise> update(@Valid @RequestBody UniSuperviseUpdateForm form){
         return ResultVo.success(service.update(form.toDomain()));
     }
 
     @DeleteMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
-    @EnableApiLogger(name = "删除监管分类", buildDetail = SuperviseCtgLogDetailBuilder.DeleteBuilder.class)
+    @EnableApiLogger(name = "删除监管分类", buildDetail = UniSuperviseLogDetailBuilder.DeleteBuilder.class)
     @ApiOperation("删除监管分类")
     public ResultVo<OkVo> delete(@PathVariable("id")String id){
         return ResultVo.success(new OkVo(service.delete(id)));

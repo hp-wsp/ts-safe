@@ -66,7 +66,7 @@ public class UniCheckTableService {
         return dao.count(supId, name, content, lawContent, checkType);
     }
 
-    public List<UniCheckTable> find(String supId, String name, String content,
+    public List<UniCheckTable> query(String supId, String name, String content,
                                     String lawContent, Integer checkType, int offset, int limit){
 
         return dao.find(supId, name, content, lawContent, checkType, offset, limit);

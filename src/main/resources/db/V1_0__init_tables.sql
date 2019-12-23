@@ -112,6 +112,8 @@ CREATE TABLE IF NOT EXISTS c_member (
   password VARCHAR(50) NOT NULL COMMENT '密码',
   name VARCHAR(30) COMMENT '姓名',
   phone VARCHAR(20) DEFAULT '' COMMENT '联系电话',
+  profession VARCHAR(200) COMMENT '擅长领域',
+  birthday VARCHAR(20) COMMENT '生日',
   is_root TINYINT DEFAULT 0 NOT NULL COMMENT '1=超级用户',
   roles VARCHAR(200) DEFAULT '' NOT NULL COMMENT '权限角色',
   status ENUM('INACTIVE','ACTIVE','FORBID') NOT NULL DEFAULT 'ACTIVE' COMMENT '状态',
@@ -120,21 +122,6 @@ CREATE TABLE IF NOT EXISTS c_member (
   create_time DATETIME NOT NULL COMMENT '创建时间',
   PRIMARY KEY (id),
   UNIQUE KEY idx_username (username),
-  INDEX idx_channel_id (channel_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-
-#------------------------------------------------------------------------
-#专家
-#------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS c_professor (
-  id CHAR(32) NOT NULL,
-  channel_id CHAR(32) NOT NULL COMMENT '服务商编号',
-  name VARCHAR(30) NOT NULL COMMENT '姓名',
-  phone VARCHAR(20) NOT NULL DEFAULT '' COMMENT '联系电话',
-  profession VARCHAR(200) COMMENT '擅长领域',
-  birthday VARCHAR(20) COMMENT '生日',
-  create_time DATETIME NOT NULL COMMENT '创建时间',
-  PRIMARY KEY (id),
   INDEX idx_channel_id (channel_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
