@@ -5,6 +5,7 @@ import com.ts.server.safe.channel.dao.ContractDao;
 import com.ts.server.safe.channel.domain.CompInfo;
 import com.ts.server.safe.channel.domain.Contract;
 import com.ts.server.safe.common.id.IdGenerators;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,10 @@ public class ContractService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public boolean delete(String id){
+        Contract t = get(id);
+        if(StringUtils.isNotBlank(t.getServiceId())){
+            throw new BaseException("合同已经分配服务");
+        }
         return dao.delete(id);
     }
 
@@ -76,14 +81,18 @@ public class ContractService {
         return dao.updateService(id, serviceId);
     }
 
-    public Long count(String channelId, String name, String num, String delCompanyId, String proAddress,
+    public Long count(String channelId, String name, String num, String delCompanyName, String proAddress,
                       Integer delCompanyType){
-        return dao.count(channelId, name, num, delCompanyId, proAddress, delCompanyType);
+        return dao.count(channelId, name, num, delCompanyName, proAddress, delCompanyType);
     }
 
-    public List<Contract> query(String channelId, String name, String num, String delCompanyId, String proAddress,
+    public List<Contract> query(String channelId, String name, String num, String delCompanyName, String proAddress,
                                 Integer delCompanyType, int offset, int limit){
 
-        return dao.find(channelId, name, num, delCompanyId, proAddress, delCompanyType, offset, limit);
+        return dao.find(channelId, name, num, delCompanyName, proAddress, delCompanyType, offset, limit);
+    }
+
+    public List<Contract> queryNoneAlloc(String channelId){
+        return dao.findNoneAlloc(channelId);
     }
 }

@@ -3,6 +3,7 @@ package com.ts.server.safe.channel.service;
 import com.ts.server.safe.BaseException;
 import com.ts.server.safe.channel.dao.ConServiceDao;
 import com.ts.server.safe.channel.domain.ConService;
+import com.ts.server.safe.channel.domain.ConServiceItem;
 import com.ts.server.safe.channel.domain.Contract;
 import com.ts.server.safe.channel.domain.Member;
 import com.ts.server.safe.common.id.IdGenerators;
@@ -30,44 +31,54 @@ public class ConServiceService {
     private final ConServiceDao dao;
     private final ContractService contractService;
     private final MemberService memberService;
+    private final ConServiceItemService itemService;
 
     @Autowired
-    public ConServiceService(ConServiceDao dao, ContractService contractService, MemberService memberService) {
+    public ConServiceService(ConServiceDao dao, ContractService contractService,
+                             MemberService memberService, ConServiceItemService itemService) {
         this.dao = dao;
         this.contractService = contractService;
         this.memberService = memberService;
+        this.itemService = itemService;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public ConService save(ConService t){
-        Contract contract = contractService.get(t.getConId());
-
+    public ConService save(String channelId, String name, String conId, String leadId, List<ConServiceItem> items){
+        Contract contract = contractService.get(conId);
+        if(!StringUtils.equals(contract.getChannelId(), channelId)){
+            throw new BaseException("不能新增服务");
+        }
         if(StringUtils.isNotBlank(contract.getServiceId())){
             throw new BaseException("合同已经添加服务");
         }
 
-        Member member = memberService.get(t.getLeaId());
-        if(!StringUtils.equals(contract.getChannelId(), t.getChannelId()) ||
-                !StringUtils.equals(member.getChannelId(), t.getChannelId())){
-
-            throw new BaseException("不能添加服务");
-        }
-
+        ConService t = new ConService();
         t.setId(IdGenerators.uuid());
+        t.setChannelId(channelId);
+        t.setName(name);
+        t.setConId(contract.getId());
         t.setConName(contract.getName());
+        t.setCompId(contract.getSerCompanyId());
+        t.setCompName(contract.getSerCompanyName());
+        Member member = memberService.get(leadId);
+        if(!StringUtils.equals(member.getChannelId(), channelId)){
+            throw new BaseException("不能新增服务");
+        }
+        t.setLeaId(member.getId());
         t.setLeaName(member.getName());
 
         dao.insert(t);
+        itemService.save(t.getId(), items);
         contractService.updateService(t.getConId(), t.getId());
 
         return dao.findOne(t.getId());
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public ConService update(ConService t){
-        ConService o = get(t.getId());
-        if(!StringUtils.equals(o.getConId(), t.getConId())){
-            Contract contract = contractService.get(t.getConId());
+    public ConService update(String id, String name, String conId, String leadId, List<ConServiceItem> items){
+        ConService o = get(id);
+        if(!StringUtils.equals(o.getConId(), conId)){
+            Contract contract = contractService.get(conId);
 
             if(StringUtils.isNotBlank(contract.getServiceId())){
                 throw new BaseException("合同已经添加服务");
@@ -76,26 +87,32 @@ public class ConServiceService {
             if(!StringUtils.equals(o.getChannelId(), contract.getChannelId())){
                 LOGGER.warn("Update contract channel not same channelId={}, newChannel={}",
                         o.getChannelId(), contract.getChannelId());
-                throw new BaseException("不能添加服务");
+                throw new BaseException("不能修改服务");
             }
-            t.setConName(contract.getName());
+
             contractService.updateService(o.getConId(), "");
-            contractService.updateService(o.getConId(), t.getId());
+            contractService.updateService(conId, id);
+
+            o.setConId(conId);
+            o.setConName(contract.getName());
         }
 
-        if(!StringUtils.equals(o.getLeaId(), t.getLeaId())){
-            Member member = memberService.get(t.getLeaId());
-            if(!StringUtils.equals(member.getChannelId(), t.getChannelId())){
-                throw new BaseException("不能添加服务");
+        if(!StringUtils.equals(o.getLeaId(), leadId)){
+            Member member = memberService.get(leadId);
+            if(!StringUtils.equals(member.getChannelId(), o.getChannelId())){
+                throw new BaseException("不能修改服务");
             }
-            t.setLeaName(member.getName());
+            o.setLeaId(member.getId());
+            o.setLeaName(member.getName());
         }
 
-        if(!dao.update(t)){
-            throw new BaseException("修复服务失败");
+        o.setName(name);
+        if(!dao.update(o)){
+            throw new BaseException("修改服务失败");
         }
+        itemService.save(o.getId(), items);
 
-        return get(t.getId());
+        return get(o.getId());
     }
 
     public ConService get(String id){
@@ -113,6 +130,10 @@ public class ConServiceService {
             throw new BaseException("不能删除服务");
         }
         return dao.delete(id);
+    }
+
+    public List<ConServiceItem> queryItems(String id){
+        return itemService.query(id);
     }
 
     public Long count(String channelId, String name, String compName, ConService.Status status){

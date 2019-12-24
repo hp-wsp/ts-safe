@@ -33,7 +33,7 @@ public class ContractDao {
         t.setSerCompanyId(r.getString("ser_company_id"));
         t.setSerCompanyName(r.getString("company_name"));
         t.setSerAddress(r.getString("ser_address"));
-        t.setSigConDate(r.getString("sig_con_date"));
+        t.setSigConDate(r.getDate("sig_con_date"));
         t.setProAddress(r.getString("pro_address"));
         t.setSerConDateFrom(r.getDate("ser_con_date_from"));
         t.setSerConDateTo(r.getDate("ser_con_date_to"));
@@ -93,24 +93,24 @@ public class ContractDao {
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
     }
 
-    public Long count(String channelId, String name, String num, String delCompanyId, String proAddress, Integer delCompanyType){
+    public Long count(String channelId, String name, String num, String delCompanyName, String proAddress, Integer delCompanyType){
         String sql = "SELECT COUNT(id) FROM c_contract WHERE channel_id LIKE ? AND name LIKE ? AND num LIKE ? " +
-                "AND del_company_id LIKE ? AND pro_address LIKE ? ";
+                "AND del_company_name LIKE ? AND pro_address LIKE ? ";
 
         if(Objects.nonNull(delCompanyType)){
             sql = sql + " AND del_company_type  = ?";
         }
 
-        final Object[] params = buildParams(channelId, name, num, delCompanyId, proAddress, delCompanyType);
+        final Object[] params = buildParams(channelId, name, num, delCompanyName, proAddress, delCompanyType);
         return jdbcTemplate.queryForObject(sql, params, Long.class);
     }
 
-    private Object[] buildParams(String channelId, String name, String num, String delCompanyId, String proAddress, Integer delCompanyType){
-        final Object[] params = delCompanyId == null? new Object[5]: new Object[6];
+    private Object[] buildParams(String channelId, String name, String num, String delCompanyName, String proAddress, Integer delCompanyType){
+        final Object[] params = delCompanyType == null? new Object[5]: new Object[6];
         params[0] = DaoUtils.blankLike(channelId);
         params[1] = DaoUtils.like(name);
         params[2] = DaoUtils.like(num);
-        params[3] = DaoUtils.blankLike(delCompanyId);
+        params[3] = DaoUtils.blankLike(delCompanyName);
         params[4] = DaoUtils.like(proAddress);
 
         if(Objects.nonNull(delCompanyType)){
@@ -120,10 +120,10 @@ public class ContractDao {
         return params;
     }
 
-    public List<Contract> find(String channelId, String name, String num, String delCompanyId, String proAddress,
+    public List<Contract> find(String channelId, String name, String num, String delCompanyName, String proAddress,
                                Integer delCompanyType, int offset, int limit){
         String sql = "SELECT * FROM c_contract WHERE channel_id LIKE ? AND name LIKE ? AND num LIKE ? " +
-                "AND del_company_id LIKE ? AND pro_address LIKE ? ";
+                "AND del_company_name LIKE ? AND pro_address LIKE ? ";
 
         if(Objects.nonNull(delCompanyType)){
             sql = sql + " AND del_company_type  = ?";
@@ -131,7 +131,7 @@ public class ContractDao {
 
         sql = sql + " ORDER BY update_time DESC, create_time DESC LIMIT ? OFFSET ?";
 
-        final Object[] params = DaoUtils.appendOffsetLimit(buildParams(channelId, name, num, delCompanyId, proAddress, delCompanyType), limit, offset);
+        final Object[] params = DaoUtils.appendOffsetLimit(buildParams(channelId, name, num, delCompanyName, proAddress, delCompanyType), limit, offset);
 
         return jdbcTemplate.query(sql, params, mapper);
     }

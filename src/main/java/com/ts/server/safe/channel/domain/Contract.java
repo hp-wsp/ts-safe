@@ -35,7 +35,7 @@ public class Contract {
     @ApiModelProperty("委托服务地址")
     private String serAddress;
     @ApiModelProperty("签订合同时间")
-    private String sigConDate;
+    private Date sigConDate;
     @ApiModelProperty("项目属地")
     private String proAddress;
     @ApiModelProperty("合同约定服务周期开始时间")
@@ -145,11 +145,11 @@ public class Contract {
         this.serAddress = serAddress;
     }
 
-    public String getSigConDate() {
+    public Date getSigConDate() {
         return sigConDate;
     }
 
-    public void setSigConDate(String sigConDate) {
+    public void setSigConDate(Date sigConDate) {
         this.sigConDate = sigConDate;
     }
 

@@ -27,13 +27,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 @RestController
-@RequestMapping("/man/company/info")
-@Api(value = "/man/company/info", tags = "M-公司信息管理API接口")
-public class CompInfoController {
+@RequestMapping("/man/company")
+@Api(value = "/man/company", tags = "M-公司信息管理API接口")
+public class CompInfoManController {
     private final CompInfoService service;
 
     @Autowired
-    public CompInfoController(CompInfoService service) {
+    public CompInfoManController(CompInfoService service) {
         this.service = service;
     }
 

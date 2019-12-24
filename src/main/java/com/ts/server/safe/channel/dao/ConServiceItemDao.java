@@ -47,7 +47,7 @@ public class ConServiceItemDao {
         jdbcTemplate.update(sql, serviceId);
     }
 
-    public List<ConServiceItem> find(int serviceId){
+    public List<ConServiceItem> find(String serviceId){
         final String sql = "SELECT * FROM c_service_item WHERE service_id = ? ORDER BY id ASC";
         return jdbcTemplate.query(sql, new Object[]{serviceId}, mapper);
     }
