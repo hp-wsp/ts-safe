@@ -24,12 +24,12 @@ public class ContractSaveForm {
     private String conProject;
     @ApiModelProperty(value = "委托单位形式", required = true)
     @NotNull
-    private int delCompanyType;
+    private int entCompType;
     @ApiModelProperty(value = "委托单位")
-    private String delCompany;
+    private String entCompName;
     @ApiModelProperty(value = "服务企业编号", required = true)
     @NotBlank
-    private String serCompanyId;
+    private String serCompId;
     @ApiModelProperty("委托服务地址")
     private String serAddress;
     @ApiModelProperty(value = "签订合同时间", required = true)
@@ -77,28 +77,28 @@ public class ContractSaveForm {
         this.conProject = conProject;
     }
 
-    public int getDelCompanyType() {
-        return delCompanyType;
+    public int getEntCompType() {
+        return entCompType;
     }
 
-    public void setDelCompanyType(int delCompanyType) {
-        this.delCompanyType = delCompanyType;
+    public void setEntCompType(int entCompType) {
+        this.entCompType = entCompType;
     }
 
-    public String getDelCompany() {
-        return delCompany;
+    public String getEntCompName() {
+        return entCompName;
     }
 
-    public void setDelCompany(String delCompany) {
-        this.delCompany = delCompany;
+    public void setEntCompName(String entCompName) {
+        this.entCompName = entCompName;
     }
 
-    public String getSerCompanyId() {
-        return serCompanyId;
+    public String getSerCompId() {
+        return serCompId;
     }
 
-    public void setSerCompanyId(String serCompanyId) {
-        this.serCompanyId = serCompanyId;
+    public void setSerCompId(String serCompId) {
+        this.serCompId = serCompId;
     }
 
     public String getSerAddress() {
@@ -187,9 +187,9 @@ public class ContractSaveForm {
         t.setNum(num);
         t.setName(name);
         t.setConProject(conProject);
-        t.setDelCompanyType(delCompanyType);
-        t.setDelCompany(delCompany);
-        t.setSerCompanyId(serCompanyId);
+        t.setEntCompType(entCompType);
+        t.setEntCompName(entCompName);
+        t.setSerCompId(serCompId);
         t.setSerAddress(serAddress);
         t.setSigConDate(sigConDate);
         t.setProAddress(proAddress);

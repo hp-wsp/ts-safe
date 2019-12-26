@@ -42,7 +42,7 @@ public class ChannelSysController {
     @EnableApiLogger(name = "新增服务商", buildDetail = ChannelLogDetailBuilder.SaveBuilder.class)
     @ApiOperation("新增服务商")
     public ResultVo<Channel> save(@Valid @RequestBody ChannelSaveForm form){
-        Channel company = service.save(form.toDomain());
+        Channel company = service.save(form.toDomain(), form.getManUsername(), form.getManPassword());
         return ResultVo.success(company);
     }
 

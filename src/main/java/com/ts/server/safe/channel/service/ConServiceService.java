@@ -58,8 +58,8 @@ public class ConServiceService {
         t.setName(name);
         t.setConId(contract.getId());
         t.setConName(contract.getName());
-        t.setCompId(contract.getSerCompanyId());
-        t.setCompName(contract.getSerCompanyName());
+        t.setCompId(contract.getSerCompId());
+        t.setCompName(contract.getSerCompName());
         Member member = memberService.get(leadId);
         if(!StringUtils.equals(member.getChannelId(), channelId)){
             throw new BaseException("不能新增服务");

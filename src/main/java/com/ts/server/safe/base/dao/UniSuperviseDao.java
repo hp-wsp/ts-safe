@@ -39,39 +39,39 @@ public class UniSuperviseDao {
     }
 
     public void insert(UniSupervise t){
-        final String sql = "INSERT INTO b_supervise_ctg (id, name, num, level, parent_id, remark, create_time) " +
+        final String sql = "INSERT INTO b_supervise (id, name, num, level, parent_id, remark, create_time) " +
                 "VALUES (?, ?, ?, ?, ?, ?, now())";
         jdbcTemplate.update(sql, t.getId(), t.getName(), t.getNum(), t.getLevel(), t.getParentId(), t.getRemark());
     }
 
     public boolean update(UniSupervise t){
-        final String sql = "UPDATE b_supervise_ctg SET name = ?, num = ?, level = ?, remark = ? WHERE id = ?";
+        final String sql = "UPDATE b_supervise SET name = ?, num = ?, level = ?, remark = ? WHERE id = ?";
         return jdbcTemplate.update(sql, t.getName(), t.getNum(), t.getLevel(), t.getRemark(), t.getId()) >0;
     }
 
     public boolean delete (String id){
-        final String sql = "DELETE FROM b_supervise_ctg WHERE id = ?";
+        final String sql = "DELETE FROM b_supervise WHERE id = ?";
         return jdbcTemplate.update(sql, id) > 0;
     }
 
     public boolean has(String id){
-        final String sql = "SELECT COUNT(id) FROM b_supervise_ctg WHERE id = ?";
+        final String sql = "SELECT COUNT(id) FROM b_supervise WHERE id = ?";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{id}, Integer.class);
         return count != null && count > 0;
     }
 
     public UniSupervise findOne(String id){
-        final String sql = "SELECT * FROM b_supervise_ctg WHERE id = ?";
+        final String sql = "SELECT * FROM b_supervise WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
     }
 
     public List<UniSupervise> findChildren(String parentId){
-        final String sql = "SELECT * FROM b_supervise_ctg WHERE parent_id = ? ORDER BY create_time";
+        final String sql = "SELECT * FROM b_supervise WHERE parent_id = ? ORDER BY create_time";
         return jdbcTemplate.query(sql, new Object[]{parentId}, mapper);
     }
 
     public Long count(String parentId, String name, String num){
-        final String sql = "SELECT COUNT(id) FROM b_supervise_ctg WHERE parent_id LIKE ? AND name LIKE ? AND num LIKE ?";
+        final String sql = "SELECT COUNT(id) FROM b_supervise WHERE parent_id LIKE ? AND name LIKE ? AND num LIKE ?";
 
         String parentIdLike = DaoUtils.blankLike(parentId);
         String nameLike = DaoUtils.like(name);
@@ -81,7 +81,7 @@ public class UniSuperviseDao {
     }
 
     public List<UniSupervise> find(String parentId, String name, String num, int offset, int limit){
-        final String sql = "SELECT * FROM b_supervise_ctg WHERE parent_id LIKE ? AND name LIKE ? AND num LIKE ? " +
+        final String sql = "SELECT * FROM b_supervise WHERE parent_id LIKE ? AND name LIKE ? AND num LIKE ? " +
                 "ORDER BY create_time LIMIT ? OFFSET ?";
 
         String parentIdLike = DaoUtils.blankLike(parentId);

@@ -25,13 +25,13 @@ public class Contract {
     @ApiModelProperty("咨询服务项目")
     private String conProject;
     @ApiModelProperty("委托单位形式")
-    private int delCompanyType;
+    private int entCompType;
     @ApiModelProperty("委托单位")
-    private String delCompany;
+    private String entCompName;
     @ApiModelProperty("服务企业编号")
-    private String serCompanyId;
+    private String serCompId;
     @ApiModelProperty("服务企业名称")
-    private String serCompanyName;
+    private String serCompName;
     @ApiModelProperty("委托服务地址")
     private String serAddress;
     @ApiModelProperty("签订合同时间")
@@ -105,36 +105,36 @@ public class Contract {
         this.conProject = conProject;
     }
 
-    public int getDelCompanyType() {
-        return delCompanyType;
+    public int getEntCompType() {
+        return entCompType;
     }
 
-    public void setDelCompanyType(int delCompanyType) {
-        this.delCompanyType = delCompanyType;
+    public void setEntCompType(int entCompType) {
+        this.entCompType = entCompType;
     }
 
-    public String getDelCompany() {
-        return delCompany;
+    public String getEntCompName() {
+        return entCompName;
     }
 
-    public void setDelCompany(String delCompany) {
-        this.delCompany = delCompany;
+    public void setEntCompName(String entCompName) {
+        this.entCompName = entCompName;
     }
 
-    public String getSerCompanyId() {
-        return serCompanyId;
+    public String getSerCompId() {
+        return serCompId;
     }
 
-    public void setSerCompanyId(String serCompanyId) {
-        this.serCompanyId = serCompanyId;
+    public void setSerCompId(String serCompId) {
+        this.serCompId = serCompId;
     }
 
-    public String getSerCompanyName() {
-        return serCompanyName;
+    public String getSerCompName() {
+        return serCompName;
     }
 
-    public void setSerCompanyName(String serCompanyName) {
-        this.serCompanyName = serCompanyName;
+    public void setSerCompName(String serCompName) {
+        this.serCompName = serCompName;
     }
 
     public String getSerAddress() {
@@ -238,7 +238,7 @@ public class Contract {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Contract contract = (Contract) o;
-        return delCompanyType == contract.delCompanyType &&
+        return entCompType == contract.entCompType &&
                 amount == contract.amount &&
                 Objects.equals(id, contract.id) &&
                 Objects.equals(channelId, contract.channelId) &&
@@ -246,9 +246,9 @@ public class Contract {
                 Objects.equals(num, contract.num) &&
                 Objects.equals(name, contract.name) &&
                 Objects.equals(conProject, contract.conProject) &&
-                Objects.equals(delCompany, contract.delCompany) &&
-                Objects.equals(serCompanyId, contract.serCompanyId) &&
-                Objects.equals(serCompanyName, contract.serCompanyName) &&
+                Objects.equals(entCompName, contract.entCompName) &&
+                Objects.equals(serCompId, contract.serCompId) &&
+                Objects.equals(serCompName, contract.serCompName) &&
                 Objects.equals(serAddress, contract.serAddress) &&
                 Objects.equals(sigConDate, contract.sigConDate) &&
                 Objects.equals(proAddress, contract.proAddress) &&
@@ -264,7 +264,7 @@ public class Contract {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, channelId, serviceId, num, name, conProject, delCompanyType, delCompany, serCompanyId, serCompanyName, serAddress, sigConDate, proAddress, serConDateFrom, serConDateTo, amount, ownPerson, ownPhone, sigPerson, sigCompany, updateTime, createTime);
+        return Objects.hash(id, channelId, serviceId, num, name, conProject, entCompType, entCompName, serCompId, serCompName, serAddress, sigConDate, proAddress, serConDateFrom, serConDateTo, amount, ownPerson, ownPhone, sigPerson, sigCompany, updateTime, createTime);
     }
 
     @Override
@@ -276,10 +276,10 @@ public class Contract {
                 .append("num", num)
                 .append("name", name)
                 .append("conProject", conProject)
-                .append("delCompanyType", delCompanyType)
-                .append("delCompany", delCompany)
-                .append("serCompanyId", serCompanyId)
-                .append("serCompanyName", serCompanyName)
+                .append("entCompType", entCompType)
+                .append("entCompName", entCompName)
+                .append("serCompId", serCompId)
+                .append("serCompName", serCompName)
                 .append("serAddress", serAddress)
                 .append("sigConDate", sigConDate)
                 .append("proAddress", proAddress)

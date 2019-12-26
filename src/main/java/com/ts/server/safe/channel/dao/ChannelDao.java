@@ -46,7 +46,7 @@ public class ChannelDao {
 
     public void insert(Channel t){
         final String sql = "INSERT INTO c_channel (id, name, province, city, address, reg_address, phone, " +
-                "mobile, contact, bus_scope status, update_time, create_time) " +
+                "mobile, contact, bus_scope, status, update_time, create_time) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getName(), t.getProvince(), t.getCity(), t.getAddress(), t.getRegAddress(),

@@ -3,6 +3,7 @@ package com.ts.server.safe.channel.service;
 import com.ts.server.safe.BaseException;
 import com.ts.server.safe.channel.dao.ChannelDao;
 import com.ts.server.safe.channel.domain.Channel;
+import com.ts.server.safe.channel.domain.Member;
 import com.ts.server.safe.common.id.IdGenerators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,11 +36,24 @@ public class ChannelService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public Channel save(Channel t){
+    public Channel save(Channel t, String username, String password){
         t.setId(IdGenerators.uuid());
-
         dao.insert(t);
+
+        saveManager(t.getId(), username, password);
+
         return dao.findOne(t.getId());
+    }
+
+    private void saveManager(String channelId, String username, String password){
+        Member member = new Member();
+        member.setChannelId(channelId);
+        member.setUsername(username);
+        member.setPassword(password);
+        member.setRoot(true);
+        member.setRoles(new String[]{"ROLE_MAN_SYS"});
+        member.setStatus(Member.Status.ACTIVE);
+        memberService.save(member);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

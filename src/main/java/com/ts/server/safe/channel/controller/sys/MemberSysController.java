@@ -5,6 +5,7 @@ import com.ts.server.safe.channel.controller.logger.MemberLogDetailBuilder;
 import com.ts.server.safe.channel.domain.Member;
 import com.ts.server.safe.channel.service.MemberService;
 import com.ts.server.safe.controller.form.PasswordResetForm;
+import com.ts.server.safe.controller.vo.HasVo;
 import com.ts.server.safe.controller.vo.OkVo;
 import com.ts.server.safe.controller.vo.ResultVo;
 import com.ts.server.safe.logger.aop.annotation.EnableApiLogger;
@@ -34,10 +35,16 @@ public class MemberSysController {
         this.service = service;
     }
 
-    @GetMapping(value = "root/{channelId}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "root", produces = APPLICATION_JSON_VALUE)
     @ApiOperation("获取服务商管理员")
-    public ResultVo<Member> getRoot(@PathVariable("channelId")String channelId){
+    public ResultVo<Member> getRoot(@RequestParam("channelId")String channelId){
         return ResultVo.success(service.getRoot(channelId));
+    }
+
+    @GetMapping(value = "hasUsername", produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("用户名是否存在")
+    public ResultVo<OkVo> hasUsername(@RequestParam("username")String username){
+        return ResultVo.success(new OkVo(service.hasUsername(username)));
     }
 
     @PutMapping(value = "resetPassword", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)

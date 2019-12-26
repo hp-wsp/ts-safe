@@ -40,7 +40,7 @@ public class ContractService {
         t.setId(IdGenerators.uuid());
 
         CompInfo info = compInfoService.get(t.getChannelId());
-        t.setSerCompanyName(info.getName());
+        t.setSerCompName(info.getName());
 
         dao.insert(t);
 
@@ -50,7 +50,7 @@ public class ContractService {
     @Transactional(propagation = Propagation.REQUIRED)
     public Contract update(Contract t){
         CompInfo info = compInfoService.get(t.getChannelId());
-        t.setSerCompanyName(info.getName());
+        t.setSerCompName(info.getName());
 
         if(!dao.update(t)){
             throw new BaseException("修改合同失败");

@@ -29,7 +29,7 @@ public class ManagerDao {
         t.setPhone(r.getString("phone"));
         t.setEmail(r.getString("email"));
         t.setPassword(r.getString("password"));
-        t.setRoles(DaoUtils.toArray(r.getString("role")));
+        t.setRoles(DaoUtils.toArray(r.getString("roles")));
         t.setForbid(r.getBoolean("is_forbid"));
         t.setRoot(r.getBoolean("is_root"));
         t.setUpdateTime(r.getTimestamp("update_time"));
@@ -44,7 +44,7 @@ public class ManagerDao {
     }
 
     public void insert(Manager t){
-        final String sql = "INSERT INTO b_manager (id, username, name, phone, email, password, role, " +
+        final String sql = "INSERT INTO b_manager (id, username, name, phone, email, password, roles, " +
                 "is_forbid, is_root, update_time, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getUsername(), t.getName(), t.getPhone(), t.getEmail(),
@@ -52,7 +52,7 @@ public class ManagerDao {
     }
 
     public boolean update(Manager t){
-        final String sql = "UPDATE b_manager SET name = ?, phone = ?, email = ?, role = ?, is_forbid = ?, update_time = now() " +
+        final String sql = "UPDATE b_manager SET name = ?, phone = ?, email = ?, roles = ?, is_forbid = ?, update_time = now() " +
                 "WHERE id = ? AND is_delete = false";
         return jdbcTemplate.update(sql, t.getName(), t.getPhone(), t.getEmail(), DaoUtils.join(t.getRoles()), t.isForbid(), t.getId()) > 0;
     }

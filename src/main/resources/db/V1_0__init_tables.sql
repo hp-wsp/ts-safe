@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS b_risk_chemistry (
 #-----------------------------------------------------------------------
 #监管分类
 #-----------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS b_supervise_ctg (
+CREATE TABLE IF NOT EXISTS b_supervise (
   id CHAR(32) NOT NULL COMMENT '编号',
   num VARCHAR(40) NOT NULL COMMENT '监管分类编号',
   name VARCHAR(30) NOT NULL COMMENT '名称',
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS c_channel (
   address VARCHAR(100) NOT NULL DEFAULT '' COMMENT '公司地址',
   reg_address VARCHAR(100) NOT NULL DEFAULT '' COMMENT '注册公司地址',
   phone VARCHAR(20) NOT NULL DEFAULT '' COMMENT '联系电话',
-  mobile VARCHAR(20) NOT NULL DEFAULT '' COMMENT '手机',
+  mobile VARCHAR(20) DEFAULT '' COMMENT '手机',
   contact VARCHAR(15) NOT NULL DEFAULT '' COMMENT '法人',
   bus_scope VARCHAR(2000)  COMMENT '经营范围',
   status ENUM('WAIT','OPEN','CLOSED') NOT NULL DEFAULT 'WAIT' COMMENT '状态',
@@ -164,4 +164,72 @@ CREATE TABLE IF NOT EXISTS c_comp_info (
   PRIMARY KEY (id),
   INDEX idx_channel_id (channel_id),
   INDEX idx_name (name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+#------------------------------------------------------------------------
+#合同
+#------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS c_contact (
+  id CHAR(32) NOT NULL,
+  channel_id CHAR(32) NOT NULL COMMENT '服务商编号',
+  num VARCHAR(64) NOT NULL COMMENT '合同编号',
+  name VARCHAR(30) COMMENT '合同名称',
+  con_project VARCHAR(30) DEFAULT '' COMMENT '咨询服务项目',
+  ent_comp_type TINYINT NOT NULL COMMENT '委托单位形式',
+  ent_comp_name VARCHAR(40) NOT NULL DEFAULT '' COMMENT '委托单位',
+  ser_comp_id CHAR(32) NOT NULL DEFAULT '' COMMENT '服务单位编号',
+  ser_comp_name VARCHAR(30) NOT NULL DEFAULT '' COMMENT '服务单位名称',
+  ser_address VARCHAR(100) DEFAULT '' COMMENT '委托服务地址',
+  sig_con_date DATE NOT NULL COMMENT '签约合同时间',
+  pro_address VARCHAR(100) DEFAULT '' COMMENT '项目属地',
+  ser_con_date_from DATETIME COMMENT '合同约定服务周期开始时间',
+  ser_con_date_to DATETIME COMMENT '合同约定服务周期结束时间',
+  amount INT NOT NULL COMMENT '合同金额',
+  own_person VARCHAR(30) COMMENT '甲方联系人',
+  own_phone  VARCHAR(20) COMMENT '甲方联系方式',
+  sig_person VARCHAR(30) COMMENT '我方签单人',
+  sig_phone  VARCHAR(20) COMMENT '我方签单单位',
+  update_time DATETIME NOT NULL COMMENT '修改时间',
+  create_time DATETIME NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (id),
+  UNIQUE KEY idx_num (num),
+  INDEX idx_channel_id (channel_id),
+  INDEX idx_ser_comp_name (ent_comp_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+#------------------------------------------------------------------------
+#合同服务
+#------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS c_service (
+  id CHAR(32) NOT NULL,
+  channel_id CHAR(32) NOT NULL COMMENT '服务商编号',
+  name VARCHAR(30) NOT NULL COMMENT '服务名称',
+  con_id CHAR(32) NOT NULL COMMENT '合同编号',
+  con_name VARCHAR(50) NOT NULL COMMENT '合同名称',
+  comp_id CHAR(32) NOT NULL COMMENT '服务企业编号',
+  comp_name VARCHAR(50) NOT NULL COMMENT '服务企业名称',
+  lea_id CHAR(32) NOT NULL COMMENT '负责人编号',
+  lea_name VARCHAR(30) NOT NULL COMMENT '负责人名称',
+  status ENUM('WAIT','FINISH') NOT NULL DEFAULT 'WAIT' COMMENT '状态',
+  update_time DATETIME NOT NULL COMMENT '修改时间',
+  create_time DATETIME NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (id),
+  UNIQUE KEY idx_con_id (con_id),
+  INDEX idx_channel_id (channel_id),
+  INDEX idx_lea_id (lea_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+#------------------------------------------------------------------------
+#合同服务项目
+#------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS c_service_item (
+  id CHAR(32) NOT NULL COMMENT '编号',
+  service_id CHAR(32) NOT NULL COMMENT '服务编号',
+  item_id CHAR(30) NOT NULL COMMENT '项目编号',
+  item_name VARCHAR(200) NOT NULL DEFAULT '' COMMENT '项目名称',
+  item_value VARCHAR(20) NOT NULL DEFAULT '' COMMENT '项目值',
+  create_time DATETIME NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (id),
+  INDEX idx_service_id (service_id),
+  INDEX idx_item_id (item_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

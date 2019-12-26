@@ -23,13 +23,21 @@ public class ChannelSaveForm {
     @ApiModelProperty(value = "注册地址")
     private String regAddress;
     @ApiModelProperty(value = "联系电话", required = true)
+    @NotBlank
     private String phone;
     @ApiModelProperty(value = "手机")
     private String mobile;
-    @ApiModelProperty(value = "联系人")
+    @ApiModelProperty(value = "法人", required = true)
+    @NotBlank
     private String contact;
     @ApiModelProperty(value = "经营范围")
     private String busScope;
+    @ApiModelProperty(value = "管理员用户名", required = true)
+    @NotBlank
+    private String manUsername;
+    @ApiModelProperty(value = "管理员密码", required = true)
+    @NotBlank
+    private String manPassword;
 
     public String getName() {
         return name;
@@ -103,6 +111,22 @@ public class ChannelSaveForm {
         this.busScope = busScope;
     }
 
+    public String getManUsername() {
+        return manUsername;
+    }
+
+    public void setManUsername(String manUsername) {
+        this.manUsername = manUsername;
+    }
+
+    public String getManPassword() {
+        return manPassword;
+    }
+
+    public void setManPassword(String manPassword) {
+        this.manPassword = manPassword;
+    }
+
     public Channel toDomain(){
         Channel t = new Channel();
 
@@ -115,6 +139,7 @@ public class ChannelSaveForm {
         t.setMobile(mobile);
         t.setContact(contact);
         t.setBusScope(busScope);
+        t.setStatus(Channel.Status.WAIT);
 
         return t;
     }

@@ -28,10 +28,10 @@ public class ContractDao {
         t.setNum(r.getString("num"));
         t.setName(r.getString("name"));
         t.setConProject(r.getString("con_project"));
-        t.setDelCompanyType(r.getInt("del_company_type"));
-        t.setDelCompany(r.getString("del_company"));
-        t.setSerCompanyId(r.getString("ser_company_id"));
-        t.setSerCompanyName(r.getString("company_name"));
+        t.setEntCompType(r.getInt("ent_comp_type"));
+        t.setEntCompName(r.getString("ent_comp_name"));
+        t.setSerCompId(r.getString("ser_comp_id"));
+        t.setSerCompName(r.getString("ser_comp_name"));
         t.setSerAddress(r.getString("ser_address"));
         t.setSigConDate(r.getDate("sig_con_date"));
         t.setProAddress(r.getString("pro_address"));
@@ -54,26 +54,26 @@ public class ContractDao {
     }
 
     public void insert(Contract t){
-        final String sql = "INSERT INTO c_contract (id, channel_id, service_id, num, name, con_project, del_company_type, " +
-                "del_company, ser_company_id, ser_company_name, ser_address, sig_con_date, pro_address, ser_con_date_from," +
+        final String sql = "INSERT INTO c_contract (id, channel_id, service_id, num, name, con_project, ent_comp_type, " +
+                "ent_comp_name, ser_comp_id, ser_comp_name, ser_address, sig_con_date, pro_address, ser_con_date_from," +
                 "ser_con_date_to, amount, own_person, own_phone, sig_person, sig_company, update_time, create_time) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getServiceId(), t.getNum(), t.getName(), t.getConProject(),
-                t.getDelCompanyType(), t.getDelCompany(), t.getSerCompanyId(), t.getSerCompanyName(), t.getSerAddress(),
+                t.getEntCompType(), t.getEntCompName(), t.getSerCompId(), t.getSerCompName(), t.getSerAddress(),
                 t.getSigConDate(), t.getProAddress(), t.getSerConDateFrom(), t.getSerConDateTo(), t.getAmount(),
                 t.getOwnPerson(), t.getOwnPhone(), t.getSigPerson(), t.getSigCompany());
     }
 
     public boolean update(Contract t){
-        final String sql = "UPDATE c_contract SET num = ?, name = ?, con_project = ?, del_company_type = ?, " +
-                "del_company = ?, ser_company_id = ?, ser_company_name = ?, ser_address = ?, sig_con_date = ?, " +
+        final String sql = "UPDATE c_contract SET num = ?, name = ?, con_project = ?, ent_comp_type = ?, " +
+                "ent_comp_name = ?, ser_comp_id = ?, ser_comp_name = ?, ser_address = ?, sig_con_date = ?, " +
                 "pro_address = ?, ser_con_date_from = ?, ser_con_date_to = ?, amount = ?, own_person = ?, " +
                 "own_phone = ?, sig_person = ?, sig_company = ?, update_time = now()" +
                 "WHERE id = ?";
 
-        return jdbcTemplate.update(sql, t.getNum(), t.getName(), t.getConProject(), t.getDelCompanyType(),
-                t.getDelCompany(), t.getSerCompanyId(), t.getSerCompanyName(), t.getSerAddress(), t.getSigConDate(),
+        return jdbcTemplate.update(sql, t.getNum(), t.getName(), t.getConProject(), t.getEntCompType(),
+                t.getEntCompName(), t.getSerCompId(), t.getSerCompName(), t.getSerAddress(), t.getSigConDate(),
                 t.getProAddress(), t.getSerConDateFrom(), t.getSerConDateTo(), t.getAmount(), t.getOwnPerson(),
                 t.getOwnPhone(), t.getSigPerson(), t.getSigCompany(), t.getId()) > 0;
     }
@@ -95,10 +95,10 @@ public class ContractDao {
 
     public Long count(String channelId, String name, String num, String delCompanyName, String proAddress, Integer delCompanyType){
         String sql = "SELECT COUNT(id) FROM c_contract WHERE channel_id LIKE ? AND name LIKE ? AND num LIKE ? " +
-                "AND del_company_name LIKE ? AND pro_address LIKE ? ";
+                "AND ent_comp_name LIKE ? AND pro_address LIKE ? ";
 
         if(Objects.nonNull(delCompanyType)){
-            sql = sql + " AND del_company_type  = ?";
+            sql = sql + " AND ent_comp_type  = ?";
         }
 
         final Object[] params = buildParams(channelId, name, num, delCompanyName, proAddress, delCompanyType);
@@ -123,10 +123,10 @@ public class ContractDao {
     public List<Contract> find(String channelId, String name, String num, String delCompanyName, String proAddress,
                                Integer delCompanyType, int offset, int limit){
         String sql = "SELECT * FROM c_contract WHERE channel_id LIKE ? AND name LIKE ? AND num LIKE ? " +
-                "AND del_company_name LIKE ? AND pro_address LIKE ? ";
+                "AND ent_comp_name LIKE ? AND pro_address LIKE ? ";
 
         if(Objects.nonNull(delCompanyType)){
-            sql = sql + " AND del_company_type  = ?";
+            sql = sql + " AND ent_comp_type  = ?";
         }
 
         sql = sql + " ORDER BY update_time DESC, create_time DESC LIMIT ? OFFSET ?";

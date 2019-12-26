@@ -44,7 +44,7 @@ public class ConServiceDao {
     }
 
     public void insert(ConService t){
-        final String sql = "INSERT INTO c_con_service (id, channel_id, name, con_id, con_name, comp_id, comp_name," +
+        final String sql = "INSERT INTO c_service (id, channel_id, name, con_id, con_name, comp_id, comp_name," +
                 "lea_id, lea_name, status, update_create, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getName(), t.getConId(), t.getConName(), t.getCompId(),
@@ -52,29 +52,29 @@ public class ConServiceDao {
     }
 
     public boolean update(ConService t){
-        final String sql = "UPDATE c_con_service SET name = ?, con_id = ?, con_name = ?, comp_id = ?, comp_name = ?," +
+        final String sql = "UPDATE c_service SET name = ?, con_id = ?, con_name = ?, comp_id = ?, comp_name = ?," +
                 "lea_id = ?, lea_name = ?, update_time = now() WHERE id = ?";
         return jdbcTemplate.update(sql, t.getName(), t.getConId(), t.getConName(), t.getCompId(), t.getCompName(),
                 t.getLeaId(), t.getLeaName(), t.getId()) > 0;
     }
 
     public boolean delete(String id){
-        final String sql = "DELETE FROM c_con_service WHERE id = ?";
+        final String sql = "DELETE FROM c_service WHERE id = ?";
         return jdbcTemplate.update(sql, id) > 0;
     }
 
     public boolean updateStatus(String id, ConService.Status status){
-        final String sql = "UPDATE c_con_service SET status = ? WHERE id";
+        final String sql = "UPDATE c_service SET status = ? WHERE id";
         return jdbcTemplate.update(sql, status.name(), id) > 0;
     }
 
     public ConService findOne(String id){
-        final String sql = "SELECT * FROM c_con_service WHERE id = ?";
+        final String sql = "SELECT * FROM c_service WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
     }
 
     public Long count(String channelId, String name, String compName, ConService.Status status){
-        final String sql = "SELECT COUNT(id) FROM c_con_service WHERE channel_id LIKE ? " +
+        final String sql = "SELECT COUNT(id) FROM c_service WHERE channel_id LIKE ? " +
                 "AND name LIKE ? AND comp_name LIKE ? AND status LIKE ?";
 
         Object[] params = buildParams(channelId, name, compName, status);
@@ -83,7 +83,7 @@ public class ConServiceDao {
 
     public List<ConService> find(String channelId, String name, String compName, ConService.Status status,
                                  int offset, int limit){
-        final String sql = "SELECT * FROM c_con_service WHERE channel_id LIKE ? " +
+        final String sql = "SELECT * FROM c_service WHERE channel_id LIKE ? " +
                 "AND name LIKE ? AND comp_name LIKE ? AND status LIKE ? " +
                 "ORDER BY update_time DESC, create_time DESC LIMIT ? OFFSET ?";
 
