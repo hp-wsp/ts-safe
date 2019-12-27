@@ -11,32 +11,21 @@ import javax.validation.constraints.NotBlank;
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 public class UniCheckTableSaveForm {
-    @ApiModelProperty(value = "检查类型编号", required = true)
-    @NotBlank
-    private String supId;
     @ApiModelProperty(value = "检查内容", required = true)
     @NotBlank
     private String content;
-    @ApiModelProperty(value = "检查内容明细")
+    @ApiModelProperty(value = "检查内容明细", required = true)
+    @NotBlank
     private String conDetail;
-    @ApiModelProperty(value = "法律名称")
-    private String lawName;
-    @ApiModelProperty(value = "法律条目")
+    @ApiModelProperty(value = "检查依据", required = true)
+    @NotBlank
     private String lawItem;
-    @ApiModelProperty(value = "法律内容")
-    private String lawContent;
-    @ApiModelProperty("检查类型")
-    private int checkType;
-    @ApiModelProperty("显示排序")
-    private int showOrder;
-
-    public String getSupId() {
-        return supId;
-    }
-
-    public void setSupId(String supId) {
-        this.supId = supId;
-    }
+    @ApiModelProperty(value = "检查类型", required = true)
+    @NotBlank
+    private String checkType;
+    @ApiModelProperty(value = "检查项目", required = true)
+    @NotBlank
+    private String checkItem;
 
     public String getContent() {
         return content;
@@ -54,14 +43,6 @@ public class UniCheckTableSaveForm {
         this.conDetail = conDetail;
     }
 
-    public String getLawName() {
-        return lawName;
-    }
-
-    public void setLawName(String lawName) {
-        this.lawName = lawName;
-    }
-
     public String getLawItem() {
         return lawItem;
     }
@@ -70,41 +51,30 @@ public class UniCheckTableSaveForm {
         this.lawItem = lawItem;
     }
 
-    public String getLawContent() {
-        return lawContent;
-    }
-
-    public void setLawContent(String lawContent) {
-        this.lawContent = lawContent;
-    }
-
-    public int getCheckType() {
+    public String getCheckType() {
         return checkType;
     }
 
-    public void setCheckType(int checkType) {
+    public void setCheckType(String checkType) {
         this.checkType = checkType;
     }
 
-    public int getShowOrder() {
-        return showOrder;
+    public String getCheckItem() {
+        return checkItem;
     }
 
-    public void setShowOrder(int showOrder) {
-        this.showOrder = showOrder;
+    public void setCheckItem(String checkItem) {
+        this.checkItem = checkItem;
     }
 
     public UniCheckTable toDomain(){
         UniCheckTable t = new UniCheckTable();
 
-        t.setSupId(supId);
+        t.setCheckType(checkType);
+        t.setCheckItem(checkItem);
         t.setContent(content);
         t.setConDetail(conDetail);
-        t.setLawName(lawName);
-        t.setLawContent(lawContent);
         t.setLawItem(lawItem);
-        t.setCheckType(checkType);
-        t.setShowOrder(showOrder);
 
         return t;
     }

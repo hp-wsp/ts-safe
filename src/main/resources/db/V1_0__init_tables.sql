@@ -57,6 +57,21 @@ CREATE TABLE IF NOT EXISTS b_supervise (
   INDEX idx_parent_id (parent_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
+#-----------------------------------------------------------------------
+#检查表
+#-----------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS b_check_table (
+  id CHAR(32) NOT NULL COMMENT '编号',
+  check_type VARCHAR(200) NOT NULL COMMENT '检查类别',
+  check_item VARCHAR(200) NOT NULL COMMENT '检查项目',
+  content VARCHAR(200) NOT NULL DEFAULT '' COMMENT '检查内容',
+  con_detail VARCHAR(2000) NOT NULL DEFAULT '' COMMENT '检查内容明细',
+  law_item VARCHAR(200) NOT NULL DEFAULT '' COMMENT '法律依据',
+  update_time DATETIME NOT NULL COMMENT '修改时间',
+  create_time DATETIME NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
 #------------------------------------------------------------------------
 #系统管理员表
 #------------------------------------------------------------------------

@@ -1,5 +1,7 @@
+#删除历史数据
 DELETE FROM b_supervise;
 
+#插入行业数据
 INSERT INTO b_supervise (id, num, name, parent_id, level, create_time) VALUES
 ('1', 'A', 'A农、林、牧、渔业', 'root', 1, now()),
 ('82', 'B', 'B采矿业', 'root', 1, now()),
@@ -1453,3 +1455,5 @@ INSERT INTO b_supervise (id, num, name, parent_id, level, create_time) VALUES
 ('1449', 'S-96-01', '社区自治组织', '1448', 3, now()),
 ('1450', 'S-96-02', '村民自治组织', '1448', 3, now()),
 ('1453', 'T-97-01', '国际组织', '1452', 3, now());
+#修改编号格式
+UPDATE b_supervise SET num = REPLACE(num, '-', '');

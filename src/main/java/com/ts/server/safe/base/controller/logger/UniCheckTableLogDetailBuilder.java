@@ -39,7 +39,7 @@ public class UniCheckTableLogDetailBuilder {
             joinPoint.getSignature();
             ResultVo<UniCheckTable> result = (ResultVo<UniCheckTable>)returnObj;
             UniCheckTable t = result.getRs();
-            return String.format("编号:%s;名称:%s", t.getId(), t.getName());
+            return String.format("编号:%s;检查内容:%s", t.getId(), t.getContent());
         }
     }
 
@@ -50,7 +50,7 @@ public class UniCheckTableLogDetailBuilder {
         @Override
         public String build(JoinPoint joinPoint, ServletRequestAttributes attributes, Object returnObj) {
             UniCheckTableUpdateForm form = (UniCheckTableUpdateForm) joinPoint.getArgs()[0];
-            return String.format("编号:%s;详情:%s", form.getId(), form.toDomain().toString());
+            return String.format("编号:%s;检查内容:%s", form.getId(), form.toDomain().getContent());
         }
     }
 }

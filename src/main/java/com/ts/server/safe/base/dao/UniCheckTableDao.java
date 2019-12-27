@@ -23,14 +23,11 @@ public class UniCheckTableDao {
         UniCheckTable t = new UniCheckTable();
 
         t.setId(r.getString("id"));
-        t.setSupId("sup_id");
-        t.setContent("content");
-        t.setConDetail("con_detail");
-        t.setLawName("law_name");
-        t.setLawItem("law_item");
-        t.setLawContent("law_content");
-        t.setCheckType(r.getInt("check_type"));
-        t.setShowOrder(r.getInt("show_order"));
+        t.setCheckType(r.getString("check_type"));
+        t.setCheckItem(r.getString("check_item"));
+        t.setContent(r.getString("content"));
+        t.setConDetail(r.getString("con_detail"));
+        t.setLawItem(r.getString("law_item"));
         t.setUpdateTime(r.getTimestamp("update_time"));
         t.setCreateTime(r.getTimestamp("create_time"));
 
@@ -43,18 +40,17 @@ public class UniCheckTableDao {
     }
 
     public void insert(UniCheckTable t){
-        final String sql = "INSERT INTO b_check_table (id, sup_id, content, con_detail, law_name, law_item, law_content, " +
-                "check_type, show_order, update_time, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+        final String sql = "INSERT INTO b_check_table (id, check_type, check_item, content, con_detail, law_item, " +
+                "update_time, create_time) VALUES (?, ?, ?, ?, ?, ?, now(), now())";
 
-        jdbcTemplate.update(sql, t.getId(), t.getSupId(), t.getContent(), t.getConDetail(), t.getLawName(), t.getLawItem(),
-                t.getLawContent(), t.getCheckType(), t.getShowOrder());
+        jdbcTemplate.update(sql, t.getId(), t.getCheckType(), t.getCheckItem(), t.getContent(), t.getConDetail(), t.getLawItem());
     }
 
     public boolean update(UniCheckTable t){
-        final String sql = "UPDATE b_check_table SET content = ?, con_detail = ?, law_name = ?, law_item = ?, " +
-                "law_content = ?, check_type = ?, show_order = ?, update_time = now() WHERE id = ?";
-        return jdbcTemplate.update(sql, t.getContent(), t.getConDetail(), t.getLawName(), t.getLawItem(),
-                t.getLawContent(), t.getCheckType(), t.getShowOrder(), t.getId()) > 0;
+        final String sql = "UPDATE b_check_table SET content = ?, con_detail = ?, law_item = ?, " +
+                "check_type = ?, check_item, update_time = now() WHERE id = ?";
+        return jdbcTemplate.update(sql, t.getContent(), t.getConDetail(),
+                t.getLawItem(), t.getCheckType(), t.getCheckItem(), t.getId()) > 0;
     }
 
     public boolean delete(String id){
@@ -67,42 +63,32 @@ public class UniCheckTableDao {
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
     }
 
-    public Long count(String supId, String name, String content, String lawContent, Integer checkType){
-        String sql = "SELECT COUNT(id) FROM b_check_table WHERE supId LIKE ? AND name LIKE ? AND content LIKE ? " +
-                "AND law_content LIKE ? ";
-        if(checkType != null){
-            sql = sql + "AND check_type = ?";
-        }
+    public Long count(String checkType, String checkItem, String content, String lawItem){
+        final String sql = "SELECT COUNT(id) FROM b_check_table WHERE check_type LIKE ? " +
+                "AND check_item LIKE ? AND content LIKE ? AND law_item LIKE ? ";
 
-        Object[] params = buildParams(supId, name, content, lawContent, checkType);
+        Object[] params = buildParams(checkType, checkItem, content, lawItem);
         return jdbcTemplate.queryForObject(sql, params, Long.class);
     }
 
-    private Object[] buildParams(String supId, String name, String content, String lawContent, Integer checkType){
-        Object[] params = checkType == null? new Object[4]: new Object[5];
+    private Object[] buildParams(String checkType, String checkItem, String content, String lawItem){
+        Object[] params = new Object[4];
 
-        params[0] = DaoUtils.like(supId);
-        params[1] = DaoUtils.like(name);
+        params[0] = DaoUtils.like(checkType);
+        params[1] = DaoUtils.like(checkItem);
         params[2] = DaoUtils.like(content);
-        params[3] = DaoUtils.like(lawContent);
-        if(checkType != null){
-            params[4] = checkType;
-        }
+        params[3] = DaoUtils.like(lawItem);
 
         return params;
     }
 
-    public List<UniCheckTable> find(String supId, String name, String content,
-                                    String lawContent, Integer checkType, int offset, int limit){
+    public List<UniCheckTable> find(String checkType, String checkItem, String content, String lawItem, int offset, int limit){
 
-        String sql = "SELECT COUNT(id) FROM b_check_table WHERE supId LIKE ? AND name LIKE ? AND content LIKE ? " +
-                "AND law_content LIKE ? ";
-        if(checkType != null){
-            sql = sql + "AND check_type = ?";
-        }
-        sql = sql + " ORDER BY show_order ASC, create_time ASC LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM b_check_table WHERE check_type LIKE ? " +
+                "AND check_item LIKE ? AND content LIKE ? AND law_item LIKE ? " +
+                "ORDER BY show_order ASC, create_time ASC LIMIT ? OFFSET ?";
 
-        Object[] params = DaoUtils.appendOffsetLimit(buildParams(supId, name, content, lawContent, checkType), offset, limit);
+        Object[] params = DaoUtils.appendOffsetLimit(buildParams(checkType, checkItem, content, lawItem), offset, limit);
         return jdbcTemplate.query(sql, params, mapper);
     }
 }

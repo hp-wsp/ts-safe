@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
+    <groupId>com.ts.safe</groupId>
     <artifactId>ts-safe</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -20,13 +20,9 @@
         <okhttp3.version>3.10.0</okhttp3.version>
         <swagger.version>1.5.12</swagger.version>
         <springfox.version>2.7.0</springfox.version>
-        <poi.version>4.1.0</poi.version>
         <common-io.version>2.6</common-io.version>
         <commons-compress.version>1.19</commons-compress.version>
-        <qcloudsms.version>1.0.6</qcloudsms.version>
         <kaptcha.version>2.3.2</kaptcha.version>
-        <xdocreport.version>2.0.2</xdocreport.version>
-        <ureport2.version>2.2.9</ureport2.version>
     </properties>
 
     <dependencies>
