@@ -66,7 +66,7 @@ public class UniSuperviseSysController {
         return ResultVo.success(service.get(id));
     }
 
-    @GetMapping(value = "{parentId}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "children/{parentId}", produces = APPLICATION_JSON_VALUE)
     @ApiOperation("查询下级监管分类")
     public ResultVo<List<UniSupervise>> queryChildren(@PathVariable("parentId")String parentId){
         return ResultVo.success(service.queryChildren(parentId));
