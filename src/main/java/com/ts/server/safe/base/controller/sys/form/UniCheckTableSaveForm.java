@@ -20,12 +20,9 @@ public class UniCheckTableSaveForm {
     @ApiModelProperty(value = "检查依据", required = true)
     @NotBlank
     private String lawItem;
-    @ApiModelProperty(value = "检查类型", required = true)
+    @ApiModelProperty(value = "检查项目编号", required = true)
     @NotBlank
-    private String checkType;
-    @ApiModelProperty(value = "检查项目", required = true)
-    @NotBlank
-    private String checkItem;
+    private String itemId;
 
     public String getContent() {
         return content;
@@ -51,30 +48,21 @@ public class UniCheckTableSaveForm {
         this.lawItem = lawItem;
     }
 
-    public String getCheckType() {
-        return checkType;
+    public String getItemId() {
+        return itemId;
     }
 
-    public void setCheckType(String checkType) {
-        this.checkType = checkType;
-    }
-
-    public String getCheckItem() {
-        return checkItem;
-    }
-
-    public void setCheckItem(String checkItem) {
-        this.checkItem = checkItem;
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
     public UniCheckTable toDomain(){
         UniCheckTable t = new UniCheckTable();
 
-//        t.setCheckType(checkType);
-//        t.setCheckItem(checkItem);
         t.setContent(content);
         t.setConDetail(conDetail);
         t.setLawItem(lawItem);
+        t.setItemId(itemId);
 
         return t;
     }

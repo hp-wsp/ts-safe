@@ -4,7 +4,6 @@ import com.ts.server.safe.BaseException;
 import com.ts.server.safe.base.dao.UniCheckItemDao;
 import com.ts.server.safe.base.dao.UniCheckTypeDao;
 import com.ts.server.safe.base.domain.UniCheckType;
-import com.ts.server.safe.common.id.IdGenerators;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -32,11 +31,8 @@ public class UniCheckTypeService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public UniCheckType save(UniCheckType t){
-        t.setId(IdGenerators.uuid());
-
-        dao.insert(t);
-
-        return dao.findOne(t.getId());
+        String id = dao.insert(t);
+        return dao.findOne(id);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

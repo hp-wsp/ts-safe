@@ -1,5 +1,7 @@
 package com.ts.server.safe.base.dao;
 
+import com.ts.server.safe.common.id.IdGenerator;
+import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.common.utils.DaoUtils;
 import com.ts.server.safe.base.domain.UniSpeIndustry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import java.util.List;
 @Repository
 public class UniSpeIndustryDao {
     private final JdbcTemplate jdbcTemplate;
+    private final IdGenerator<String> idGenerator;
 
     private final RowMapper<UniSpeIndustry> mapper = (r, i) -> {
         UniSpeIndustry t = new UniSpeIndustry();
@@ -33,11 +36,15 @@ public class UniSpeIndustryDao {
     @Autowired
     public UniSpeIndustryDao(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.idGenerator = IdGenerators.seqId(
+                dataSource, "seq_spe_industry", e -> String.format("%05d", e));
     }
 
-    public void insert(UniSpeIndustry t){
+    public String insert(UniSpeIndustry t){
+        String id = idGenerator.generate();
         final String sql = "INSERT INTO b_spe_industry (id, name, remark, create_time) VALUES (?, ?, ?, now())";
-        jdbcTemplate.update(sql, t.getId(), t.getName(), t.getRemark());
+        jdbcTemplate.update(sql, id, t.getName(), t.getRemark());
+        return id;
     }
 
     public boolean update(UniSpeIndustry t){

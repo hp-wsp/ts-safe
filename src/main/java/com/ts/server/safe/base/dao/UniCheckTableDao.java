@@ -1,6 +1,8 @@
 package com.ts.server.safe.base.dao;
 
 import com.ts.server.safe.base.domain.UniCheckTable;
+import com.ts.server.safe.common.id.IdGenerator;
+import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.common.utils.DaoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,6 +20,7 @@ import java.util.List;
 @Repository
 public class UniCheckTableDao {
     private final JdbcTemplate jdbcTemplate;
+    private final IdGenerator<String> idGenerator;
 
     private RowMapper<UniCheckTable> mapper = (r, i) -> {
         UniCheckTable t = new UniCheckTable();
@@ -38,14 +41,19 @@ public class UniCheckTableDao {
     @Autowired
     public UniCheckTableDao(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.idGenerator = IdGenerators.seqId(
+                dataSource, "seq_check_table", e -> String.format("%05d", e));
     }
 
-    public void insert(UniCheckTable t){
+    public String insert(UniCheckTable t){
+        String id = idGenerator.generate();
         final String sql = "INSERT INTO b_check_table (id, type_id, type_name, item_id, item_name, content, con_detail, law_item, create_time) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, now())";
 
-        jdbcTemplate.update(sql, t.getId(), t.getTypeId(), t.getTypeName(),
+        jdbcTemplate.update(sql, id, t.getTypeId(), t.getTypeName(),
                 t.getItemId(), t.getItemName(), t.getContent(), t.getConDetail(), t.getLawItem());
+
+        return id;
     }
 
     public boolean update(UniCheckTable t){
@@ -63,6 +71,12 @@ public class UniCheckTableDao {
     public UniCheckTable findOne(String id){
         final String sql = "SELECT * FROM b_check_table WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
+    }
+
+    public boolean hasOfItem(String itemId){
+        final String sql = "SELECT COUNT(id) FROM b_check_table WHERE item_id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{itemId}, Integer.class);
+        return count != null && count > 0;
     }
 
     public Long count(String typeName, String itemName, String content, String lawItem){

@@ -3,7 +3,9 @@ package com.ts.server.safe.base.controller.sys;
 import com.ts.server.safe.base.controller.logger.UniCheckTableLogDetailBuilder;
 import com.ts.server.safe.base.controller.sys.form.UniCheckTableSaveForm;
 import com.ts.server.safe.base.controller.sys.form.UniCheckTableUpdateForm;
+import com.ts.server.safe.base.domain.UniCheckItem;
 import com.ts.server.safe.base.domain.UniCheckTable;
+import com.ts.server.safe.base.service.UniCheckItemService;
 import com.ts.server.safe.base.service.UniCheckTableService;
 import com.ts.server.safe.controller.vo.OkVo;
 import com.ts.server.safe.controller.vo.ResultPageVo;
@@ -28,27 +30,40 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping("/sys/checkTable")
 @ApiACL(value = "ROLE_SYS")
-@Api(value = "/sys/checkTable", tags = "S-管理检查表API接口")
+@Api(value = "/sys/checkTable", tags = "S-管理检查表")
 public class UniCheckTableSysController {
     private final UniCheckTableService service;
+    private final UniCheckItemService itemService;
 
     @Autowired
-    public UniCheckTableSysController(UniCheckTableService service) {
+    public UniCheckTableSysController(UniCheckTableService service, UniCheckItemService itemService) {
         this.service = service;
+        this.itemService = itemService;
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @EnableApiLogger(name = "新增检查表", buildDetail = UniCheckTableLogDetailBuilder.SaveBuilder.class)
     @ApiOperation("新增检查表")
     public ResultVo<UniCheckTable> save(@Valid @RequestBody UniCheckTableSaveForm form){
-        return ResultVo.success(service.save(form.toDomain()));
+        UniCheckTable t = form.toDomain();
+        setItem(t);
+        return ResultVo.success(service.save(t));
+    }
+
+    private void setItem(UniCheckTable t){
+        UniCheckItem item = itemService.get(t.getItemId());
+        t.setTypeId(item.getTypeId());
+        t.setTypeName(item.getTypeName());
+        t.setItemName(item.getName());
     }
 
     @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @EnableApiLogger(name = "修改检查表", buildDetail = UniCheckTableLogDetailBuilder.UpdateBuilder.class)
     @ApiOperation("修改检查表")
     public ResultVo<UniCheckTable> update(@Valid @RequestBody UniCheckTableUpdateForm form){
-        return ResultVo.success(service.update(form.toDomain()));
+        UniCheckTable t = form.toDomain();
+        setItem(t);
+        return ResultVo.success(service.update(t));
     }
 
     @GetMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)

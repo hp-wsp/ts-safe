@@ -1,5 +1,7 @@
 package com.ts.server.safe.base.dao;
 
+import com.ts.server.safe.common.id.IdGenerator;
+import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.common.utils.DaoUtils;
 import com.ts.server.safe.base.domain.UniRiskChemical;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import java.util.List;
 @Repository
 public class UniRiskChemicalDao {
     private final JdbcTemplate jdbcTemplate;
+    private final IdGenerator<String> idGenerator;
 
     private final RowMapper<UniRiskChemical> mapper = (r, i) -> {
         UniRiskChemical t = new UniRiskChemical();
@@ -35,11 +38,15 @@ public class UniRiskChemicalDao {
     @Autowired
     public UniRiskChemicalDao(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.idGenerator = IdGenerators.seqId(
+                dataSource, "seq_risk_chemical", e -> String.format("%05d", e));
     }
 
-    public void insert(UniRiskChemical t){
+    public String insert(UniRiskChemical t){
+        String id = idGenerator.generate();
         final String sql = "INSERT INTO b_risk_chemistry (id, name, alias, cas, remark, create_time) VALUES (?, ?, ?, ?, ?, now())";
-        jdbcTemplate.update(sql, t.getId(), t.getName(), t.getAlias(), t.getCas(), t.getRemark());
+        jdbcTemplate.update(sql, id, t.getName(), t.getAlias(), t.getCas(), t.getRemark());
+        return id;
     }
 
     public boolean update(UniRiskChemical t){

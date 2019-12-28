@@ -41,6 +41,9 @@ spring:
           prep-stmt-cache-sql-limit: 2048
   flyway:
     locations: classpath:/db
+    baseline-on-migrate: false
+    clean-on-validation-error: false
+    clean-disabled: false
     enabled: true
 
 server:

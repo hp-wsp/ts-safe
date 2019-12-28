@@ -1,4 +1,14 @@
 #------------------------------------------------------------------------
+#Sequence
+#------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS s_sequence (
+  seq_key VARCHAR(30) NOT NULL DEFAULT '' COMMENT '序列KEY',
+  cur_value INT(11) NOT NULL COMMENT '序列的当前值',
+  remark VARCHAR(50) NOT NULL DEFAULT '' COMMENT '备注',
+  PRIMARY KEY (seq_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+#------------------------------------------------------------------------
 #操作日志
 #------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS l_operator (
@@ -10,9 +20,7 @@ CREATE TABLE IF NOT EXISTS l_operator (
   create_time DATETIME NOT NULL COMMENT '创建时间',
   PRIMARY KEY (id),
   INDEX idx_name (t_name),
-  INDEX idx_type (t_type),
-  INDEX idx_username (username),
-  INDEX idx_create_time (create_time)
+  INDEX idx_username (username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 #---------------------------------------------------------------------
@@ -58,11 +66,11 @@ CREATE TABLE IF NOT EXISTS b_supervise (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 #-----------------------------------------------------------------------
-#检查类型
+#检查类别
 #-----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS b_check_type (
   id CHAR(32) NOT NULL COMMENT '编号',
-  name VARCHAR(50) NOT NULL COMMENT '检查类别',
+  name VARCHAR(50) NOT NULL COMMENT '名称',
   remark VARCHAR(200)  COMMENT '检查项目',
   create_time DATETIME NOT NULL COMMENT '创建时间',
   PRIMARY KEY (id)
@@ -73,7 +81,8 @@ CREATE TABLE IF NOT EXISTS b_check_type (
 #-----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS b_check_item (
   id CHAR(32) NOT NULL COMMENT '编号',
-  type_id CHAR(32) NOT NULL COMMENT '检查类型编号',
+  type_id CHAR(32) NOT NULL COMMENT '检查类别编号',
+  type_name VARCHAR(50) NOT NULL DEFAULT '' COMMENT '检查类别名称',
   name VARCHAR(50) NOT NULL COMMENT '检查项目名称',
   remark VARCHAR(200)  COMMENT '检查项目',
   create_time DATETIME NOT NULL COMMENT '创建时间',

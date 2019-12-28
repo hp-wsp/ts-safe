@@ -1,5 +1,7 @@
 package com.ts.server.safe.base.dao;
 
+import com.ts.server.safe.common.id.IdGenerator;
+import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.common.utils.DaoUtils;
 import com.ts.server.safe.base.domain.UniSupervise;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import java.util.List;
 @Repository
 public class UniSuperviseDao {
     private final JdbcTemplate jdbcTemplate;
+    private final IdGenerator<String> idGenerator;
 
     private final RowMapper<UniSupervise> mapper = (r, i) -> {
         UniSupervise t = new UniSupervise();
@@ -36,12 +39,16 @@ public class UniSuperviseDao {
     @Autowired
     public UniSuperviseDao(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.idGenerator = IdGenerators.seqId(
+                dataSource, "seq_supervise", e -> String.format("%05d", e));
     }
 
-    public void insert(UniSupervise t){
+    public String insert(UniSupervise t){
+        String id = idGenerator.generate();
         final String sql = "INSERT INTO b_supervise (id, name, num, level, parent_id, remark, create_time) " +
                 "VALUES (?, ?, ?, ?, ?, ?, now())";
-        jdbcTemplate.update(sql, t.getId(), t.getName(), t.getNum(), t.getLevel(), t.getParentId(), t.getRemark());
+        jdbcTemplate.update(sql, id, t.getName(), t.getNum(), t.getLevel(), t.getParentId(), t.getRemark());
+        return id;
     }
 
     public boolean update(UniSupervise t){

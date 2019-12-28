@@ -1,6 +1,8 @@
 package com.ts.server.safe.base.dao;
 
 import com.ts.server.safe.base.domain.UniCheckType;
+import com.ts.server.safe.common.id.IdGenerator;
+import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.common.utils.DaoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,6 +20,7 @@ import java.util.List;
 @Repository
 public class UniCheckTypeDao {
     private final JdbcTemplate jdbcTemplate;
+    private final IdGenerator<String> idGenerator;
 
     private final RowMapper<UniCheckType> mapper = (r, i) -> {
         UniCheckType t = new UniCheckType();
@@ -33,11 +36,15 @@ public class UniCheckTypeDao {
     @Autowired
     public UniCheckTypeDao(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.idGenerator = IdGenerators.seqId(
+                dataSource, "seq_check_type", e -> String.format("%03d", e));
     }
 
-    public void insert(UniCheckType t){
+    public String insert(UniCheckType t){
+        String id = idGenerator.generate();
         final String sql = "INSERT INTO b_check_type (id, name, remark, create_time) VALUES (?, ?, ?, now())";
-        jdbcTemplate.update(sql, t.getId(), t.getName(), t.getRemark());
+        jdbcTemplate.update(sql, id, t.getName(), t.getRemark());
+        return id;
     }
 
     public boolean update(UniCheckType t){

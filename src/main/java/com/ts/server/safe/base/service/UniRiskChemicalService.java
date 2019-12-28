@@ -1,7 +1,6 @@
 package com.ts.server.safe.base.service;
 
 import com.ts.server.safe.BaseException;
-import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.base.dao.UniRiskChemicalDao;
 import com.ts.server.safe.base.domain.UniRiskChemical;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +28,8 @@ public class UniRiskChemicalService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public UniRiskChemical save(UniRiskChemical t){
-        t.setId(IdGenerators.uuid());
-
-        dao.insert(t);
-
-        return dao.findOne(t.getId());
+        String id = dao.insert(t);
+        return dao.findOne(id);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

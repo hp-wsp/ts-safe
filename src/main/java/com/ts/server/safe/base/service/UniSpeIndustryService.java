@@ -29,10 +29,9 @@ public class UniSpeIndustryService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public UniSpeIndustry save(UniSpeIndustry t){
-        t.setId(IdGenerators.uuid());
-        dao.insert(t);
+        String id = dao.insert(t);
 
-        return dao.findOne(t.getId());
+        return dao.findOne(id);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

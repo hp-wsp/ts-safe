@@ -34,11 +34,10 @@ public class UniSuperviseService {
             throw new BaseException("上级监管分类不存在");
         }
 
-        t.setId(IdGenerators.uuid());
         t.setLevel(getLevel(t.getParentId()));
-        dao.insert(t);
+        String id = dao.insert(t);
 
-        return dao.findOne(t.getId());
+        return dao.findOne(id);
     }
 
     private boolean hasParentId(String parentId){

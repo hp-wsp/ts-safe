@@ -1,8 +1,9 @@
 package com.ts.server.safe.base.service;
 
 import com.ts.server.safe.BaseException;
+import com.ts.server.safe.base.dao.UniCheckItemDao;
 import com.ts.server.safe.base.dao.UniCheckTableDao;
-import com.ts.server.safe.base.domain.UniCheckTable;
+import com.ts.server.safe.base.domain.UniCheckItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -12,56 +13,63 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 统一检查表业务服务
+ * 检查项目业务服务
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 @Service
-@Transactional(propagation = Propagation.REQUIRED)
-public class UniCheckTableService {
-    private final UniCheckTableDao dao;
+@Transactional(readOnly = true)
+public class UniCheckItemService {
+    private final UniCheckItemDao dao;
+    private final UniCheckTableDao tableDao;
 
     @Autowired
-    public UniCheckTableService(UniCheckTableDao dao) {
+    public UniCheckItemService(UniCheckItemDao dao, UniCheckTableDao tableDao) {
         this.dao = dao;
+        this.tableDao = tableDao;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public UniCheckTable save(UniCheckTable t){
+    public UniCheckItem save(UniCheckItem t){
         String id = dao.insert(t);
+
         return dao.findOne(id);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public UniCheckTable update(UniCheckTable t){
+    public UniCheckItem update(UniCheckItem t){
         if(!dao.update(t)){
-            throw new BaseException("修改检查表失败");
+            throw new BaseException("修改检查项目失败");
         }
+
         return dao.findOne(t.getId());
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public boolean delete(String id){
+        if(tableDao.hasOfItem(id)){
+            throw new BaseException("有关联检查表");
+        }
         return dao.delete(id);
     }
 
-    public UniCheckTable get(String id){
+    public UniCheckItem get(String id){
         try{
             return dao.findOne(id);
         }catch (DataAccessException e){
-            throw new BaseException("检查表不存在");
+            throw new BaseException("检查项目不存在");
         }
     }
 
-    public Long count(String typeName, String itemName, String content, String lawItem){
-        return dao.count(typeName, itemName, content, lawItem);
+    public Long count(String typeName, String name){
+        return dao.count(typeName, name);
     }
 
-    public List<UniCheckTable> query(String typeName, String itemName, String content, String lawItem, int offset, int limit){
-        return dao.find(typeName, itemName, content, lawItem, offset, limit);
+    public List<UniCheckItem> query(String typeName, String name, int offset, int limit){
+        return dao.find(typeName, name, offset, limit);
     }
 
-    public List<UniCheckTable> queryOfItem(String itemId) {
-        return dao.findOfItem(itemId);
+    public List<UniCheckItem> queryOfType(String typeId){
+        return dao.findOfType(typeId);
     }
 }

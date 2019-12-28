@@ -16,6 +16,8 @@ public class UniCheckItem {
     private String id;
     @ApiModelProperty("类别编号")
     private String typeId;
+    @ApiModelProperty("类别名称")
+    private String typeName;
     @ApiModelProperty("名称")
     private String name;
     @ApiModelProperty("备注")
@@ -37,6 +39,14 @@ public class UniCheckItem {
 
     public void setTypeId(String typeId) {
         this.typeId = typeId;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     public String getName() {
@@ -70,6 +80,7 @@ public class UniCheckItem {
         UniCheckItem that = (UniCheckItem) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(typeId, that.typeId) &&
+                Objects.equals(typeName, that.typeName) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(remark, that.remark) &&
                 Objects.equals(createTime, that.createTime);
@@ -77,7 +88,7 @@ public class UniCheckItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, typeId, name, remark, createTime);
+        return Objects.hash(id, typeId, typeName, name, remark, createTime);
     }
 
     @Override
@@ -85,6 +96,7 @@ public class UniCheckItem {
         return new ToStringBuilder(this)
                 .append("id", id)
                 .append("typeId", typeId)
+                .append("typeName", typeName)
                 .append("name", name)
                 .append("remark", remark)
                 .append("createTime", createTime)
