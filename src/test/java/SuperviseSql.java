@@ -27,7 +27,7 @@ public class SuperviseSql {
                 int index = count.incrementAndGet() -1;
                 if(index > 0){
                     String[] array = StringUtils.splitByWholeSeparatorPreserveAllTokens(e, ",");
-                    String id = String.valueOf(index);
+                    String id = String.format("%05d", index);
                     if(StringUtils.isNotBlank(array[0])){
                         UniSupervise t = build(id, array[0], "root", 1);
                         stack1.push(t);
@@ -42,7 +42,7 @@ public class SuperviseSql {
                         UniSupervise pp = stack1.peek();
                         UniSupervise p = stack2.peek();
                         UniSupervise t = build(id, array[2], p.getId(), 3);
-                        t.setNum(pp.getNum() + "-" + p.getNum()+"-" + String.format("%02d", count3.incrementAndGet()));
+                        t.setNum(pp.getNum()  + p.getNum() + String.format("%02d", count3.incrementAndGet()));
                         list.add(t);
                     }
                 }

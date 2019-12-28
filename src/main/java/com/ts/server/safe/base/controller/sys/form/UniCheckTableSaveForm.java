@@ -70,8 +70,8 @@ public class UniCheckTableSaveForm {
     public UniCheckTable toDomain(){
         UniCheckTable t = new UniCheckTable();
 
-        t.setCheckType(checkType);
-        t.setCheckItem(checkItem);
+//        t.setCheckType(checkType);
+//        t.setCheckItem(checkItem);
         t.setContent(content);
         t.setConDetail(conDetail);
         t.setLawItem(lawItem);

@@ -14,18 +14,20 @@ import java.util.Objects;
 public class UniCheckTable {
     @ApiModelProperty("编号")
     private String id;
-    @ApiModelProperty("检查类别")
-    private String checkType;
-    @ApiModelProperty("检查项目")
-    private String checkItem;
+    @ApiModelProperty("检查类别编号")
+    private String typeId;
+    @ApiModelProperty("检查类别名称")
+    private String typeName;
+    @ApiModelProperty("检查项目编号")
+    private String itemId;
+    @ApiModelProperty("检查项目名称")
+    private String itemName;
     @ApiModelProperty("检查内容")
     private String content;
     @ApiModelProperty("检查内容明细")
     private String conDetail;
     @ApiModelProperty("法律依据")
     private String lawItem;
-    @ApiModelProperty("修改时间")
-    private Date updateTime;
     @ApiModelProperty("创建时间")
     private Date createTime;
 
@@ -37,20 +39,36 @@ public class UniCheckTable {
         this.id = id;
     }
 
-    public String getCheckType() {
-        return checkType;
+    public String getTypeId() {
+        return typeId;
     }
 
-    public void setCheckType(String checkType) {
-        this.checkType = checkType;
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
     }
 
-    public String getCheckItem() {
-        return checkItem;
+    public String getTypeName() {
+        return typeName;
     }
 
-    public void setCheckItem(String checkItem) {
-        this.checkItem = checkItem;
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 
     public String getContent() {
@@ -77,14 +95,6 @@ public class UniCheckTable {
         this.lawItem = lawItem;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -99,30 +109,32 @@ public class UniCheckTable {
         if (o == null || getClass() != o.getClass()) return false;
         UniCheckTable that = (UniCheckTable) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(checkType, that.checkType) &&
-                Objects.equals(checkItem, that.checkItem) &&
+                Objects.equals(typeId, that.typeId) &&
+                Objects.equals(typeName, that.typeName) &&
+                Objects.equals(itemId, that.itemId) &&
+                Objects.equals(itemName, that.itemName) &&
                 Objects.equals(content, that.content) &&
                 Objects.equals(conDetail, that.conDetail) &&
                 Objects.equals(lawItem, that.lawItem) &&
-                Objects.equals(updateTime, that.updateTime) &&
                 Objects.equals(createTime, that.createTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, checkType, checkItem, content, conDetail, lawItem, updateTime, createTime);
+        return Objects.hash(id, typeId, typeName, itemId, itemName, content, conDetail, lawItem, createTime);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .append("id", id)
-                .append("checkType", checkType)
-                .append("checkItem", checkItem)
+                .append("typeId", typeId)
+                .append("typeName", typeName)
+                .append("itemId", itemId)
+                .append("itemName", itemName)
                 .append("content", content)
                 .append("conDetail", conDetail)
                 .append("lawItem", lawItem)
-                .append("updateTime", updateTime)
                 .append("createTime", createTime)
                 .toString();
     }

@@ -67,17 +67,16 @@ public class UniCheckTableSysController {
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ApiOperation("查询检查表")
     public ResultPageVo<UniCheckTable> query(
-            @ApiParam(value = "检查分类编好") @RequestParam(required = false) String supId,
-            @ApiParam(value = "检查类型") @RequestParam(required = false) String checkType,
-            @ApiParam(value = "检查项目") @RequestParam(required = false) String checkItem,
+            @ApiParam(value = "检查类型") @RequestParam(required = false) String typeName,
+            @ApiParam(value = "检查项目") @RequestParam(required = false) String itemName,
             @ApiParam(value = "检查内容") @RequestParam(required = false) String content,
             @ApiParam(value = "法律内容") @RequestParam(required = false) String lawItem,
             @RequestParam(defaultValue = "true") @ApiParam(value = "是否得到查询记录数") boolean isCount,
             @RequestParam(defaultValue = "0") @ApiParam(value = "查询页数") int page,
             @RequestParam(defaultValue = "15") @ApiParam(value = "查询每页记录数") int rows){
 
-        return new ResultPageVo.Builder<>(page, rows, service.query(checkType, checkItem, content, lawItem, page * rows, rows))
-                .count(isCount, () -> service.count(checkType, checkItem, content, lawItem))
+        return new ResultPageVo.Builder<>(page, rows, service.query(typeName, itemName, content, lawItem, page * rows, rows))
+                .count(isCount, () -> service.count(typeName, itemName, content, lawItem))
                 .build();
     }
 }
