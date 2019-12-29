@@ -2,6 +2,7 @@ package com.ts.server.safe.security.kaptcha;
 
 import com.google.code.kaptcha.Producer;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.google.code.kaptcha.text.TextProducer;
 import com.google.code.kaptcha.util.Config;
 import com.ts.server.safe.security.kaptcha.code.KaptchaCodeService;
 import org.apache.commons.lang3.StringUtils;
@@ -42,7 +43,12 @@ public class KaptchaService {
         pro.setProperty("kaptcha.textproducer.font.color", properties.getFontColor());
         pro.setProperty("kaptcha.textproducer.font.size", String.valueOf(properties.getFontSize()));
         pro.setProperty("kaptcha.textproducer.char.length", String.valueOf(properties.getCharLength()));
-        return new Config(pro);
+        return new Config(pro){
+            @Override
+            public TextProducer getTextProducerImpl() {
+                return new SecureTextProducer();
+            }
+        };
     }
 
     public void writCodeImage(String codeKey, OutputStream outputStream)throws IOException {
