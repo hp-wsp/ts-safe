@@ -69,8 +69,13 @@ public class UniCheckTypeDao {
     }
 
     public List<UniCheckType> find(String name, int offset, int limit){
-        final String sql = "SELECT * FROM b_check_type WHERE name LIKE ? ORDER BY create_time ASC LIMIT ? OFFSET ?";
+        final String sql = "SELECT * FROM b_check_type WHERE name LIKE ? ORDER BY id ASC LIMIT ? OFFSET ?";
         String nameLike = DaoUtils.like(name);
         return jdbcTemplate.query(sql, new Object[]{nameLike, limit, offset}, mapper);
+    }
+
+    public List<UniCheckType> findAll(){
+        final String sql = "SELECT * FROM b_check_type ORDER BY id ASC";
+        return jdbcTemplate.query(sql, mapper);
     }
 }

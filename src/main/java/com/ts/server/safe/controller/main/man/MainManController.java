@@ -56,7 +56,7 @@ public class MainManController {
     @PostMapping(value = "login", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @EnableApiLogger(name = "用户登录", type = "loginMan", buildDetail = LoginLogDetailBuilder.class, obtainUsername = ObtainLoginUsername.class)
     @ApiOperation("申报人员登录")
-    public ResultVo<LoginVo<Member>> memberLogin(@Valid @RequestBody LoginForm form){
+    public ResultVo<LoginVo<Member>> login(@Valid @RequestBody LoginForm form){
 
         //放置于管理员用户名冲突
         String username = String.format("DEC_%s", form.getUsername());

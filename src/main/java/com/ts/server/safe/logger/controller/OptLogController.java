@@ -3,6 +3,7 @@ package com.ts.server.safe.logger.controller;
 import com.ts.server.safe.controller.vo.ResultPageVo;
 import com.ts.server.safe.logger.domain.OptLog;
 import com.ts.server.safe.logger.service.OptLogService;
+import com.ts.server.safe.security.annotation.ApiACL;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -24,8 +25,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 @RestController
-@RequestMapping("/manage/logger")
-@Api(value = "/manage/logger", tags = "日志查询API接口")
+@RequestMapping("/sys/logger")
+@ApiACL("ROLE_SYS")
+@Api(value = "/sys/logger", tags = "日志查询API接口")
 public class OptLogController {
     private final OptLogService service;
 

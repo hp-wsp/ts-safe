@@ -92,7 +92,12 @@ public class MemberService {
     public Optional<Member> getValidate(String username, String password){
         try{
             Member m = dao.findOneByUsername(username);
+            if(m.getStatus() != Member.Status.ACTIVE){
+                throw new BaseException(106, "用户被禁用，请联系管理员");
+            }
             return StringUtils.equals(m.getPassword(), password)? Optional.of(m): Optional.empty();
+        }catch (BaseException e){
+            throw e;
         }catch (Exception e){
             LOGGER.error("Get member username={},throw={}", username, e.getMessage());
             return Optional.empty();

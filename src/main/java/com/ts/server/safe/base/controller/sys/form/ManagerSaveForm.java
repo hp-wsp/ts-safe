@@ -4,6 +4,7 @@ import com.ts.server.safe.base.domain.Manager;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -25,7 +26,7 @@ public class ManagerSaveForm {
     @NotBlank
     private String password;
     @ApiModelProperty(value = "用户角色")
-    @NotBlank
+    @NotEmpty
     private String[] roles;
     @ApiModelProperty(value = "是否禁用")
     @NotNull

@@ -37,7 +37,7 @@ public class ManagerLogDetailBuilder {
         @Override
         @SuppressWarnings("unchecked")
         public String build(JoinPoint joinPoint, ServletRequestAttributes attributes, Object returnObj) {
-            ResultVo<Manager> result = (ResultVo<Manager>)joinPoint.getTarget();
+            ResultVo<Manager> result = (ResultVo<Manager>)returnObj;
             Manager t = result.getRs();
             return String.format("编号:%s;用户名:%s", t.getId(), t.getUsername());
         }
@@ -50,7 +50,7 @@ public class ManagerLogDetailBuilder {
         @Override
         public String build(JoinPoint joinPoint, ServletRequestAttributes attributes, Object returnObj) {
             ManagerUpdateForm form = (ManagerUpdateForm) joinPoint.getArgs()[0];
-            return String.format("编号:%s;详情:%s", form.getId(), form.toDomain().toString());
+            return String.format("编号:%s;用户名:%s", form.getId(), form.toDomain().getUsername());
         }
     }
 
@@ -62,7 +62,7 @@ public class ManagerLogDetailBuilder {
         @SuppressWarnings("unchecked")
         public String build(JoinPoint joinPoint, ServletRequestAttributes attributes, Object returnObj) {
             PasswordResetForm form = (PasswordResetForm) joinPoint.getArgs()[0];
-            ResultVo<OkVo> result = (ResultVo<OkVo>)joinPoint.getTarget();
+            ResultVo<OkVo> result = (ResultVo<OkVo>)returnObj;
             boolean ok = result.getRs().isOk();
             return String.format("重置密码:%s;用户编号:%s", ok?"成功":"失败", form.getId());
         }

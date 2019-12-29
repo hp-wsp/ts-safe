@@ -28,27 +28,33 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/man/account")
 @ApiACL("ROLE_AUTHENTICATION")
 @Api(value = "/man/account", tags = "申报端基础API接口")
-public class AccountDecController {
+public class AccountManController {
 
     private final MemberService memberService;
 
     @Autowired
-    public AccountDecController(MemberService memberService) {
+    public AccountManController(MemberService memberService) {
         this.memberService = memberService;
     }
 
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("得到用户信息")
+    public ResultVo<Member> get(){
+        String id = getCredential().getId();
+        return ResultVo.success(memberService.get(id));
+    }
 
     @PostMapping(value = "updatePassword", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @EnableApiLogger(name = "修改申报员密码", buildDetail = AccountManLogDetailBuilder.UpdatePasswordBuilder.class)
-    @ApiOperation("修改申报员密码")
+    @EnableApiLogger(name = "修改用户密码", buildDetail = AccountManLogDetailBuilder.UpdatePasswordBuilder.class)
+    @ApiOperation("修改用户密码")
     public ResultVo<OkVo> updatePassword(@Validated @RequestBody PasswordUpdateForm form){
         String id = getCredential().getId();
         return ResultVo.success(new OkVo(memberService.updatePassword(id, form.getPassword(), form.getNewPassword())));
     }
 
-    @PutMapping(value = "account", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @EnableApiLogger(name = "修改管理员信息", buildDetail = AccountManLogDetailBuilder.UpdateAccountBuilder.class)
-    @ApiOperation("修改申报员信息")
+    @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @EnableApiLogger(name = "修改用户信息", buildDetail = AccountManLogDetailBuilder.UpdateAccountBuilder.class)
+    @ApiOperation("修改用户信息")
     public ResultVo<Member> updateAccount(@Validated @RequestBody AccountManForm form){
         Member m = memberService.get(getCredential().getId());
         m.setName(form.getName());

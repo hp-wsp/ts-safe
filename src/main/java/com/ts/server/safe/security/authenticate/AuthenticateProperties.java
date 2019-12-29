@@ -12,7 +12,7 @@ import java.util.List;
  */
 @ConfigurationProperties(prefix="security.auth")
 public class AuthenticateProperties {
-    private boolean enable = true;
+    private boolean enable = false;
     private String matcher = "ant";
     private List<Authentication> authentications = Collections.emptyList();
 

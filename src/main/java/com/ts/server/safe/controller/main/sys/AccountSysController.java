@@ -30,11 +30,18 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Api(value = "/sys/account", tags = "S-管理端账户API接口")
 public class AccountSysController {
 
-    private final ManagerService managerService;
+    private final ManagerService service;
 
     @Autowired
-    public AccountSysController(ManagerService managerService) {
-        this.managerService = managerService;
+    public AccountSysController(ManagerService service) {
+        this.service = service;
+    }
+
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("获取管理员信息")
+    public ResultVo<Manager> get(){
+        String id = getCredential().getId();
+        return ResultVo.success(service.get(id));
     }
 
     @PostMapping(value = "updatePassword", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -42,19 +49,19 @@ public class AccountSysController {
     @ApiOperation("修改密码")
     public ResultVo<OkVo> updatePassword(@Validated @RequestBody PasswordUpdateForm form){
         String id = getCredential().getId();
-        return ResultVo.success(new OkVo(managerService.updatePassword(id, form.getPassword(), form.getNewPassword())));
+        return ResultVo.success(new OkVo(service.updatePassword(id, form.getPassword(), form.getNewPassword())));
     }
 
     @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @EnableApiLogger(name = "修改管理员信息", buildDetail = AccountSysLogDetailBuilder.UpdateAccountBuilder.class)
     @ApiOperation("修改管理员信息")
     public ResultVo<Manager> updateAccount(@Validated @RequestBody AccountSysForm form){
-        Manager m = managerService.get(getCredential().getId());
+        Manager m = service.get(getCredential().getId());
         m.setName(form.getName());
         m.setPhone(form.getPhone());
         m.setEmail(form.getEmail());
 
-        return ResultVo.success(managerService.update(m));
+        return ResultVo.success(service.update(m));
     }
 
     private Credential getCredential(){

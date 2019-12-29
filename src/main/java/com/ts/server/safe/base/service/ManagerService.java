@@ -66,13 +66,15 @@ public class ManagerService {
     }
 
     public Optional<Manager> getValidate(String username, String password){
-        try{
+        try {
             Manager m = dao.findOneByUsername(username);
-            if(m.isForbid()){
-                throw new BaseException("用户被禁用，请联系管理员");
+            if (m.isForbid()) {
+                throw new BaseException(106, "用户被禁用，请联系管理员");
             }
-            return StringUtils.equals(m.getPassword(), password)? Optional.of(m): Optional.empty();
-        }catch (Exception e){
+            return StringUtils.equals(m.getPassword(), password) ? Optional.of(m) : Optional.empty();
+        }catch (BaseException e){
+            throw e;
+        }catch (DataAccessException e){
             LOGGER.error("Get manager username={},throw={}", username, e.getMessage());
             return Optional.empty();
         }

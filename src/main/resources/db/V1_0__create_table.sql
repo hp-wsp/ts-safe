@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS b_spe_industry (
 # 危化品目录
 #------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS b_risk_chemistry (
-  id CHAR(32) NOT NULL COMMENT '编号',
+  id CHAR(5) NOT NULL COMMENT '编号',
   name VARCHAR(30) NOT NULL COMMENT '名称',
   alias VARCHAR(30) COMMENT '别名',
   cas VARcHAR(32) NOT NULL DEFAULT '' COMMENT 'CAS编号',
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS b_risk_chemistry (
 #监管分类
 #-----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS b_supervise (
-  id CHAR(32) NOT NULL COMMENT '编号',
+  id CHAR(5) NOT NULL COMMENT '编号',
   num VARCHAR(40) NOT NULL COMMENT '监管分类编号',
   name VARCHAR(30) NOT NULL COMMENT '名称',
   level TINYINT NOT NULL DEFAULT 0 COMMENT '类别级别',
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS b_supervise (
 #检查类别
 #-----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS b_check_type (
-  id CHAR(32) NOT NULL COMMENT '编号',
+  id CHAR(3) NOT NULL COMMENT '编号',
   name VARCHAR(50) NOT NULL COMMENT '名称',
   remark VARCHAR(200)  COMMENT '检查项目',
   create_time DATETIME NOT NULL COMMENT '创建时间',
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS b_check_type (
 #检查项目
 #-----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS b_check_item (
-  id CHAR(32) NOT NULL COMMENT '编号',
+  id CHAR(3) NOT NULL COMMENT '编号',
   type_id CHAR(32) NOT NULL COMMENT '检查类别编号',
   type_name VARCHAR(50) NOT NULL DEFAULT '' COMMENT '检查类别名称',
   name VARCHAR(50) NOT NULL COMMENT '检查项目名称',
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS b_check_item (
 #检查表
 #-----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS b_check_table (
-  id CHAR(32) NOT NULL COMMENT '编号',
+  id CHAR(5) NOT NULL COMMENT '编号',
   type_id CHAR(32) NOT NULL COMMENT '检查类型编号',
   type_name VARCHAR(40) NOT NULL COMMENT '检查类型名称',
   item_id CHAR(32) NOT NULL COMMENT '检查项目编号',

@@ -101,14 +101,14 @@ public class UniCheckTableDao {
     public List<UniCheckTable> find(String typeName, String itemName, String content, String lawItem, int offset, int limit){
 
         final String sql = "SELECT * FROM b_check_table WHERE type_name LIKE ? AND item_name LIKE ? " +
-                "AND content LIKE ? AND law_item LIKE ? ORDER BY create_time LIMIT ? OFFSET ?";
+                "AND content LIKE ? AND law_item LIKE ? ORDER BY id LIMIT ? OFFSET ?";
 
         Object[] params = DaoUtils.appendOffsetLimit(buildParams(typeName, itemName, content, lawItem), offset, limit);
         return jdbcTemplate.query(sql, params, mapper);
     }
 
     public List<UniCheckTable> findOfItem(String itemId){
-        final String sql = "SELECT * FROM b_check_table WHERE item_id = ? ORDER BY create_time ASC";
+        final String sql = "SELECT * FROM b_check_table WHERE item_id = ? ORDER BY id ASC";
         return jdbcTemplate.query(sql, new Object[]{itemId}, mapper);
     }
 }

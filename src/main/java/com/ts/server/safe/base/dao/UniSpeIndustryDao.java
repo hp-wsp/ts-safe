@@ -71,6 +71,6 @@ public class UniSpeIndustryDao {
     public List<UniSpeIndustry> find(String name, int offset, int limit){
         final String sql = "SELECT * FROM b_spe_industry WHERE name LIKE ? ORDER BY create_time LIMIT ? OFFSET ?";
         String nameLike = DaoUtils.like(name);
-        return jdbcTemplate.query(sql, new Object[]{nameLike},mapper);
+        return jdbcTemplate.query(sql, new Object[]{nameLike, limit, offset},mapper);
     }
 }

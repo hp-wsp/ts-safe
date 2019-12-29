@@ -66,4 +66,8 @@ public class UniCheckTypeService {
     public List<UniCheckType> query(String name, int offset, int limit){
         return dao.find(name, offset, limit);
     }
+
+    public List<UniCheckType> queryAll(){
+        return dao.findAll();
+    }
 }

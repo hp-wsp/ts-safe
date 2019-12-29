@@ -50,7 +50,7 @@ public class ChannelLogDetailBuilder {
         @Override
         public String build(JoinPoint joinPoint, ServletRequestAttributes attributes, Object returnObj) {
             ChannelUpdateForm form = (ChannelUpdateForm) joinPoint.getArgs()[0];
-            return String.format("编号:%s;详情:%s", form.getId(), form.toDomain().toString());
+            return String.format("编号:%s;服务商名称:%s", form.getId(), form.toDomain().getName());
         }
     }
 }
