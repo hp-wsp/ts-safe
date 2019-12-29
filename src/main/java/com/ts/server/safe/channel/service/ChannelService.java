@@ -52,7 +52,7 @@ public class ChannelService {
         member.setPassword(password);
         member.setRoot(true);
         member.setRoles(new String[]{"ROLE_MAN_SYS"});
-        member.setStatus(Member.Status.ACTIVE);
+        member.setStatus(Member.Status.INACTIVE);
         memberService.save(member);
     }
 
