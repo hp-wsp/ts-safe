@@ -1,5 +1,7 @@
 package com.ts.server.safe.channel.controller.man.form;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ts.server.safe.channel.domain.Contract;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -34,12 +36,15 @@ public class ContractSaveForm {
     private String serAddress;
     @ApiModelProperty(value = "签订合同时间", required = true)
     @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date sigConDate;
     @ApiModelProperty(value = "项目属地")
     private String proAddress;
     @ApiModelProperty(value = "合同约定服务周期开始时间")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date serConDateFrom;
     @ApiModelProperty(value = "合同约定服务周期结束时间")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date serConDateTo;
     @ApiModelProperty(value = "合同金额", required = true)
     @Min(0)

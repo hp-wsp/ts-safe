@@ -78,6 +78,12 @@ public class ContractDao {
                 t.getOwnPhone(), t.getSigPerson(), t.getSigCompany(), t.getId()) > 0;
     }
 
+    public boolean hasNum(String channelId, String num){
+        final String sql = "SELECT COUNT(id) FROM c_contract WHERE channel_id = ? AND num = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{channelId, num}, Integer.class);
+        return count != null && count > 0;
+    }
+
     public boolean updateService(String id, String serviceId){
         final String sql = "UPDATE c_contract SET service_id = ? WHERE id = ?";
         return jdbcTemplate.update(sql, serviceId, id) > 0;

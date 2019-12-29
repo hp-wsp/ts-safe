@@ -37,9 +37,13 @@ public class ContractService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public Contract save(Contract t){
+        if(dao.hasNum(t.getChannelId(), t.getNum())){
+            throw  new BaseException("合同编号已经存在");
+        }
+
         t.setId(IdGenerators.uuid());
 
-        CompInfo info = compInfoService.get(t.getChannelId());
+        CompInfo info = compInfoService.get(t.getSerCompId());
         t.setSerCompName(info.getName());
 
         dao.insert(t);
@@ -49,7 +53,13 @@ public class ContractService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public Contract update(Contract t){
-        CompInfo info = compInfoService.get(t.getChannelId());
+        Contract o = get(t.getId());
+        if(!StringUtils.equals(o.getNum(), t.getNum()) &&
+                dao.hasNum(o.getChannelId(), t.getNum())){
+            throw  new BaseException("合同编号已经存在");
+        }
+
+        CompInfo info = compInfoService.get(t.getSerCompId());
         t.setSerCompName(info.getName());
 
         if(!dao.update(t)){

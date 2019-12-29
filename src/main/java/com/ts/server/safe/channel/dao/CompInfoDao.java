@@ -44,7 +44,7 @@ public class CompInfoDao {
                 "reg_date = ?, bus_status = ?, legal_person = ?, legal_phone = ?, legal_mobile = ?, safe_person = ?, " +
                 "safe_phone = ?, safe_mobile = ?, contact = ?, phone = ?, mobile = ?, credit_code = ?, post_code = ?," +
                 "ind_ctg_ids = ?, ind_ctg_names = ?, ind_phone = ?, ent_scale = ?, ind_of_company = ?, mem_fun = ?," +
-                "man_product = ?, profile = ?, images = ?, update = now() WHERE id = ? AND channel_id = ?";
+                "man_product = ?, profile = ?, images = ?, update_time = now() WHERE id = ? AND channel_id = ?";
 
         return jdbcTemplate.update(sql, t.getName(), t.getProvince(), t.getCity(), t.getCountry(), t.getAddress(), t.getRegAddress(),
                 t.getRegDate(), t.getBusStatus(), t.getLegalPerson(), t.getLegalPhone(), t.getLegalMobile(), t.getSafePerson(),
@@ -72,7 +72,7 @@ public class CompInfoDao {
     public Long count(String channelId, String name, String province,
                       String city, String country, String indCtgId, String contact, String phone){
 
-        final String sql = "SELECT * FROM c_comp_info WHERE channel_id = ? AND name LIKE ? AND province LIKE ? AND city LIKE ? " +
+        final String sql = "SELECT COUNT(id) FROM c_comp_info WHERE channel_id = ? AND name LIKE ? AND province LIKE ? AND city LIKE ? " +
                 "AND country LIKE ? AND ind_ctg_ids LIKE ? AND contact LIKE ? AND phone LIKE ?";
 
         String nameLike = DaoUtils.like(name);

@@ -220,9 +220,10 @@ CREATE TABLE IF NOT EXISTS c_comp_info (
 #------------------------------------------------------------------------
 #合同
 #------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS c_contact (
+CREATE TABLE IF NOT EXISTS c_contract (
   id CHAR(32) NOT NULL,
   channel_id CHAR(32) NOT NULL COMMENT '服务商编号',
+  service_id CHAR(32) COMMENT '关联服务编号',
   num VARCHAR(64) NOT NULL COMMENT '合同编号',
   name VARCHAR(30) COMMENT '合同名称',
   con_project VARCHAR(30) DEFAULT '' COMMENT '咨询服务项目',
@@ -239,13 +240,13 @@ CREATE TABLE IF NOT EXISTS c_contact (
   own_person VARCHAR(30) COMMENT '甲方联系人',
   own_phone  VARCHAR(20) COMMENT '甲方联系方式',
   sig_person VARCHAR(30) COMMENT '我方签单人',
-  sig_phone  VARCHAR(20) COMMENT '我方签单单位',
+  sig_company  VARCHAR(20) COMMENT '我方签单单位',
   update_time DATETIME NOT NULL COMMENT '修改时间',
   create_time DATETIME NOT NULL COMMENT '创建时间',
   PRIMARY KEY (id),
   UNIQUE KEY idx_num (num),
   INDEX idx_channel_id (channel_id),
-  INDEX idx_ser_comp_name (ent_comp_name)
+  INDEX idx_ent_comp_name (ent_comp_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 #------------------------------------------------------------------------
