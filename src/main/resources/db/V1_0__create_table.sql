@@ -24,6 +24,21 @@ CREATE TABLE IF NOT EXISTS l_operator (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 #---------------------------------------------------------------------
+#行政区划
+#---------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS b_district (
+  id CHAR(32) NOT NULL COMMENT '编号',
+  name VARCHAR(50) NOT NULL COMMENT '名称',
+  full_name VARCHAR(50) COMMENT '全名称',
+  parent_id CHAR(32) NOT NULL COMMENT '上级区划编号',
+  location VARCHAR(20) COMMENT '地理位置',
+  level TINYINT NOT NULL DEFAULT 0 COMMENT '级别',
+  create_time DATETIME NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (id),
+  INDEX idx_level (level)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+#---------------------------------------------------------------------
 #特种行业
 #---------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS b_spe_industry (

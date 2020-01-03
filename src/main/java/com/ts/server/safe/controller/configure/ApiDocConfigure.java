@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Api文档配置
+ * api doc配置
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
@@ -28,7 +28,7 @@ import java.util.List;
 public class ApiDocConfigure {
 
     @Bean
-    public Docket createSysRestApi() {
+    public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .globalOperationParameters(buildHeadParameters())
                 .apiInfo(apiInfo())
@@ -53,7 +53,7 @@ public class ApiDocConfigure {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Ts-Safe API文档")
-                .termsOfServiceUrl("http://api.tuoshecx.com/safe")
+                .termsOfServiceUrl("http://safe.tuoshecx.com/api/v2/api-docs")
                 .contact(new Contact("WangWei", "", "hhywangwei@gmail.com"))
                 .version("1.0")
                 .build();

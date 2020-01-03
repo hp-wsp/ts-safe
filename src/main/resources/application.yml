@@ -51,3 +51,6 @@ server:
   compression:
     enabled: true
     mime-types: text/html,application/json
+
+tencent:
+  map_key: L2XBZ-L7LWD-GAV46-H23SI-KAGJF-KRFUN

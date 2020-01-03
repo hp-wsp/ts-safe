@@ -33,7 +33,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  */
 @RestController
 @RequestMapping(value = "/man/conService")
-@Api(value = "/man/conService", tags = "M-管理合同API接口")
+@Api(value = "/man/conService", tags = "M-管理合同服务API接口")
 public class ConServiceManController {
     private final ConServiceService service;
 

@@ -17,7 +17,7 @@
     <properties>
         <java.version>11</java.version>
         <lang3.version>3.4</lang3.version>
-        <okhttp3.version>3.10.0</okhttp3.version>
+        <okhttp3.version>3.14.4</okhttp3.version>
         <swagger.version>1.5.12</swagger.version>
         <springfox.version>2.7.0</springfox.version>
         <common-io.version>2.6</common-io.version>
@@ -70,6 +70,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
             <version>${commons-compress.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp3.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.penggle</groupId>
