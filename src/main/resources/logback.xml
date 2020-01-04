@@ -31,7 +31,7 @@
 
     <root level="INFO">
         <appender-ref ref="stdout"/>
-        <!--<appender-ref ref="file"/>-->
+        <appender-ref ref="file"/>
     </root>
 
     <logger name="com.ts.server.safe" level="DEBUG"/>

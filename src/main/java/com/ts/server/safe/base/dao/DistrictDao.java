@@ -1,7 +1,7 @@
-package com.ts.server.safe.tencent.dao;
+package com.ts.server.safe.base.dao;
 
 import com.ts.server.safe.common.utils.DaoUtils;
-import com.ts.server.safe.tencent.domain.District;
+import com.ts.server.safe.base.domain.District;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -42,6 +42,11 @@ public class DistrictDao {
         final String sql = "INSERT INTO b_district (id, name, full_name, location, parent_id, level, create_time) " +
                 "VALUES (?, ?, ?, ?, ?, ?, now())";
         jdbcTemplate.update(sql, t.getId(), t.getName(), t.getFullName(), DaoUtils.join(t.getLocation()), t.getParentId(), t.getLevel());
+    }
+
+    public boolean update(District t){
+        final String sql = "UPDATE b_district name = ?, full_name = ?, location = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, t.getName(), t.getFullName(), DaoUtils.join(t.getLocation()), t.getId()) > 0;
     }
 
     public boolean has(String id){

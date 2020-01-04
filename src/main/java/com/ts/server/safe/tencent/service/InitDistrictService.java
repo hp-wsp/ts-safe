@@ -1,7 +1,7 @@
 package com.ts.server.safe.tencent.service;
 
-import com.ts.server.safe.tencent.dao.DistrictDao;
-import com.ts.server.safe.tencent.domain.District;
+import com.ts.server.safe.base.dao.DistrictDao;
+import com.ts.server.safe.base.domain.District;
 import com.ts.server.safe.tencent.map.QqMapService;
 import com.ts.server.safe.tencent.map.client.response.DistrictResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 /**
  * 行政区划业务服务
  *
@@ -19,12 +17,12 @@ import java.util.List;
  */
 @Service
 @Transactional(readOnly = true)
-public class DistrictService {
+public class InitDistrictService {
     private final DistrictDao dao;
     private final QqMapService mapService;
 
     @Autowired
-    public DistrictService(DistrictDao dao, QqMapService mapService) {
+    public InitDistrictService(DistrictDao dao, QqMapService mapService) {
         this.dao = dao;
         this.mapService = mapService;
     }
@@ -54,9 +52,5 @@ public class DistrictService {
             int nextLevel = level + 1;
             saveDistrict(t.getId(), nextLevel);
         });
-    }
-
-    public List<District> query(String parentId){
-        return dao.find(parentId);
     }
 }

@@ -1,4 +1,4 @@
-package com.ts.server.safe.tencent.domain;
+package com.ts.server.safe.base.domain;
 
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
