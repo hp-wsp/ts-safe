@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS b_check_type (
 #-----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS b_check_item (
   id CHAR(3) NOT NULL COMMENT '编号',
-  type_id CHAR(32) NOT NULL COMMENT '检查类别编号',
+  type_id CHAR(3) NOT NULL COMMENT '检查类别编号',
   type_name VARCHAR(50) NOT NULL DEFAULT '' COMMENT '检查类别名称',
   name VARCHAR(50) NOT NULL COMMENT '检查项目名称',
   remark VARCHAR(200)  COMMENT '检查项目',
@@ -110,9 +110,9 @@ CREATE TABLE IF NOT EXISTS b_check_item (
 #-----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS b_check_table (
   id CHAR(5) NOT NULL COMMENT '编号',
-  type_id CHAR(32) NOT NULL COMMENT '检查类型编号',
+  type_id CHAR(3) NOT NULL COMMENT '检查类型编号',
   type_name VARCHAR(40) NOT NULL COMMENT '检查类型名称',
-  item_id CHAR(32) NOT NULL COMMENT '检查项目编号',
+  item_id CHAR(3) NOT NULL COMMENT '检查项目编号',
   item_name VARCHAR(50) NOT NULL COMMENT '检查项目名称',
   content VARCHAR(200) NOT NULL DEFAULT '' COMMENT '检查内容',
   con_detail VARCHAR(2000) NOT NULL DEFAULT '' COMMENT '检查内容明细',
@@ -306,4 +306,49 @@ CREATE TABLE IF NOT EXISTS c_service_item (
   PRIMARY KEY (id),
   INDEX idx_service_id (service_id),
   INDEX idx_item_id (item_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+#------------------------------------------------------------------------
+#检查任务
+#------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS c_check_task (
+  id CHAR(32) NOT NULL COMMENT '编号',
+  channel_id CHAR(32) NOT NULL COMMENT '服务商编号',
+  service_id CHAR(32) NOT NULL COMMENT '服务编号',
+  service_name VARCHAR(30) NOT NULL COMMENT '服务名称',
+  comp_id CHAR(32) NOT NULL COMMENT '企业编号',
+  comp_name VARCHAR(30) NOT NULL COMMENT '企业名称',
+  check_time_from DATE NOT NULL COMMENT '检查开始时间',
+  check_time_to DATE NOT NULL COMMENT '检查结束时间',
+  check_user_ids VARCHAR(200) NOT NULL COMMENT '检查人员编号集合',
+  check_user_names VARCHAR(200) NOT NULL COMMENT '检查人员名称集合',
+  check_table_ids VARCHAR(200) NOT NULL COMMENT '检查表集合',
+  check_table_names VARCHAR(200) NOT NULL COMMENT '检查表名称集合',
+  status ENUM('WAIT','FINISH') NOT NULL DEFAULT 'WAIT' COMMENT '状态',
+  update_time DATETIME NOT NULL COMMENT '修改时间',
+  create_time DATETIME NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (id),
+  INDEX idx_channel_id (channel_id),
+  INDEX idx_service_name (service_name),
+  INDEX idx_comp_name (comp_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+#-----------------------------------------------------------------------
+#检查内容
+#-----------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS c_check_content (
+  id CHAR(32) NOT NULL COMMENT '编号',
+  task_id CHAR(32) NOT NULL COMMENT '检查任务编号',
+  table_id CHAR(5) NOT NULL COMMENT '检查表编号',
+  type_id CHAR(3) NOT NULL COMMENT '检查类型编号',
+  type_name VARCHAR(40) NOT NULL COMMENT '检查类型名称',
+  item_id CHAR(3) NOT NULL COMMENT '检查项目编号',
+  item_name VARCHAR(50) NOT NULL COMMENT '检查项目名称',
+  content VARCHAR(200) NOT NULL DEFAULT '' COMMENT '检查内容',
+  con_detail VARCHAR(2000) NOT NULL DEFAULT '' COMMENT '检查内容明细',
+  law_item VARCHAR(200) NOT NULL DEFAULT '' COMMENT '法律依据',
+  update_time DATETIME NOT NULL COMMENT '修改时间',
+  create_time DATETIME NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (id),
+  UNIQUE KEY idx_task_id_table_id (task_id, table_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

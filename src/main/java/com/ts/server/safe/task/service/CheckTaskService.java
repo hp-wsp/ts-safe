@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * 检查任务业务服务
  *
@@ -23,20 +25,26 @@ import org.springframework.transaction.annotation.Transactional;
 public class CheckTaskService {
     private final CheckTaskDao dao;
     private final ConServiceService conService;
+    private final CheckContentService contentService;
 
     @Autowired
-    public CheckTaskService(CheckTaskDao dao, ConServiceService conService) {
+    public CheckTaskService(CheckTaskDao dao, ConServiceService conService,
+                            CheckContentService contentService) {
         this.dao = dao;
         this.conService = conService;
+        this.contentService = contentService;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public CheckTask save(CheckTask t){
+    public CheckTask save(CheckTask t, List<String> tableIds){
 
         t.setId(IdGenerators.uuid());
         setService(t);
-
         dao.insert(t);
+
+        for(String tableId: tableIds){
+            contentService.save(t.getId(), tableId);
+        }
 
         return dao.findOne(t.getId());
     }
