@@ -7,11 +7,11 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
- * 统一检查表
+ * 统一检查内容
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class UniCheckTable {
+public class UniCheckContent {
     @ApiModelProperty("编号")
     private String id;
     @ApiModelProperty("检查类别编号")
@@ -107,7 +107,7 @@ public class UniCheckTable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UniCheckTable that = (UniCheckTable) o;
+        UniCheckContent that = (UniCheckContent) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(typeId, that.typeId) &&
                 Objects.equals(typeName, that.typeName) &&

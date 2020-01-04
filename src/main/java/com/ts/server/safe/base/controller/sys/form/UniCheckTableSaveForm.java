@@ -1,6 +1,6 @@
 package com.ts.server.safe.base.controller.sys.form;
 
-import com.ts.server.safe.base.domain.UniCheckTable;
+import com.ts.server.safe.base.domain.UniCheckContent;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotBlank;
@@ -56,8 +56,8 @@ public class UniCheckTableSaveForm {
         this.itemId = itemId;
     }
 
-    public UniCheckTable toDomain(){
-        UniCheckTable t = new UniCheckTable();
+    public UniCheckContent toDomain(){
+        UniCheckContent t = new UniCheckContent();
 
         t.setContent(content);
         t.setConDetail(conDetail);

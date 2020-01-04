@@ -1,8 +1,8 @@
 package com.ts.server.safe.base.service;
 
 import com.ts.server.safe.BaseException;
-import com.ts.server.safe.base.dao.UniCheckTableDao;
-import com.ts.server.safe.base.domain.UniCheckTable;
+import com.ts.server.safe.base.dao.UniCheckContentDao;
+import com.ts.server.safe.base.domain.UniCheckContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -18,22 +18,22 @@ import java.util.List;
  */
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
-public class UniCheckTableService {
-    private final UniCheckTableDao dao;
+public class UniCheckContentService {
+    private final UniCheckContentDao dao;
 
     @Autowired
-    public UniCheckTableService(UniCheckTableDao dao) {
+    public UniCheckContentService(UniCheckContentDao dao) {
         this.dao = dao;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public UniCheckTable save(UniCheckTable t){
+    public UniCheckContent save(UniCheckContent t){
         String id = dao.insert(t);
         return dao.findOne(id);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public UniCheckTable update(UniCheckTable t){
+    public UniCheckContent update(UniCheckContent t){
         if(!dao.update(t)){
             throw new BaseException("修改检查表失败");
         }
@@ -45,7 +45,7 @@ public class UniCheckTableService {
         return dao.delete(id);
     }
 
-    public UniCheckTable get(String id){
+    public UniCheckContent get(String id){
         try{
             return dao.findOne(id);
         }catch (DataAccessException e){
@@ -57,11 +57,11 @@ public class UniCheckTableService {
         return dao.count(typeName, itemName, content, lawItem);
     }
 
-    public List<UniCheckTable> query(String typeName, String itemName, String content, String lawItem, int offset, int limit){
+    public List<UniCheckContent> query(String typeName, String itemName, String content, String lawItem, int offset, int limit){
         return dao.find(typeName, itemName, content, lawItem, offset, limit);
     }
 
-    public List<UniCheckTable> queryOfItem(String itemId) {
+    public List<UniCheckContent> queryOfItem(String itemId) {
         return dao.findOfItem(itemId);
     }
 }

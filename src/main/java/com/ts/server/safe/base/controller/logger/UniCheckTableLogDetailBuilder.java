@@ -1,7 +1,7 @@
 package com.ts.server.safe.base.controller.logger;
 
 import com.ts.server.safe.base.controller.sys.form.UniCheckTableUpdateForm;
-import com.ts.server.safe.base.domain.UniCheckTable;
+import com.ts.server.safe.base.domain.UniCheckContent;
 import com.ts.server.safe.controller.vo.OkVo;
 import com.ts.server.safe.controller.vo.ResultVo;
 import com.ts.server.safe.logger.aop.annotation.ApiLogDetailBuilder;
@@ -37,8 +37,8 @@ public class UniCheckTableLogDetailBuilder {
         @SuppressWarnings("unchecked")
         public String build(JoinPoint joinPoint, ServletRequestAttributes attributes, Object returnObj) {
             joinPoint.getSignature();
-            ResultVo<UniCheckTable> result = (ResultVo<UniCheckTable>)returnObj;
-            UniCheckTable t = result.getRs();
+            ResultVo<UniCheckContent> result = (ResultVo<UniCheckContent>)returnObj;
+            UniCheckContent t = result.getRs();
             return String.format("编号:%s;检查内容:%s", t.getId(), t.getContent());
         }
     }

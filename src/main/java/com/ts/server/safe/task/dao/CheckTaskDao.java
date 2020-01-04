@@ -33,8 +33,8 @@ public class CheckTaskDao {
         t.setCheckTimeTo(r.getDate("check_time_to"));
         t.setCheckUserIds(DaoUtils.toArray(r.getString("check_user_ids")));
         t.setCheckUserNames(DaoUtils.toArray(r.getString("check_user_names")));
-        t.setCheckTableIds(DaoUtils.toArray("check_table_ids"));
-        t.setCheckTableNames(DaoUtils.toArray("check_table_names"));
+        t.setCheckSupIds(DaoUtils.toArray("check_table_ids"));
+        t.setCheckSupNames(DaoUtils.toArray("check_table_names"));
         t.setStatus(CheckTask.Status.valueOf(r.getString("status")));
         t.setUpdateTime(r.getTimestamp("update_time"));
         t.setCreateTime(r.getTimestamp("create_time"));
@@ -54,7 +54,7 @@ public class CheckTaskDao {
 
         jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getServiceId(), t.getServiceName(), t.getCompId(),
                 t.getCompName(), t.getCheckTimeFrom(), t.getCheckTimeTo(), DaoUtils.join(t.getCheckUserIds()),
-                DaoUtils.join(t.getCheckUserNames()), DaoUtils.join(t.getCheckTableIds()), DaoUtils.join(t.getCheckTableNames()),
+                DaoUtils.join(t.getCheckUserNames()), DaoUtils.join(t.getCheckSupIds()), DaoUtils.join(t.getCheckSupNames()),
                 t.getStatus().name());
     }
 
@@ -65,8 +65,8 @@ public class CheckTaskDao {
 
         return jdbcTemplate.update(sql, t.getServiceId(), t.getServiceName(), t.getCompId(), t.getCompName(),
                 t.getCheckTimeFrom(), t.getCheckTimeTo(), DaoUtils.join(t.getCheckUserIds()),
-                DaoUtils.join(t.getCheckUserNames()), DaoUtils.join(t.getCheckTableIds()),
-                DaoUtils.join(t.getCheckTableNames()), t.getStatus().name(), t.getId()) > 0;
+                DaoUtils.join(t.getCheckUserNames()), DaoUtils.join(t.getCheckSupIds()),
+                DaoUtils.join(t.getCheckSupNames()), t.getStatus().name(), t.getId()) > 0;
     }
 
     public boolean delete(String id){
@@ -115,8 +115,8 @@ public class CheckTaskDao {
         return jdbcTemplate.queryForObject(sql, params, Long.class);
     }
 
-    public List<CheckTask> query(String channelId, String compName, String checkUserName,
-                                 CheckTask.Status status, Date checkTimeFrom, Date checkTimeTo, int offset, int limit){
+    public List<CheckTask> find(String channelId, String compName, String checkUserName,
+                                CheckTask.Status status, Date checkTimeFrom, Date checkTimeTo, int offset, int limit){
         String sql = "SELECT * FROM c_check_task WHERE channel_id LIKE ? AND comp_name LIKE ? " +
                 "AND check_user_name LIKE ? AND status LIKE ? ";
         int len = 6;

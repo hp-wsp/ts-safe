@@ -1,10 +1,10 @@
 package com.ts.server.safe.base.controller.man;
 
 import com.ts.server.safe.base.controller.man.vo.UniCheckTypeVo;
-import com.ts.server.safe.base.domain.UniCheckTable;
+import com.ts.server.safe.base.domain.UniCheckContent;
 import com.ts.server.safe.base.domain.UniCheckType;
 import com.ts.server.safe.base.service.UniCheckItemService;
-import com.ts.server.safe.base.service.UniCheckTableService;
+import com.ts.server.safe.base.service.UniCheckContentService;
 import com.ts.server.safe.base.service.UniCheckTypeService;
 import com.ts.server.safe.controller.vo.ResultVo;
 import io.swagger.annotations.Api;
@@ -31,12 +31,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class UniCheckManController {
     private final UniCheckTypeService typeService;
     private final UniCheckItemService itemService;
-    private final UniCheckTableService tableService;
+    private final UniCheckContentService tableService;
 
     @Autowired
     public UniCheckManController(UniCheckTypeService typeService,
                                  UniCheckItemService itemService,
-                                 UniCheckTableService tableService) {
+                                 UniCheckContentService tableService) {
 
         this.typeService = typeService;
         this.itemService = itemService;
@@ -66,8 +66,8 @@ public class UniCheckManController {
 
     @GetMapping(value = "table/{itemId}", produces = APPLICATION_JSON_VALUE)
     @ApiOperation("查询检查表")
-    public ResultVo<List<UniCheckTable>> queryTable(@PathVariable("itemId") String itemId){
-        List<UniCheckTable> tables = tableService.queryOfItem(itemId);
+    public ResultVo<List<UniCheckContent>> queryTable(@PathVariable("itemId") String itemId){
+        List<UniCheckContent> tables = tableService.queryOfItem(itemId);
         return ResultVo.success(tables);
     }
 }

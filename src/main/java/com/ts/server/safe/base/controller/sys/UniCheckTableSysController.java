@@ -4,9 +4,9 @@ import com.ts.server.safe.base.controller.logger.UniCheckTableLogDetailBuilder;
 import com.ts.server.safe.base.controller.sys.form.UniCheckTableSaveForm;
 import com.ts.server.safe.base.controller.sys.form.UniCheckTableUpdateForm;
 import com.ts.server.safe.base.domain.UniCheckItem;
-import com.ts.server.safe.base.domain.UniCheckTable;
+import com.ts.server.safe.base.domain.UniCheckContent;
 import com.ts.server.safe.base.service.UniCheckItemService;
-import com.ts.server.safe.base.service.UniCheckTableService;
+import com.ts.server.safe.base.service.UniCheckContentService;
 import com.ts.server.safe.controller.vo.OkVo;
 import com.ts.server.safe.controller.vo.ResultPageVo;
 import com.ts.server.safe.controller.vo.ResultVo;
@@ -32,11 +32,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @ApiACL(value = "ROLE_SYS")
 @Api(value = "/sys/checkTable", tags = "S-管理检查表")
 public class UniCheckTableSysController {
-    private final UniCheckTableService service;
+    private final UniCheckContentService service;
     private final UniCheckItemService itemService;
 
     @Autowired
-    public UniCheckTableSysController(UniCheckTableService service, UniCheckItemService itemService) {
+    public UniCheckTableSysController(UniCheckContentService service, UniCheckItemService itemService) {
         this.service = service;
         this.itemService = itemService;
     }
@@ -44,13 +44,13 @@ public class UniCheckTableSysController {
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @EnableApiLogger(name = "新增检查表", buildDetail = UniCheckTableLogDetailBuilder.SaveBuilder.class)
     @ApiOperation("新增检查表")
-    public ResultVo<UniCheckTable> save(@Valid @RequestBody UniCheckTableSaveForm form){
-        UniCheckTable t = form.toDomain();
+    public ResultVo<UniCheckContent> save(@Valid @RequestBody UniCheckTableSaveForm form){
+        UniCheckContent t = form.toDomain();
         setItem(t);
         return ResultVo.success(service.save(t));
     }
 
-    private void setItem(UniCheckTable t){
+    private void setItem(UniCheckContent t){
         UniCheckItem item = itemService.get(t.getItemId());
         t.setTypeId(item.getTypeId());
         t.setTypeName(item.getTypeName());
@@ -60,15 +60,15 @@ public class UniCheckTableSysController {
     @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @EnableApiLogger(name = "修改检查表", buildDetail = UniCheckTableLogDetailBuilder.UpdateBuilder.class)
     @ApiOperation("修改检查表")
-    public ResultVo<UniCheckTable> update(@Valid @RequestBody UniCheckTableUpdateForm form){
-        UniCheckTable t = form.toDomain();
+    public ResultVo<UniCheckContent> update(@Valid @RequestBody UniCheckTableUpdateForm form){
+        UniCheckContent t = form.toDomain();
         setItem(t);
         return ResultVo.success(service.update(t));
     }
 
     @GetMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
     @ApiOperation("得到检查表")
-    public ResultVo<UniCheckTable> get(@PathVariable("id")String id){
+    public ResultVo<UniCheckContent> get(@PathVariable("id")String id){
         return ResultVo.success(service.get(id));
     }
 
@@ -81,7 +81,7 @@ public class UniCheckTableSysController {
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ApiOperation("查询检查表")
-    public ResultPageVo<UniCheckTable> query(
+    public ResultPageVo<UniCheckContent> query(
             @ApiParam(value = "检查类型") @RequestParam(required = false) String typeName,
             @ApiParam(value = "检查项目") @RequestParam(required = false) String itemName,
             @ApiParam(value = "检查内容") @RequestParam(required = false) String content,

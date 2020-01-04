@@ -42,8 +42,8 @@ INSERT INTO b_check_item (id, type_id, type_name, name, create_time) VALUES
 #-------------------------------------------------------------------
 #初始检查表数据
 #-------------------------------------------------------------------
-DELETE FROM b_check_table;
-INSERT INTO b_check_table (id, type_id, type_name, item_id, item_name, content, con_detail, law_item, create_time) VALUES
+DELETE FROM b_check_content;
+INSERT INTO b_check_content (id, type_id, type_name, item_id, item_name, content, con_detail, law_item, create_time) VALUES
 ('00001','001', '基础管理', '001', '资质证照', '营业执照', '企业经营者应当依法向工商行政管理机关办理有关登记手续，取得工商营业执照。', '《中华人民共和国公司法》第七条', now()),
 ('00002','001', '基础管理', '001', '资质证照', '经营范围', '企业应当在规定的范围内经营。公司的经营范围中属于法律、行政法规规定须经批准的项目，应当依法经过批准。', '《中华人民共和国公司法》第十二条', now()),
 ('00003','001', '基础管理', '001', '资质证照', '消防安全检查意见书', '公众聚集场所在投入使用、营业前，建设单位或者使用单位应当向场所所在地的县级以上地方人民政府公安机关消防机构申请消防安全检查。公安机关消防机构应当自受理申请之日起十个工作日内，根据消防技术标准和管理规定，对该场所进行消防安全检查。未经消防安全检查或者经检查不符合消防安全要求的，不得投入使用、营业。', '《中华人民共和国消防法》第十五条', now()),

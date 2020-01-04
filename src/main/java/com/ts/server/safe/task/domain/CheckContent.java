@@ -16,8 +16,8 @@ public class CheckContent {
     private String id;
     @ApiModelProperty("任务编号")
     private String taskId;
-    @ApiModelProperty("检查表编号")
-    private String tableId;
+    @ApiModelProperty("检查内容编号")
+    private String contentId;
     @ApiModelProperty("检查类别编号")
     private String typeId;
     @ApiModelProperty("检查类别名称")
@@ -53,12 +53,12 @@ public class CheckContent {
         this.taskId = taskId;
     }
 
-    public String getTableId() {
-        return tableId;
+    public String getContentId() {
+        return contentId;
     }
 
-    public void setTableId(String tableId) {
-        this.tableId = tableId;
+    public void setContentId(String contentId) {
+        this.contentId = contentId;
     }
 
     public String getTypeId() {
@@ -140,7 +140,7 @@ public class CheckContent {
         CheckContent that = (CheckContent) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(taskId, that.taskId) &&
-                Objects.equals(tableId, that.tableId) &&
+                Objects.equals(contentId, that.contentId) &&
                 Objects.equals(typeId, that.typeId) &&
                 Objects.equals(typeName, that.typeName) &&
                 Objects.equals(itemId, that.itemId) &&
@@ -154,7 +154,7 @@ public class CheckContent {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, taskId, tableId, typeId, typeName, itemId, itemName, content, conDetail, lawItem, updateTime, createTime);
+        return Objects.hash(id, taskId, contentId, typeId, typeName, itemId, itemName, content, conDetail, lawItem, updateTime, createTime);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class CheckContent {
         return new ToStringBuilder(this)
                 .append("id", id)
                 .append("taskId", taskId)
-                .append("tableId", tableId)
+                .append("contentId", contentId)
                 .append("typeId", typeId)
                 .append("typeName", typeName)
                 .append("itemId", itemId)

@@ -1,7 +1,7 @@
 package com.ts.server.safe.task.service;
 
-import com.ts.server.safe.base.domain.UniCheckTable;
-import com.ts.server.safe.base.service.UniCheckTableService;
+import com.ts.server.safe.base.domain.UniCheckContent;
+import com.ts.server.safe.base.service.UniCheckContentService;
 import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.task.dao.CheckContentDao;
 import com.ts.server.safe.task.domain.CheckContent;
@@ -21,28 +21,28 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class CheckContentService {
     private final CheckContentDao dao;
-    private final UniCheckTableService tableService;
+    private final UniCheckContentService tableService;
 
     @Autowired
-    public CheckContentService(CheckContentDao dao, UniCheckTableService tableService) {
+    public CheckContentService(CheckContentDao dao, UniCheckContentService tableService) {
         this.dao = dao;
         this.tableService = tableService;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public CheckContent save(String taskId, String tableId){
-        return dao.has(taskId, tableId)?
-                update(taskId, tableId) : insert(taskId, tableId);
+    public CheckContent save(String taskId, String contentId){
+        return dao.has(taskId, contentId)?
+                update(taskId, contentId) : insert(taskId, contentId);
     }
 
-    private CheckContent insert(String taskId, String tableId){
+    private CheckContent insert(String taskId, String contentId){
         CheckContent t = new CheckContent();
 
-        UniCheckTable table = tableService.get(tableId);
+        UniCheckContent table = tableService.get(contentId);
 
         t.setId(IdGenerators.uuid());
         t.setTaskId(taskId);
-        t.setTableId(table.getId());
+        t.setContentId(table.getId());
         t.setTypeId(table.getTypeId());
         t.setTypeName(table.getTypeName());
         t.setItemId(table.getItemId());
@@ -56,11 +56,11 @@ public class CheckContentService {
         return dao.findOne(t.getId());
     }
 
-    private CheckContent update(String taskId, String tableId){
-        CheckContent t = dao.findOne(taskId, tableId);
+    private CheckContent update(String taskId, String contentId){
+        CheckContent t = dao.findOne(taskId, contentId);
 
-        UniCheckTable table = tableService.get(tableId);
-        t.setTableId(table.getId());
+        UniCheckContent table = tableService.get(contentId);
+        t.setContentId(table.getId());
         t.setTypeId(table.getTypeId());
         t.setTypeName(table.getTypeName());
         t.setItemId(table.getItemId());
@@ -77,6 +77,11 @@ public class CheckContentService {
     @Transactional(propagation = Propagation.REQUIRED)
     public boolean delete(String id){
         return dao.delete(id);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteTask(String taskId){
+        dao.deleteTask(taskId);
     }
 
     public List<CheckContent> query(String taskId){

@@ -23,7 +23,7 @@ public class CheckContentDao {
 
         t.setId(r.getString("id"));
         t.setTaskId(r.getString("task_id"));
-        t.setTableId(r.getString("table_id"));
+        t.setContentId(r.getString("content_id"));
         t.setTypeId(r.getString("type_id"));
         t.setTypeName(r.getString("type_name"));
         t.setItemId(r.getString("item_id"));
@@ -43,24 +43,24 @@ public class CheckContentDao {
     }
 
     public void insert(CheckContent t){
-        final String sql = "INSERT INTO c_check_content (id, task_id, table_id, type_id, type_name, item_id, item_name," +
+        final String sql = "INSERT INTO c_check_content (id, content_id, table_id, type_id, type_name, item_id, item_name," +
                 "content, con_detail, law_item, update_time, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
-        jdbcTemplate.update(sql, t.getId(), t.getTaskId(), t.getTableId(), t.getTypeId(), t.getTypeName(), t.getItemId(),
+        jdbcTemplate.update(sql, t.getId(), t.getTaskId(), t.getContentId(), t.getTypeId(), t.getTypeName(), t.getItemId(),
                 t.getItemName(), t.getContent(), t.getConDetail(), t.getLawItem());
     }
 
     public boolean update(CheckContent t){
-        final String sql = "UPDATE c_check_content SET table_id = ?, type_id = ?, type_name = ?, item_id = ?, item_name = ?," +
+        final String sql = "UPDATE c_check_content SET content_id = ?, type_id = ?, type_name = ?, item_id = ?, item_name = ?," +
                 "content = ?, con_detail = ?, law_item = ?, update_time = now() WHERE id = ?";
 
-        return jdbcTemplate.update(sql, t.getTableId(), t.getTypeId(), t.getTypeName(), t.getItemId(), t.getItemName(),
+        return jdbcTemplate.update(sql, t.getContentId(), t.getTypeId(), t.getTypeName(), t.getItemId(), t.getItemName(),
                 t.getContent(), t.getConDetail(), t.getLawItem(), t.getId()) > 0;
     }
 
-    public boolean has(String taskId, String tableId){
-        final String sql = "SELECT COUNT(id) FROM c_check_content WHERE task_id = ? AND table_id = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{taskId, tableId}, Integer.class);
+    public boolean has(String taskId, String cotentId){
+        final String sql = "SELECT COUNT(id) FROM c_check_content WHERE task_id = ? AND content_id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{taskId, cotentId}, Integer.class);
         return count != null && count > 0;
     }
 
@@ -69,9 +69,9 @@ public class CheckContentDao {
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
     }
 
-    public CheckContent findOne(String taskId, String tableId){
-        final String sql = "SELECT * FROM c_check_content WHERE task_id = ? AND table_id = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{taskId, tableId}, mapper);
+    public CheckContent findOne(String taskId, String contentId){
+        final String sql = "SELECT * FROM c_check_content WHERE task_id = ? AND content_id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{taskId, contentId}, mapper);
     }
 
     public boolean delete(String id){

@@ -33,10 +33,10 @@ public class CheckTask {
     private String[] checkUserIds;
     @ApiModelProperty("检查人员姓名集合")
     private String[] checkUserNames;
-    @ApiModelProperty("检查表编号集合")
-    private String[] checkTableIds;
-    @ApiModelProperty("检查表名称集合")
-    private String[] checkTableNames;
+    @ApiModelProperty("行业(检查表)编号集合")
+    private String[] checkSupIds;
+    @ApiModelProperty("行业(检查表)名称集合")
+    private String[] checkSupNames;
     @ApiModelProperty("检查任务状态")
     private Status status;
     @ApiModelProperty("修改时间")
@@ -128,20 +128,20 @@ public class CheckTask {
         this.checkUserNames = checkUserNames;
     }
 
-    public String[] getCheckTableIds() {
-        return checkTableIds;
+    public String[] getCheckSupIds() {
+        return checkSupIds;
     }
 
-    public void setCheckTableIds(String[] checkTableIds) {
-        this.checkTableIds = checkTableIds;
+    public void setCheckSupIds(String[] checkSupIds) {
+        this.checkSupIds = checkSupIds;
     }
 
-    public String[] getCheckTableNames() {
-        return checkTableNames;
+    public String[] getCheckSupNames() {
+        return checkSupNames;
     }
 
-    public void setCheckTableNames(String[] checkTableNames) {
-        this.checkTableNames = checkTableNames;
+    public void setCheckSupNames(String[] checkSupNames) {
+        this.checkSupNames = checkSupNames;
     }
 
     public Status getStatus() {
@@ -183,8 +183,8 @@ public class CheckTask {
                 Objects.equals(checkTimeTo, checkTask.checkTimeTo) &&
                 Arrays.equals(checkUserIds, checkTask.checkUserIds) &&
                 Arrays.equals(checkUserNames, checkTask.checkUserNames) &&
-                Arrays.equals(checkTableIds, checkTask.checkTableIds) &&
-                Arrays.equals(checkTableNames, checkTask.checkTableNames) &&
+                Arrays.equals(checkSupIds, checkTask.checkSupIds) &&
+                Arrays.equals(checkSupNames, checkTask.checkSupNames) &&
                 status == checkTask.status &&
                 Objects.equals(updateTime, checkTask.updateTime) &&
                 Objects.equals(createTime, checkTask.createTime);
@@ -195,8 +195,8 @@ public class CheckTask {
         int result = Objects.hash(id, channelId, serviceId, serviceName, compId, compName, checkTimeFrom, checkTimeTo, status, updateTime, createTime);
         result = 31 * result + Arrays.hashCode(checkUserIds);
         result = 31 * result + Arrays.hashCode(checkUserNames);
-        result = 31 * result + Arrays.hashCode(checkTableIds);
-        result = 31 * result + Arrays.hashCode(checkTableNames);
+        result = 31 * result + Arrays.hashCode(checkSupIds);
+        result = 31 * result + Arrays.hashCode(checkSupNames);
         return result;
     }
 
@@ -213,8 +213,8 @@ public class CheckTask {
                 .append("checkTimeTo", checkTimeTo)
                 .append("checkUserIds", checkUserIds)
                 .append("checkUserNames", checkUserNames)
-                .append("checkTableIds", checkTableIds)
-                .append("checkTableNames", checkTableNames)
+                .append("checkSupIds", checkSupIds)
+                .append("checkSupNames", checkSupNames)
                 .append("status", status)
                 .append("updateTime", updateTime)
                 .append("createTime", createTime)

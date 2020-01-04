@@ -2,7 +2,7 @@ package com.ts.server.safe.base.service;
 
 import com.ts.server.safe.BaseException;
 import com.ts.server.safe.base.dao.UniCheckItemDao;
-import com.ts.server.safe.base.dao.UniCheckTableDao;
+import com.ts.server.safe.base.dao.UniCheckContentDao;
 import com.ts.server.safe.base.domain.UniCheckItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -21,10 +21,10 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class UniCheckItemService {
     private final UniCheckItemDao dao;
-    private final UniCheckTableDao tableDao;
+    private final UniCheckContentDao tableDao;
 
     @Autowired
-    public UniCheckItemService(UniCheckItemDao dao, UniCheckTableDao tableDao) {
+    public UniCheckItemService(UniCheckItemDao dao, UniCheckContentDao tableDao) {
         this.dao = dao;
         this.tableDao = tableDao;
     }

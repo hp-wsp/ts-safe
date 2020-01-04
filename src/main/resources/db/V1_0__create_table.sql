@@ -106,9 +106,9 @@ CREATE TABLE IF NOT EXISTS b_check_item (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 #-----------------------------------------------------------------------
-#检查表
+#检查内容
 #-----------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS b_check_table (
+CREATE TABLE IF NOT EXISTS b_check_content (
   id CHAR(5) NOT NULL COMMENT '编号',
   type_id CHAR(3) NOT NULL COMMENT '检查类型编号',
   type_name VARCHAR(40) NOT NULL COMMENT '检查类型名称',
@@ -339,7 +339,7 @@ CREATE TABLE IF NOT EXISTS c_check_task (
 CREATE TABLE IF NOT EXISTS c_check_content (
   id CHAR(32) NOT NULL COMMENT '编号',
   task_id CHAR(32) NOT NULL COMMENT '检查任务编号',
-  table_id CHAR(5) NOT NULL COMMENT '检查表编号',
+  content_id CHAR(5) NOT NULL COMMENT '检查表编号',
   type_id CHAR(3) NOT NULL COMMENT '检查类型编号',
   type_name VARCHAR(40) NOT NULL COMMENT '检查类型名称',
   item_id CHAR(3) NOT NULL COMMENT '检查项目编号',
@@ -350,5 +350,5 @@ CREATE TABLE IF NOT EXISTS c_check_content (
   update_time DATETIME NOT NULL COMMENT '修改时间',
   create_time DATETIME NOT NULL COMMENT '创建时间',
   PRIMARY KEY (id),
-  UNIQUE KEY idx_task_id_table_id (task_id, table_id)
+  UNIQUE KEY idx_task_id_content_id (task_id, content_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
