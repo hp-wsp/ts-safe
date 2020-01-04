@@ -25,31 +25,33 @@ public class CompInfoDao {
     }
 
     public void insert(CompInfo t){
-        final String sql = "INSERT INTO c_comp_info (id, name, channel_id, province, city, country, address, reg_address," +
-                "reg_date, bus_status, legal_person, legal_phone, legal_mobile, safe_person, safe_phone, safe_mobile, " +
-                "contact, phone, mobile, credit_code, post_code, ind_ctg_ids, ind_ctg_names, ind_phone, ent_scale, " +
-                "ind_of_company, mem_fun, man_product, profile, images, update_time, create_time) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+        final String sql = "INSERT INTO c_comp_info (id, name, channel_id, province_id, province, city_id, city, country_id, " +
+                "country, address, reg_address, reg_date, bus_status, legal_person, legal_phone, legal_mobile, safe_person, " +
+                "safe_phone, safe_mobile, contact, phone, mobile, credit_code, post_code, ind_ctg_ids, ind_ctg_names, " +
+                "ind_phone, ent_scale, ind_of_company, mem_fun, man_product, profile, images, update_time, create_time) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
-        jdbcTemplate.update(sql, t.getId(), t.getName(), t.getChannelId(), t.getProvince(), t.getCity(), t.getCountry(),
-                t.getAddress(), t.getRegAddress(), t.getRegDate(), t.getBusStatus(), t.getLegalPerson(), t.getLegalPhone(),
-                t.getLegalMobile(), t.getSafePerson(), t.getSafePhone(), t.getSafeMobile(), t.getContact(), t.getPhone(),
-                t.getMobile(), t.getCreditCode(), t.getPostCode(), DaoUtils.join(t.getIndCtgIds()), DaoUtils.join(t.getIndCtgNames()),
-                t.getIndPhone(), t.getEntScale(), t.getIndOfCompany(), t.getMemFun(), t.getManProduct(), t.getProfile(),
-                DaoUtils.join(t.getImages()));
+        jdbcTemplate.update(sql, t.getId(), t.getName(), t.getChannelId(), t.getProvinceId(), t.getProvince(), t.getCityId(),
+                t.getCity(), t.getCountryId(), t.getCountry(), t.getAddress(), t.getRegAddress(), t.getRegDate(),
+                t.getBusStatus(), t.getLegalPerson(), t.getLegalPhone(), t.getLegalMobile(), t.getSafePerson(),
+                t.getSafePhone(), t.getSafeMobile(), t.getContact(), t.getPhone(), t.getMobile(), t.getCreditCode(),
+                t.getPostCode(), DaoUtils.join(t.getIndCtgIds()), DaoUtils.join(t.getIndCtgNames()), t.getIndPhone(),
+                t.getEntScale(), t.getIndOfCompany(), t.getMemFun(), t.getManProduct(), t.getProfile(), DaoUtils.join(t.getImages()));
     }
 
     public boolean update(CompInfo t){
-        final String sql = "UPDATE c_comp_info SET name = ?, province = ?, city = ?, country = ?, address = ?, reg_address = ?," +
-                "reg_date = ?, bus_status = ?, legal_person = ?, legal_phone = ?, legal_mobile = ?, safe_person = ?, " +
-                "safe_phone = ?, safe_mobile = ?, contact = ?, phone = ?, mobile = ?, credit_code = ?, post_code = ?," +
-                "ind_ctg_ids = ?, ind_ctg_names = ?, ind_phone = ?, ent_scale = ?, ind_of_company = ?, mem_fun = ?," +
-                "man_product = ?, profile = ?, images = ?, update_time = now() WHERE id = ? AND channel_id = ?";
+        final String sql = "UPDATE c_comp_info SET name = ?, province_id = ?, province = ?, city_id = ?, city = ?, " +
+                "country_id = ?, country = ?, address = ?, reg_address = ?, reg_date = ?, bus_status = ?, legal_person = ?, " +
+                "legal_phone = ?, legal_mobile = ?, safe_person = ?, safe_phone = ?, safe_mobile = ?, contact = ?, " +
+                "phone = ?, mobile = ?, credit_code = ?, post_code = ?, ind_ctg_ids = ?, ind_ctg_names = ?, ind_phone = ?, " +
+                "ent_scale = ?, ind_of_company = ?, mem_fun = ?, man_product = ?, profile = ?, images = ?, update_time = now()" +
+                " WHERE id = ? AND channel_id = ?";
 
-        return jdbcTemplate.update(sql, t.getName(), t.getProvince(), t.getCity(), t.getCountry(), t.getAddress(), t.getRegAddress(),
-                t.getRegDate(), t.getBusStatus(), t.getLegalPerson(), t.getLegalPhone(), t.getLegalMobile(), t.getSafePerson(),
-                t.getSafePhone(), t.getSafeMobile(), t.getContact(), t.getPhone(), t.getMobile(), t.getCreditCode(), t.getPostCode(),
-                DaoUtils.join(t.getIndCtgIds()), DaoUtils.join(t.getIndCtgNames()), t.getIndPhone(), t.getEntScale(), t.getIndOfCompany(),
+        return jdbcTemplate.update(sql, t.getName(), t.getProvinceId(), t.getProvince(), t.getCityId(), t.getCity(), t.getCountryId(),
+                t.getCountry(), t.getAddress(), t.getRegAddress(), t.getRegDate(), t.getBusStatus(), t.getLegalPerson(),
+                t.getLegalPhone(), t.getLegalMobile(), t.getSafePerson(), t.getSafePhone(), t.getSafeMobile(), t.getContact(),
+                t.getPhone(), t.getMobile(), t.getCreditCode(), t.getPostCode(), DaoUtils.join(t.getIndCtgIds()),
+                DaoUtils.join(t.getIndCtgNames()), t.getIndPhone(), t.getEntScale(), t.getIndOfCompany(),
                 t.getMemFun(), t.getManProduct(), t.getProfile(), DaoUtils.join(t.getImages()), t.getId(), t.getChannelId()) > 0;
     }
 
@@ -111,8 +113,11 @@ public class CompInfoDao {
         t.setId(r.getString("id"));
         t.setName(r.getString("name"));
         t.setChannelId(r.getString("channel_id"));
+        t.setProvinceId(r.getString("provinceId"));
         t.setProvince(r.getString("province"));
+        t.setCityId(r.getString("city_id"));
         t.setCity(r.getString("city"));
+        t.setCountryId(r.getString("country_id"));
         t.setCountry(r.getString("country"));
         t.setAddress(r.getString("address"));
         t.setRegAddress(r.getString("reg_address"));

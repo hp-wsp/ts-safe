@@ -19,11 +19,17 @@ public class CompInfo {
     private String channelId;
     @ApiModelProperty("企业名称")
     private String name;
+    @ApiModelProperty("省份编号")
+    private String provinceId;
     @ApiModelProperty("省份")
     private String province;
+    @ApiModelProperty("城市编号")
+    private String cityId;
     @ApiModelProperty("城市")
     private String city;
-    @ApiModelProperty("国家")
+    @ApiModelProperty("县区编号")
+    private String countryId;
+    @ApiModelProperty("县区")
     private String country;
     @ApiModelProperty("企业地址")
     private String address;
@@ -102,6 +108,14 @@ public class CompInfo {
         this.name = name;
     }
 
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+    }
+
     public String getProvince() {
         return province;
     }
@@ -110,12 +124,28 @@ public class CompInfo {
         this.province = province;
     }
 
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
     public String getCity() {
         return city;
     }
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(String countryId) {
+        this.countryId = countryId;
     }
 
     public String getCountry() {
@@ -344,8 +374,11 @@ public class CompInfo {
                 Objects.equals(id, compInfo.id) &&
                 Objects.equals(channelId, compInfo.channelId) &&
                 Objects.equals(name, compInfo.name) &&
+                Objects.equals(provinceId, compInfo.provinceId) &&
                 Objects.equals(province, compInfo.province) &&
+                Objects.equals(cityId, compInfo.cityId) &&
                 Objects.equals(city, compInfo.city) &&
+                Objects.equals(countryId, compInfo.countryId) &&
                 Objects.equals(country, compInfo.country) &&
                 Objects.equals(address, compInfo.address) &&
                 Objects.equals(regAddress, compInfo.regAddress) &&
@@ -375,7 +408,7 @@ public class CompInfo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, channelId, name, province, city, country, address, regAddress, regDate, busStatus, legalPerson, legalPhone, legalMobile, safePerson, safePhone, safeMobile, contact, phone, mobile, creditCode, postCode, indCtgIds, indCtgNames, indPhone, entScale, indOfCompany, memFun, manProduct, profile, images, updateTime, createTime);
+        return Objects.hash(id, channelId, name, provinceId, province, cityId, city, countryId, country, address, regAddress, regDate, busStatus, legalPerson, legalPhone, legalMobile, safePerson, safePhone, safeMobile, contact, phone, mobile, creditCode, postCode, indCtgIds, indCtgNames, indPhone, entScale, indOfCompany, memFun, manProduct, profile, images, updateTime, createTime);
     }
 
     @Override
@@ -384,8 +417,11 @@ public class CompInfo {
                 .append("id", id)
                 .append("channelId", channelId)
                 .append("name", name)
+                .append("provinceId", provinceId)
                 .append("province", province)
+                .append("cityId", cityId)
                 .append("city", city)
+                .append("countryId", countryId)
                 .append("country", country)
                 .append("address", address)
                 .append("regAddress", regAddress)

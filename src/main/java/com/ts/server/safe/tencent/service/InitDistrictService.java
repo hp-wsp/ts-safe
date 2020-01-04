@@ -1,7 +1,7 @@
 package com.ts.server.safe.tencent.service;
 
-import com.ts.server.safe.base.dao.DistrictDao;
 import com.ts.server.safe.base.domain.District;
+import com.ts.server.safe.base.service.DistrictService;
 import com.ts.server.safe.tencent.map.QqMapService;
 import com.ts.server.safe.tencent.map.client.response.DistrictResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -18,12 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class InitDistrictService {
-    private final DistrictDao dao;
+    private final DistrictService service;
     private final QqMapService mapService;
 
     @Autowired
-    public InitDistrictService(DistrictDao dao, QqMapService mapService) {
-        this.dao = dao;
+    public InitDistrictService(DistrictService service, QqMapService mapService) {
+        this.service = service;
         this.mapService = mapService;
     }
 
@@ -36,19 +36,19 @@ public class InitDistrictService {
         if(level > 3){
             return ;
         }
+
         DistrictResponse response = mapService.district(e -> e.setId(parentId).build());
         response.getDistricts().forEach(e -> {
             District t = new District();
-            if(!dao.has(e.getId())){
-                t.setId(e.getId());
-                String name = StringUtils.isBlank(e.getName())? e.getFullname(): e.getName();
-                t.setName(name);
-                t.setFullName(e.getFullname());
-                t.setLevel(level);
-                t.setParentId(StringUtils.isBlank(parentId)? "root": parentId);
-                t.setLocation(e.getLocation());
-                dao.insert(t);
-            }
+            t.setId(e.getId());
+            String name = StringUtils.isBlank(e.getName())? e.getFullname(): e.getName();
+            t.setName(name);
+            t.setFullName(e.getFullname());
+            t.setLevel(level);
+            t.setParentId(StringUtils.isBlank(parentId)? "root": parentId);
+            t.setLocation(e.getLocation());
+            service.save(t);
+
             int nextLevel = level + 1;
             saveDistrict(t.getId(), nextLevel);
         });

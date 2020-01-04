@@ -16,10 +16,18 @@ public class Channel {
     private String id;
     @ApiModelProperty(value = "服务商名称")
     private String name;
+    @ApiModelProperty("省份编号")
+    private String provinceId;
     @ApiModelProperty("省份")
     private String province;
+    @ApiModelProperty("城市编号")
+    private String cityId;
     @ApiModelProperty("城市")
     private String city;
+    @ApiModelProperty("县区编号")
+    private String countryId;
+    @ApiModelProperty("县区")
+    private String country;
     @ApiModelProperty("地址")
     private String address;
     @ApiModelProperty("注册地址")
@@ -62,6 +70,14 @@ public class Channel {
         this.name = name;
     }
 
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+    }
+
     public String getProvince() {
         return province;
     }
@@ -70,12 +86,36 @@ public class Channel {
         this.province = province;
     }
 
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
     public String getCity() {
         return city;
     }
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(String countryId) {
+        this.countryId = countryId;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getAddress() {
@@ -157,8 +197,12 @@ public class Channel {
         Channel channel = (Channel) o;
         return Objects.equals(id, channel.id) &&
                 Objects.equals(name, channel.name) &&
+                Objects.equals(provinceId, channel.provinceId) &&
                 Objects.equals(province, channel.province) &&
+                Objects.equals(cityId, channel.cityId) &&
                 Objects.equals(city, channel.city) &&
+                Objects.equals(countryId, channel.countryId) &&
+                Objects.equals(country, channel.country) &&
                 Objects.equals(address, channel.address) &&
                 Objects.equals(regAddress, channel.regAddress) &&
                 Objects.equals(phone, channel.phone) &&
@@ -172,8 +216,7 @@ public class Channel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, province, city, address, regAddress, phone, mobile,
-                contact, busScope, status, updateTime, createTime);
+        return Objects.hash(id, name, provinceId, province, cityId, city, countryId, country, address, regAddress, phone, mobile, contact, busScope, status, updateTime, createTime);
     }
 
     @Override
@@ -181,8 +224,12 @@ public class Channel {
         return new ToStringBuilder(this)
                 .append("id", id)
                 .append("name", name)
+                .append("provinceId", provinceId)
                 .append("province", province)
+                .append("cityId", cityId)
                 .append("city", city)
+                .append("countryId", countryId)
+                .append("country", country)
                 .append("address", address)
                 .append("regAddress", regAddress)
                 .append("phone", phone)

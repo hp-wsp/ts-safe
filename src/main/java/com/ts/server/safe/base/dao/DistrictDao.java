@@ -59,4 +59,9 @@ public class DistrictDao {
         final String sql = "SELECT * FROM b_district WHERE parent_id = ? ORDER BY create_time";
         return jdbcTemplate.query(sql, new Object[]{parentId}, mapper);
     }
+
+    public District findOne(String id){
+        final String sql = "SELECT * FROM b_district WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
+    }
 }

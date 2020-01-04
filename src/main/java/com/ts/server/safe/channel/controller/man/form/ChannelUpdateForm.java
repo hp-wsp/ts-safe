@@ -14,10 +14,14 @@ public class ChannelUpdateForm {
     @NotBlank
     @ApiModelProperty(value = "单位名称", required = true)
     private String name;
-    @ApiModelProperty(value = "省份", required = true)
-    private String province;
-    @ApiModelProperty(value = "城市", required = true)
-    private String city;
+    @NotBlank
+    @ApiModelProperty(value = "省份编号", required = true)
+    private String provinceId;
+    @NotBlank
+    @ApiModelProperty(value = "城市编号", required = true)
+    private String cityId;
+    @ApiModelProperty(value = "县区编号")
+    private String countryId;
     @ApiModelProperty(value = "地址")
     private String address;
     @ApiModelProperty(value = "注册地址")
@@ -41,20 +45,28 @@ public class ChannelUpdateForm {
         this.name = name;
     }
 
-    public String getProvince() {
-        return province;
+    public String getProvinceId() {
+        return provinceId;
     }
 
-    public void setProvince(String province) {
-        this.province = province;
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
     }
 
-    public String getCity() {
-        return city;
+    public String getCityId() {
+        return cityId;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
+    public String getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(String countryId) {
+        this.countryId = countryId;
     }
 
     public String getAddress() {
@@ -109,8 +121,9 @@ public class ChannelUpdateForm {
         Channel t = new Channel();
 
         t.setName(name);
-        t.setProvince(province);
-        t.setCity(city);
+        t.setProvinceId(provinceId);
+        t.setCityId(cityId);
+        t.setCountryId(countryId);
         t.setAddress(address);
         t.setRegAddress(regAddress);
         t.setPhone(phone);

@@ -24,8 +24,12 @@ public class ChannelDao {
 
         t.setId(r.getString("id"));
         t.setName(r.getString("name"));
+        t.setProvinceId(r.getString("province_id"));
         t.setProvince(r.getString("province"));
+        t.setCityId(r.getString("city_id"));
         t.setCity(r.getString("city"));
+        t.setCountryId(r.getString("country_id"));
+        t.setCountry(r.getString("country"));
         t.setAddress(r.getString("address"));
         t.setRegAddress(r.getString("reg_address"));
         t.setPhone(r.getString("phone"));
@@ -45,20 +49,22 @@ public class ChannelDao {
     }
 
     public void insert(Channel t){
-        final String sql = "INSERT INTO c_channel (id, name, province, city, address, reg_address, phone, " +
-                "mobile, contact, bus_scope, status, update_time, create_time) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+        final String sql = "INSERT INTO c_channel (id, name, province_id, province, city_id, city, country_id, country, " +
+                "address, reg_address, phone, mobile, contact, bus_scope, status, update_time, create_time) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
-        jdbcTemplate.update(sql, t.getId(), t.getName(), t.getProvince(), t.getCity(), t.getAddress(), t.getRegAddress(),
-                t.getPhone(), t.getMobile(), t.getContact(), t.getBusScope(), t.getStatus().name());
+        jdbcTemplate.update(sql, t.getId(), t.getName(), t.getProvinceId(), t.getProvince(), t.getCityId(), t.getCity(),
+                t.getCountryId(), t.getCountry(), t.getAddress(), t.getRegAddress(), t.getPhone(), t.getMobile(),
+                t.getContact(), t.getBusScope(), t.getStatus().name());
     }
 
     public boolean update(Channel t){
-        final String sql = "UPDATE c_channel SET name = ?, province = ?, city = ?, address = ?, reg_address = ?, " +
-                "phone = ?, mobile = ?, contact = ?, bus_scope = ?, update_time = now() " +
-                "WHERE id = ? AND is_delete = false";
-        return jdbcTemplate.update(sql, t.getName(), t.getProvince(), t.getCity(), t.getAddress(), t.getRegAddress(),
-                t.getPhone(), t.getMobile(), t.getContact(), t.getBusScope(), t.getId()) > 0;
+        final String sql = "UPDATE c_channel SET name = ?, province_id = ?, province = ?, city_id = ?, city = ?, " +
+                "country_id = ?, country = ?, address = ?, reg_address = ?, phone = ?, mobile = ?, contact = ?, " +
+                "bus_scope = ?, update_time = now() WHERE id = ? AND is_delete = false";
+        return jdbcTemplate.update(sql, t.getName(), t.getProvinceId(), t.getProvince(), t.getCityId(), t.getCity(),
+                t.getCountryId(), t.getCountry(), t.getAddress(), t.getRegAddress(), t.getPhone(), t.getMobile(),
+                t.getContact(), t.getBusScope(), t.getId()) > 0;
     }
 
     public boolean updateStatus(String id, Channel.Status status){

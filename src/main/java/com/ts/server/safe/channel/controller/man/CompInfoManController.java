@@ -1,5 +1,6 @@
 package com.ts.server.safe.channel.controller.man;
 
+import com.ts.server.safe.base.service.DistrictService;
 import com.ts.server.safe.channel.controller.logger.CompInfoLogDetailBuilder;
 import com.ts.server.safe.channel.controller.man.form.CompInfoSaveForm;
 import com.ts.server.safe.channel.controller.man.form.CompInfoUpdateForm;
@@ -31,10 +32,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Api(value = "/man/company", tags = "M-公司信息管理API接口")
 public class CompInfoManController {
     private final CompInfoService service;
+    private final DistrictService districtService;
 
     @Autowired
-    public CompInfoManController(CompInfoService service) {
+    public CompInfoManController(CompInfoService service, DistrictService districtService) {
         this.service = service;
+        this.districtService = districtService;
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -43,7 +46,14 @@ public class CompInfoManController {
     public ResultVo<CompInfo> save(@Valid @RequestBody CompInfoSaveForm form){
         CompInfo t = form.toDomain();
         t.setChannelId(getCredential().getChannelId());
+        setDistrict(t);
         return ResultVo.success(service.save(t));
+    }
+
+    private void setDistrict(CompInfo t){
+        districtService.setDistrictName(t.getProvinceId(), e -> t.setProvince(e.getName()), "省份不存在");
+        districtService.setDistrictName(t.getCityId(), e -> t.setCity(e.getName()), "城市不存在");
+        districtService.setDistrictName(t.getCountryId(), e -> t.setCountry(e.getName()), "县区不存在");
     }
 
     @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -52,6 +62,7 @@ public class CompInfoManController {
     public ResultVo<CompInfo> update(@Valid @RequestBody CompInfoUpdateForm form){
         CompInfo t = form.toDomain();
         t.setChannelId(getCredential().getChannelId());
+        setDistrict(t);
         return ResultVo.success(service.update(t));
     }
 

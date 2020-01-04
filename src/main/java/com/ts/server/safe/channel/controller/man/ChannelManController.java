@@ -1,5 +1,6 @@
 package com.ts.server.safe.channel.controller.man;
 
+import com.ts.server.safe.base.service.DistrictService;
 import com.ts.server.safe.channel.controller.man.form.ChannelUpdateForm;
 import com.ts.server.safe.channel.domain.Channel;
 import com.ts.server.safe.channel.service.ChannelService;
@@ -27,10 +28,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Api(value = "/man/channel", tags = "M-服务商信息管理")
 public class ChannelManController {
     private final ChannelService service;
+    private final DistrictService districtService;
 
     @Autowired
-    public ChannelManController(ChannelService service) {
+    public ChannelManController(ChannelService service, DistrictService districtService) {
         this.service = service;
+        this.districtService = districtService;
     }
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
@@ -47,7 +50,14 @@ public class ChannelManController {
         String channelId = getCredential().getChannelId();
         Channel t = form.toDomain();
         t.setId(channelId);
+        setDistrict(t);
         return ResultVo.success(service.update(t));
+    }
+
+    private void setDistrict(Channel t){
+        districtService.setDistrictName(t.getProvinceId(), e -> t.setProvince(e.getName()), "省份不存在");
+        districtService.setDistrictName(t.getCityId(), e -> t.setCity(e.getName()), "城市不存在");
+        districtService.setDistrictName(t.getCountryId(), e -> t.setCountry(e.getName()), "县区不存在");
     }
     
     private ManCredential getCredential(){

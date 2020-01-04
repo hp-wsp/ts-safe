@@ -15,12 +15,12 @@ public class CompInfoSaveForm {
     @ApiModelProperty(value = "企业名称", required = true)
     @NotBlank
     private String name;
-    @ApiModelProperty(value = "省份")
-    private String province;
-    @ApiModelProperty(value = "城市")
-    private String city;
-    @ApiModelProperty(value = "国家")
-    private String country;
+    @ApiModelProperty(value = "省份编号")
+    private String provinceId;
+    @ApiModelProperty(value = "城市编号")
+    private String cityId;
+    @ApiModelProperty(value = "县区编号")
+    private String countryId;
     @ApiModelProperty("企业地址")
     private String address;
     @ApiModelProperty("注册地址")
@@ -82,28 +82,28 @@ public class CompInfoSaveForm {
         this.name = name;
     }
 
-    public String getProvince() {
-        return province;
+    public String getProvinceId() {
+        return provinceId;
     }
 
-    public void setProvince(String province) {
-        this.province = province;
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
     }
 
-    public String getCity() {
-        return city;
+    public String getCityId() {
+        return cityId;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
     }
 
-    public String getCountry() {
-        return country;
+    public String getCountryId() {
+        return countryId;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setCountryId(String countryId) {
+        this.countryId = countryId;
     }
 
     public String getAddress() {
@@ -302,9 +302,9 @@ public class CompInfoSaveForm {
         CompInfo t = new CompInfo();
 
         t.setName(name);
-        t.setProvince(province);
-        t.setCity(city);
-        t.setCountry(country);
+        t.setProvinceId(provinceId);
+        t.setCityId(cityId);
+        t.setCountryId(countryId);
         t.setAddress(address);
         t.setRegAddress(regAddress);
         t.setRegDate(regDate);

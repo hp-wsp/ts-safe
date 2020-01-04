@@ -1,13 +1,18 @@
 package com.ts.server.safe.base.service;
 
+import com.ts.server.safe.BaseException;
 import com.ts.server.safe.base.dao.DistrictDao;
 import com.ts.server.safe.base.domain.District;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * 行政区划业务服务
@@ -35,5 +40,25 @@ public class DistrictService {
 
     public List<District> query(String parentId){
         return dao.find(parentId);
+    }
+
+    public Optional<District> getOpt(String id){
+        try{
+            return Optional.of(dao.findOne(id));
+        }catch (DataAccessException e){
+            return Optional.empty();
+        }
+    }
+
+    public void setDistrictName(String id, Consumer<District> consumer, String errMsg){
+        if(StringUtils.isBlank(id)){
+            return ;
+        }
+
+        Optional<District> opt = getOpt(id);
+        if(opt.isEmpty()){
+            throw new BaseException(errMsg);
+        }
+        opt.ifPresent(consumer);
     }
 }
