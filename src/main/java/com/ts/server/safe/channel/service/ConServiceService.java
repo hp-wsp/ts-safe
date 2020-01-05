@@ -66,8 +66,10 @@ public class ConServiceService {
         }
         t.setLeaId(member.getId());
         t.setLeaName(member.getName());
+        t.setStatus(ConService.Status.WAIT);
 
         dao.insert(t);
+        items.forEach(e -> e.setServiceId(t.getId()));
         itemService.save(t.getId(), items);
         contractService.updateService(t.getConId(), t.getId());
 
@@ -110,6 +112,7 @@ public class ConServiceService {
         if(!dao.update(o)){
             throw new BaseException("修改服务失败");
         }
+        items.forEach(e -> e.setServiceId(o.getId()));
         itemService.save(o.getId(), items);
 
         return get(o.getId());

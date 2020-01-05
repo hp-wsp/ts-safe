@@ -37,9 +37,8 @@ public class CheckTaskService {
     private final MemberService memberService;
 
     @Autowired
-    public CheckTaskService(CheckTaskDao dao, ConServiceService conService,
-                            CompInfoService infoService, CheckContentService contentService,
-                            MemberService memberService) {
+    public CheckTaskService(CheckTaskDao dao, ConServiceService conService, CompInfoService infoService,
+                            CheckContentService contentService, MemberService memberService) {
         this.dao = dao;
         this.conService = conService;
         this.infoService = infoService;
@@ -51,6 +50,7 @@ public class CheckTaskService {
     public CheckTask save(CheckTask t, String[] contentIds){
 
         t.setId(IdGenerators.uuid());
+        t.setStatus(CheckTask.Status.WAIT);
         setService(t);
         setSups(t);
         setCheckUser(t);

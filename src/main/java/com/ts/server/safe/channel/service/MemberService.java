@@ -48,6 +48,9 @@ public class MemberService {
 
         t.setId(IdGenerators.uuid());
         t.setRoot(dao.notHasMember(t.getChannelId()));
+        if(StringUtils.isBlank(t.getName())){
+            t.setName(t.getUsername());
+        }
         dao.insert(t);
 
         return dao.findOne(t.getId());

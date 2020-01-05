@@ -43,7 +43,7 @@ public class CheckContentDao {
     }
 
     public void insert(CheckContent t){
-        final String sql = "INSERT INTO c_check_content (id, content_id, table_id, type_id, type_name, item_id, item_name," +
+        final String sql = "INSERT INTO c_check_content (id, task_id, content_id, type_id, type_name, item_id, item_name," +
                 "content, con_detail, law_item, update_time, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getTaskId(), t.getContentId(), t.getTypeId(), t.getTypeName(), t.getItemId(),
@@ -58,9 +58,9 @@ public class CheckContentDao {
                 t.getContent(), t.getConDetail(), t.getLawItem(), t.getId()) > 0;
     }
 
-    public boolean has(String taskId, String cotentId){
+    public boolean has(String taskId, String contentId){
         final String sql = "SELECT COUNT(id) FROM c_check_content WHERE task_id = ? AND content_id = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{taskId, cotentId}, Integer.class);
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{taskId, contentId}, Integer.class);
         return count != null && count > 0;
     }
 
@@ -85,7 +85,7 @@ public class CheckContentDao {
     }
 
     public List<CheckContent> find(String taskId){
-        final String sql = "SELECT * FROM c_check_content WHERE task_id = ? ORDER BY table_id ASC";
+        final String sql = "SELECT * FROM c_check_content WHERE task_id = ? ORDER BY content_id ASC";
         return jdbcTemplate.query(sql, new Object[]{taskId}, mapper);
     }
 }

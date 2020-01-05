@@ -33,8 +33,8 @@ public class CheckTaskDao {
         t.setCheckTimeTo(r.getDate("check_time_to"));
         t.setCheckUserIds(DaoUtils.toArray(r.getString("check_user_ids")));
         t.setCheckUserNames(DaoUtils.toArray(r.getString("check_user_names")));
-        t.setCheckSupIds(DaoUtils.toArray("check_table_ids"));
-        t.setCheckSupNames(DaoUtils.toArray("check_table_names"));
+        t.setCheckSupIds(DaoUtils.toArray(r.getString("check_table_ids")));
+        t.setCheckSupNames(DaoUtils.toArray(r.getString("check_table_names")));
         t.setStatus(CheckTask.Status.valueOf(r.getString("status")));
         t.setUpdateTime(r.getTimestamp("update_time"));
         t.setCreateTime(r.getTimestamp("create_time"));

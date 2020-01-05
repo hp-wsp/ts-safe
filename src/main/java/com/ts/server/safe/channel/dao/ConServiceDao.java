@@ -45,7 +45,7 @@ public class ConServiceDao {
 
     public void insert(ConService t){
         final String sql = "INSERT INTO c_service (id, channel_id, name, con_id, con_name, comp_id, comp_name," +
-                "lea_id, lea_name, status, update_create, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+                "lea_id, lea_name, status, update_time, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getName(), t.getConId(), t.getConName(), t.getCompId(),
                 t.getCompName(), t.getLeaId(), t.getLeaName(), t.getStatus().name());

@@ -113,7 +113,7 @@ public class CompInfoDao {
         t.setId(r.getString("id"));
         t.setName(r.getString("name"));
         t.setChannelId(r.getString("channel_id"));
-        t.setProvinceId(r.getString("provinceId"));
+        t.setProvinceId(r.getString("province_id"));
         t.setProvince(r.getString("province"));
         t.setCityId(r.getString("city_id"));
         t.setCity(r.getString("city"));
