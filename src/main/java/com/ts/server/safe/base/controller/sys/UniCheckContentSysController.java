@@ -42,7 +42,7 @@ public class UniCheckContentSysController {
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @EnableApiLogger(name = "新增检查表", buildDetail = UniCheckTableLogDetailBuilder.SaveBuilder.class)
+    @EnableApiLogger(name = "新增检查内容", buildDetail = UniCheckTableLogDetailBuilder.SaveBuilder.class)
     @ApiOperation("新增检查表")
     public ResultVo<UniCheckContent> save(@Valid @RequestBody UniCheckTableSaveForm form){
         UniCheckContent t = form.toDomain();
@@ -58,7 +58,7 @@ public class UniCheckContentSysController {
     }
 
     @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @EnableApiLogger(name = "修改检查表", buildDetail = UniCheckTableLogDetailBuilder.UpdateBuilder.class)
+    @EnableApiLogger(name = "修改检查内容", buildDetail = UniCheckTableLogDetailBuilder.UpdateBuilder.class)
     @ApiOperation("修改检查表")
     public ResultVo<UniCheckContent> update(@Valid @RequestBody UniCheckTableUpdateForm form){
         UniCheckContent t = form.toDomain();
@@ -67,20 +67,20 @@ public class UniCheckContentSysController {
     }
 
     @GetMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
-    @ApiOperation("得到检查表")
+    @ApiOperation("得到检查内容")
     public ResultVo<UniCheckContent> get(@PathVariable("id")String id){
         return ResultVo.success(service.get(id));
     }
 
     @DeleteMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
-    @EnableApiLogger(name = "删除检查表", buildDetail = UniCheckTableLogDetailBuilder.DeleteBuilder.class)
+    @EnableApiLogger(name = "删除检查内容", buildDetail = UniCheckTableLogDetailBuilder.DeleteBuilder.class)
     @ApiOperation("删除检查表")
     public ResultVo<OkVo> delete(@PathVariable("id")String id){
         return ResultVo.success(new OkVo(service.delete(id)));
     }
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    @ApiOperation("查询检查表")
+    @ApiOperation("查询检查内容")
     public ResultPageVo<UniCheckContent> query(
             @ApiParam(value = "检查类型") @RequestParam(required = false) String typeName,
             @ApiParam(value = "检查项目") @RequestParam(required = false) String itemName,
