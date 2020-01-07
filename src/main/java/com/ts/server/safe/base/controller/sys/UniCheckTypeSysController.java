@@ -26,7 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @ApiACL("ROLE_SYS")
 @RequestMapping("/sys/checkType")
-@Api(value = "/sys/checkType", tags = "S-管理检查类别")
+@Api(value = "/sys/checkType", tags = "S-管理检查类别API接口")
 public class UniCheckTypeSysController {
     private final UniCheckTypeService service;
 

@@ -10,6 +10,7 @@ import com.ts.server.safe.controller.vo.OkVo;
 import com.ts.server.safe.controller.vo.ResultPageVo;
 import com.ts.server.safe.controller.vo.ResultVo;
 import com.ts.server.safe.security.annotation.ApiACL;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @ApiACL("ROLE_SYS")
 @RequestMapping("/sys/checkItem")
+@Api(value = "/sys/checkItem", tags = "S-管理检查项目API接口")
 public class UniCheckItemSysController {
     private final UniCheckItemService service;
     private final UniCheckTypeService typeService;

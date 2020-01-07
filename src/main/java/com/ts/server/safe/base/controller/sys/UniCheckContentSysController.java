@@ -23,20 +23,20 @@ import javax.validation.Valid;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
- * 管理检查表API接口
+ * 管理检查内容API接口
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 @RestController
-@RequestMapping("/sys/checkTable")
+@RequestMapping("/sys/checkContent")
 @ApiACL(value = "ROLE_SYS")
-@Api(value = "/sys/checkTable", tags = "S-管理检查表")
-public class UniCheckTableSysController {
+@Api(value = "/sys/checkContent", tags = "S-管理检查内容API接口")
+public class UniCheckContentSysController {
     private final UniCheckContentService service;
     private final UniCheckItemService itemService;
 
     @Autowired
-    public UniCheckTableSysController(UniCheckContentService service, UniCheckItemService itemService) {
+    public UniCheckContentSysController(UniCheckContentService service, UniCheckItemService itemService) {
         this.service = service;
         this.itemService = itemService;
     }

@@ -18,6 +18,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.Collections;
 import java.util.List;
 
+import static springfox.documentation.builders.PathSelectors.*;
+import static com.google.common.base.Predicates.*;
+
 /**
  * api doc配置
  *
@@ -26,18 +29,6 @@ import java.util.List;
 @Configuration
 @EnableSwagger2
 public class ApiDocConfigure {
-
-    @Bean
-    public Docket createRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .globalOperationParameters(buildHeadParameters())
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ts.server.safe"))
-                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
-                .paths(PathSelectors.any())
-                .build();
-    }
 
     private List<Parameter> buildHeadParameters(){
         Parameter tokenParam = new ParameterBuilder().
@@ -53,9 +44,46 @@ public class ApiDocConfigure {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Ts-Safe API文档")
+                .description("sys:系统端API接口；man:服务商端API接口；comm:通用API接口。")
                 .termsOfServiceUrl("http://safe.tuoshecx.com/api/v2/api-docs")
                 .contact(new Contact("WangWei", "", "hhywangwei@gmail.com"))
                 .version("1.0")
+                .build();
+    }
+
+    @Bean
+    Docket createSysRestApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .globalOperationParameters(buildHeadParameters())
+                .apiInfo(apiInfo())
+                .groupName("sys")
+                .select()
+                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
+                .paths(regex("/sys/.*"))
+                .build();
+    }
+
+    @Bean
+    Docket createManRestApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .globalOperationParameters(buildHeadParameters())
+                .apiInfo(apiInfo())
+                .groupName("man")
+                .select()
+                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
+                .paths(regex("/man/.*"))
+                .build();
+    }
+
+    @Bean
+    Docket createCommRestApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .globalOperationParameters(buildHeadParameters())
+                .apiInfo(apiInfo())
+                .groupName("comm")
+                .select()
+                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
+                .paths(regex("/comm/.*"))
                 .build();
     }
 }
