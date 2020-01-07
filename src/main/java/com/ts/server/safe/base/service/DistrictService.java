@@ -52,6 +52,11 @@ public class DistrictService {
 
     public void setDistrictName(String id, Consumer<District> consumer, String errMsg){
         if(StringUtils.isBlank(id)){
+            District empty = new District();
+            empty.setId("");
+            empty.setName("");
+            empty.setFullName("");
+            consumer.accept(empty);
             return ;
         }
 

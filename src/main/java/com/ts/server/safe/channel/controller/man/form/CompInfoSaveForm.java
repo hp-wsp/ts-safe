@@ -2,8 +2,10 @@ package com.ts.server.safe.channel.controller.man.form;
 
 import com.ts.server.safe.channel.domain.CompInfo;
 import io.swagger.annotations.ApiModelProperty;
+import net.bytebuddy.implementation.bind.annotation.Empty;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -55,9 +57,11 @@ public class CompInfoSaveForm {
     private String creditCode;
     @ApiModelProperty("邮编")
     private String postCode;
-    @ApiModelProperty("行业分类编号集合")
+    @ApiModelProperty(value = "行业分类编号集合", required = true)
+    @NotEmpty
     private List<String> indCtgIds;
-    @ApiModelProperty("行业分类名称集合")
+    @ApiModelProperty(value = "行业分类名称集合", required = true)
+    @NotEmpty
     private List<String> indCtgNames;
     @ApiModelProperty("联系电话")
     private String indPhone;
