@@ -92,17 +92,17 @@ public class CheckTaskManController {
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ApiOperation("查询检查任务")
     public ResultPageVo<CheckTask> query(
-            @RequestParam @ApiParam(value = "公司名称") String compName,
-            @RequestParam @ApiParam(value = "检查员姓名") String checkUserName,
-            @RequestParam @ApiParam(value = "状态") String status,
-            @RequestParam @ApiParam(value = "检查开始时间") Date checkTimeFrom,
-            @RequestParam @ApiParam(value = "检查结束时间") Date checkTimeTo,
+            @RequestParam(required = false) @ApiParam(value = "公司名称") String compName,
+            @RequestParam(required = false) @ApiParam(value = "检查员姓名") String checkUserName,
+            @RequestParam(required = false) @ApiParam(value = "状态") String status,
+            @RequestParam(required = false) @ApiParam(value = "检查开始时间") Date checkTimeFrom,
+            @RequestParam(required = false) @ApiParam(value = "检查结束时间") Date checkTimeTo,
             @RequestParam(defaultValue = "0") @ApiParam(value = "查询页数") int page,
             @RequestParam(defaultValue = "true") @ApiParam(value = "是否得到查询记录数") boolean isCount,
             @RequestParam(defaultValue = "15") @ApiParam(value = "查询每页记录数") int rows){
 
         String channelId = getCredential().getChannelId();
-        CheckTask.Status statusObj = CheckTask.Status.valueOf(status);
+        CheckTask.Status statusObj = status == null? null: CheckTask.Status.valueOf(status);
         return new ResultPageVo.Builder<>(page, rows, service.query(channelId, compName, checkUserName, statusObj, checkTimeFrom, checkTimeTo, page * rows, rows))
                 .count(isCount, () -> service.count(channelId, compName, checkUserName, statusObj, checkTimeFrom, checkTimeTo))
                 .build();

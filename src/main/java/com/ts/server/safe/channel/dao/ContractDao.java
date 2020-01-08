@@ -99,45 +99,45 @@ public class ContractDao {
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
     }
 
-    public Long count(String channelId, String name, String num, String delCompanyName, String proAddress, Integer delCompanyType){
+    public Long count(String channelId, String name, String num, String entCompName, String proAddress, Integer entCompType){
         String sql = "SELECT COUNT(id) FROM c_contract WHERE channel_id LIKE ? AND name LIKE ? AND num LIKE ? " +
                 "AND ent_comp_name LIKE ? AND pro_address LIKE ? ";
 
-        if(Objects.nonNull(delCompanyType)){
+        if(Objects.nonNull(entCompType)){
             sql = sql + " AND ent_comp_type  = ?";
         }
 
-        final Object[] params = buildParams(channelId, name, num, delCompanyName, proAddress, delCompanyType);
+        final Object[] params = buildParams(channelId, name, num, entCompName, proAddress, entCompType);
         return jdbcTemplate.queryForObject(sql, params, Long.class);
     }
 
-    private Object[] buildParams(String channelId, String name, String num, String delCompanyName, String proAddress, Integer delCompanyType){
-        final Object[] params = delCompanyType == null? new Object[5]: new Object[6];
+    private Object[] buildParams(String channelId, String name, String num, String entCompName, String proAddress, Integer entCompType){
+        final Object[] params = entCompType == null? new Object[5]: new Object[6];
         params[0] = DaoUtils.blankLike(channelId);
         params[1] = DaoUtils.like(name);
         params[2] = DaoUtils.like(num);
-        params[3] = DaoUtils.blankLike(delCompanyName);
+        params[3] = DaoUtils.blankLike(entCompName);
         params[4] = DaoUtils.like(proAddress);
 
-        if(Objects.nonNull(delCompanyType)){
-            params[5] = delCompanyType;
+        if(Objects.nonNull(entCompType)){
+            params[5] = entCompType;
         }
 
         return params;
     }
 
-    public List<Contract> find(String channelId, String name, String num, String delCompanyName, String proAddress,
-                               Integer delCompanyType, int offset, int limit){
+    public List<Contract> find(String channelId, String name, String num, String entCompName, String proAddress,
+                               Integer entCompType, int offset, int limit){
         String sql = "SELECT * FROM c_contract WHERE channel_id LIKE ? AND name LIKE ? AND num LIKE ? " +
                 "AND ent_comp_name LIKE ? AND pro_address LIKE ? ";
 
-        if(Objects.nonNull(delCompanyType)){
+        if(Objects.nonNull(entCompType)){
             sql = sql + " AND ent_comp_type  = ?";
         }
 
         sql = sql + " ORDER BY update_time DESC, create_time DESC LIMIT ? OFFSET ?";
 
-        final Object[] params = DaoUtils.appendOffsetLimit(buildParams(channelId, name, num, delCompanyName, proAddress, delCompanyType), limit, offset);
+        final Object[] params = DaoUtils.appendOffsetLimit(buildParams(channelId, name, num, entCompName, proAddress, entCompType), offset, limit);
 
         return jdbcTemplate.query(sql, params, mapper);
     }

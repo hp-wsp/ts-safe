@@ -85,16 +85,16 @@ public class ContractManController {
     public ResultPageVo<Contract> query(
             @ApiParam(value = "合同名称") @RequestParam(required = false)String name,
             @ApiParam(value = "合同编号") @RequestParam(required = false)String num,
-            @ApiParam(value = "代理公司名称") @RequestParam(required = false)String delCompanyName,
+            @ApiParam(value = "代理公司名称") @RequestParam(required = false)String entCompName,
             @ApiParam(value = "项目属地") @RequestParam(required = false) String proAddress,
-            @ApiParam(value = "代理公司名称") @RequestParam(required = false) Integer delCompanyType,
+            @ApiParam(value = "代理公司名称") @RequestParam(required = false) Integer entCompType,
             @RequestParam(defaultValue = "0") @ApiParam(value = "查询页数") int page,
             @RequestParam(defaultValue = "true") @ApiParam(value = "是否得到查询记录数") boolean isCount,
             @RequestParam(defaultValue = "15") @ApiParam(value = "查询每页记录数") int rows){
 
         String channelId = getCredential().getChannelId();
-        return new ResultPageVo.Builder<>(page, rows, service.query(channelId, name, num, delCompanyName, proAddress, delCompanyType, page * rows, rows))
-                .count(isCount, () -> service.count(channelId, name, num, delCompanyName, proAddress, delCompanyType))
+        return new ResultPageVo.Builder<>(page, rows, service.query(channelId, name, num, entCompName, proAddress, entCompType, page * rows, rows))
+                .count(isCount, () -> service.count(channelId, name, num, entCompName, proAddress, entCompType))
                 .build();
     }
 

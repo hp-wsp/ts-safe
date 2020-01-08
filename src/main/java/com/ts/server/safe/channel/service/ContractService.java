@@ -91,15 +91,16 @@ public class ContractService {
         return dao.updateService(id, serviceId);
     }
 
-    public Long count(String channelId, String name, String num, String delCompanyName, String proAddress,
-                      Integer delCompanyType){
-        return dao.count(channelId, name, num, delCompanyName, proAddress, delCompanyType);
+    public Long count(String channelId, String name, String num,
+                      String entCompName, String proAddress, Integer entCompType){
+
+        return dao.count(channelId, name, num, entCompName, proAddress, entCompType);
     }
 
-    public List<Contract> query(String channelId, String name, String num, String delCompanyName, String proAddress,
-                                Integer delCompanyType, int offset, int limit){
+    public List<Contract> query(String channelId, String name, String num, String entCompName,
+                                String proAddress, Integer entCompType, int offset, int limit){
 
-        return dao.find(channelId, name, num, delCompanyName, proAddress, delCompanyType, offset, limit);
+        return dao.find(channelId, name, num, entCompName, proAddress, entCompType, offset, limit);
     }
 
     public List<Contract> queryNoneAlloc(String channelId){

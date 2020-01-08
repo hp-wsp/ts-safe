@@ -88,8 +88,8 @@ public class CheckTaskDao {
                       CheckTask.Status status, Date checkTimeFrom, Date checkTimeTo){
 
         String sql = "SELECT COUNT(id) FROM c_check_task WHERE channel_id LIKE ? AND comp_name LIKE ?" +
-                " AND check_user_name LIKE ? AND status LIKE ? ";
-        int len = 4;
+                " AND check_user_names LIKE ?";
+        int len = 3;
         if(checkTimeFrom != null){
             sql = sql + " AND check_time_from < ?";
             ++len;
@@ -98,13 +98,18 @@ public class CheckTaskDao {
             sql = sql + " AND check_time_to < ? ";
             ++len;
         }
+        if(status != null){
+            sql= sql + " AND status = ? ";
+        }
 
         int index = 0;
         Object[] params = new Object[len];
-        params[index++] = DaoUtils.like(channelId);
+        params[index++] = DaoUtils.blankLike(channelId);
         params[index++] = DaoUtils.like(compName);
         params[index++] = DaoUtils.like(checkUserName);
-        params[index++] = DaoUtils.like(status.name());
+        if(checkTimeFrom != null){
+            params[index++] =  checkTimeFrom;
+        }
         if(checkTimeFrom != null){
             params[index++] =  checkTimeFrom;
         }
@@ -118,8 +123,8 @@ public class CheckTaskDao {
     public List<CheckTask> find(String channelId, String compName, String checkUserName,
                                 CheckTask.Status status, Date checkTimeFrom, Date checkTimeTo, int offset, int limit){
         String sql = "SELECT * FROM c_check_task WHERE channel_id LIKE ? AND comp_name LIKE ? " +
-                "AND check_user_name LIKE ? AND status LIKE ? ";
-        int len = 6;
+                "AND check_user_names LIKE ? ";
+        int len = 5;
         if(checkTimeFrom != null){
             sql = sql + " AND check_time_from < ?";
             ++len;
@@ -128,14 +133,19 @@ public class CheckTaskDao {
             sql = sql + " AND check_time_to < ? ";
             ++len;
         }
+        if(status != null){
+            sql= sql + " AND status = ? ";
+        }
         sql = sql + "ORDER BY create_time DESC LIMIT ? OFFSET ?";
 
         int index = 0;
         Object[] params = new Object[len];
-        params[index++] = DaoUtils.like(channelId);
+        params[index++] = DaoUtils.blankLike(channelId);
         params[index++] = DaoUtils.like(compName);
         params[index++] = DaoUtils.like(checkUserName);
-        params[index++] = DaoUtils.like(status.name());
+        if(status!= null){
+            params[index++] = status.name();
+        }
         if(checkTimeFrom != null){
             params[index++] =  checkTimeFrom;
         }
