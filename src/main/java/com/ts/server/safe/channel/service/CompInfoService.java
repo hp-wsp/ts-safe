@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,10 +23,12 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class CompInfoService {
     private final CompInfoDao dao;
+    private final CompProductService productService;
 
     @Autowired
-    public CompInfoService(CompInfoDao dao) {
+    public CompInfoService(CompInfoDao dao, CompProductService productService) {
         this.dao = dao;
+        this.productService = productService;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -36,8 +39,10 @@ public class CompInfoService {
         t.setId(IdGenerators.uuid());
 
         dao.insert(t);
+        CompInfo n = dao.findOne(t.getId());
+        productService.save(n, Collections.emptyList());
 
-        return dao.findOne(t.getId());
+        return n;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -58,7 +63,12 @@ public class CompInfoService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public boolean delete(String id, String channelId){
-        return dao.delete(id, channelId);
+        if(dao.delete(id, channelId)){
+            productService.deleteOfCompany(id);
+            return true;
+        }
+
+        return false;
     }
 
     public boolean hasName(String channelId, String name){
