@@ -1,5 +1,7 @@
 package com.ts.server.safe.task.dao;
 
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ts.server.safe.common.utils.DaoUtils;
 import com.ts.server.safe.task.domain.CheckTask;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -19,54 +23,42 @@ import java.util.List;
 @Repository
 public class CheckTaskDao {
     private final JdbcTemplate jdbcTemplate;
-
-    private final RowMapper<CheckTask> mapper = (r, i) -> {
-        CheckTask t = new CheckTask();
-
-        t.setId(r.getString("id"));
-        t.setChannelId(r.getString("channel_id"));
-        t.setServiceId(r.getString("service_id"));
-        t.setServiceName(r.getString("service_name"));
-        t.setCompId(r.getString("comp_id"));
-        t.setCompName(r.getString("comp_name"));
-        t.setCheckTimeFrom(r.getDate("check_time_from"));
-        t.setCheckTimeTo(r.getDate("check_time_to"));
-        t.setCheckUserIds(DaoUtils.toArray(r.getString("check_user_ids")));
-        t.setCheckUserNames(DaoUtils.toArray(r.getString("check_user_names")));
-        t.setCheckSupIds(DaoUtils.toArray(r.getString("check_table_ids")));
-        t.setCheckSupNames(DaoUtils.toArray(r.getString("check_table_names")));
-        t.setStatus(CheckTask.Status.valueOf(r.getString("status")));
-        t.setUpdateTime(r.getTimestamp("update_time"));
-        t.setCreateTime(r.getTimestamp("create_time"));
-
-        return t;
-    };
+    private final ObjectMapper objectMapper;
+    private final RowMapper<CheckTask> mapper;
 
     @Autowired
-    public CheckTaskDao(DataSource dataSource){
+    public CheckTaskDao(DataSource dataSource, ObjectMapper objectMapper){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.objectMapper = objectMapper;
+        this.mapper = new CheckTaskMapper(objectMapper);
     }
 
     public void insert(CheckTask t){
         final String sql = "INSERT INTO c_check_task (id, channel_id, service_id, service_name, comp_id, comp_name, " +
-                "check_time_from, check_time_to, check_user_ids, check_user_names, check_table_ids, " +
-                "check_table_names, status, update_time, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+                "check_time_from, check_time_to, check_users, check_ind_ctgs, status, update_time, create_time) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
-        jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getServiceId(), t.getServiceName(), t.getCompId(),
-                t.getCompName(), t.getCheckTimeFrom(), t.getCheckTimeTo(), DaoUtils.join(t.getCheckUserIds()),
-                DaoUtils.join(t.getCheckUserNames()), DaoUtils.join(t.getCheckSupIds()), DaoUtils.join(t.getCheckSupNames()),
-                t.getStatus().name());
+        jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getServiceId(), t.getServiceName(),
+                t.getCompId(), t.getCompName(), t.getCheckTimeFrom(), t.getCheckTimeTo(),
+                toJson(t.getCheckUsers()), toJson(t.getCheckIndCtgs()), t.getStatus().name());
+    }
+
+    private String toJson(List<?> values){
+        try{
+            return values == null || values.isEmpty()? "{}": objectMapper.writeValueAsString(values);
+        }catch (Exception e){
+            throw new RuntimeException("Object to json fail");
+        }
     }
 
     public boolean update(CheckTask t){
         final String sql = "UPDATE c_check_task SET service_id = ?, service_name = ?, comp_id = ?, comp_name = ?," +
-                "check_time_from = ?, check_time_to = ?, check_user_ids = ?, check_user_names = ?, check_table_ids = ?," +
-                "check_table_names = ?, status = ?, update_time = now() WHERE id = ?";
+                "check_time_from = ?, check_time_to = ?, check_users = ?, check_ind_ctgs = ?, status = ?, update_time = now() " +
+                "WHERE id = ?";
 
         return jdbcTemplate.update(sql, t.getServiceId(), t.getServiceName(), t.getCompId(), t.getCompName(),
-                t.getCheckTimeFrom(), t.getCheckTimeTo(), DaoUtils.join(t.getCheckUserIds()),
-                DaoUtils.join(t.getCheckUserNames()), DaoUtils.join(t.getCheckSupIds()),
-                DaoUtils.join(t.getCheckSupNames()), t.getStatus().name(), t.getId()) > 0;
+                t.getCheckTimeFrom(), t.getCheckTimeTo(), toJson(t.getCheckUsers()), toJson(t.getCheckIndCtgs()),
+                t.getStatus().name(), t.getId()) > 0;
     }
 
     public boolean delete(String id){
@@ -84,12 +76,10 @@ public class CheckTaskDao {
         return jdbcTemplate.update(sql, status.name(), id) > 0;
     }
 
-    public Long count(String channelId, String compName, String checkUserName,
-                      CheckTask.Status status, Date checkTimeFrom, Date checkTimeTo){
+    public Long count(String channelId, String compName, CheckTask.Status status, Date checkTimeFrom, Date checkTimeTo){
 
-        String sql = "SELECT COUNT(id) FROM c_check_task WHERE channel_id LIKE ? AND comp_name LIKE ?" +
-                " AND check_user_names LIKE ?";
-        int len = 3;
+        String sql = "SELECT COUNT(id) FROM c_check_task WHERE channel_id LIKE ? AND comp_name LIKE ? ";
+        int len = 2;
         if(checkTimeFrom != null){
             sql = sql + " AND check_time_from < ?";
             ++len;
@@ -106,7 +96,6 @@ public class CheckTaskDao {
         Object[] params = new Object[len];
         params[index++] = DaoUtils.blankLike(channelId);
         params[index++] = DaoUtils.like(compName);
-        params[index++] = DaoUtils.like(checkUserName);
         if(checkTimeFrom != null){
             params[index++] =  checkTimeFrom;
         }
@@ -120,11 +109,10 @@ public class CheckTaskDao {
         return jdbcTemplate.queryForObject(sql, params, Long.class);
     }
 
-    public List<CheckTask> find(String channelId, String compName, String checkUserName,
-                                CheckTask.Status status, Date checkTimeFrom, Date checkTimeTo, int offset, int limit){
-        String sql = "SELECT * FROM c_check_task WHERE channel_id LIKE ? AND comp_name LIKE ? " +
-                "AND check_user_names LIKE ? ";
-        int len = 5;
+    public List<CheckTask> find(String channelId, String compName, CheckTask.Status status,
+                                Date checkTimeFrom, Date checkTimeTo, int offset, int limit){
+        String sql = "SELECT * FROM c_check_task WHERE channel_id LIKE ? AND comp_name LIKE ? ";
+        int len = 4;
         if(checkTimeFrom != null){
             sql = sql + " AND check_time_from < ?";
             ++len;
@@ -142,7 +130,6 @@ public class CheckTaskDao {
         Object[] params = new Object[len];
         params[index++] = DaoUtils.blankLike(channelId);
         params[index++] = DaoUtils.like(compName);
-        params[index++] = DaoUtils.like(checkUserName);
         if(status!= null){
             params[index++] = status.name();
         }
@@ -156,5 +143,46 @@ public class CheckTaskDao {
         params[index] = offset;
 
         return jdbcTemplate.query(sql, params, mapper);
+    }
+
+    static class CheckTaskMapper implements RowMapper<CheckTask>{
+        private final ObjectMapper objectMapper;
+        private final JavaType usersType;
+        private final JavaType indCtgsType;
+
+        CheckTaskMapper(ObjectMapper objectMapper){
+            this.objectMapper = objectMapper;
+            this.usersType = objectMapper.getTypeFactory().constructParametricType(List.class, CheckTask.CheckUser.class);
+            this.indCtgsType = objectMapper.getTypeFactory().constructParametricType(List.class, CheckTask.CheckIndCtg.class);
+        }
+
+        @Override
+        public CheckTask mapRow(ResultSet r, int i) throws SQLException {
+            CheckTask t = new CheckTask();
+
+            t.setId(r.getString("id"));
+            t.setChannelId(r.getString("channel_id"));
+            t.setServiceId(r.getString("service_id"));
+            t.setServiceName(r.getString("service_name"));
+            t.setCompId(r.getString("comp_id"));
+            t.setCompName(r.getString("comp_name"));
+            t.setCheckTimeFrom(r.getDate("check_time_from"));
+            t.setCheckTimeTo(r.getDate("check_time_to"));
+            t.setCheckUsers(toObject(r.getString("check_users"), usersType));
+            t.setCheckIndCtgs(toObject(r.getString("check_ind_ctgs"), indCtgsType));
+            t.setStatus(CheckTask.Status.valueOf(r.getString("status")));
+            t.setUpdateTime(r.getTimestamp("update_time"));
+            t.setCreateTime(r.getTimestamp("create_time"));
+
+            return t;
+        }
+
+        private <T> List<T> toObject(String v, JavaType javaType){
+            try{
+                return objectMapper.readValue(v, javaType);
+            }catch (Exception e){
+                throw new RuntimeException("To object fail value " + v);
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-import com.ts.server.safe.base.domain.UniSupervise;
+import com.ts.server.safe.base.domain.UniIndCtg;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
@@ -15,9 +15,9 @@ public class SuperviseSql {
     }
 
     public SuperviseSql(){
-        Stack<UniSupervise> stack1 = new Stack<>();
-        Stack<UniSupervise> stack2 = new Stack<>();
-        List<UniSupervise> list = new ArrayList<>();
+        Stack<UniIndCtg> stack1 = new Stack<>();
+        Stack<UniIndCtg> stack2 = new Stack<>();
+        List<UniIndCtg> list = new ArrayList<>();
         AtomicInteger count = new AtomicInteger(0);
         try(InputStream stream = SuperviseSql.class.getResourceAsStream("aa.csv")){
             Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8);
@@ -29,19 +29,19 @@ public class SuperviseSql {
                     String[] array = StringUtils.splitByWholeSeparatorPreserveAllTokens(e, ",");
                     String id = String.format("%05d", index);
                     if(StringUtils.isNotBlank(array[0])){
-                        UniSupervise t = build(id, array[0], "root", 1);
+                        UniIndCtg t = build(id, array[0], "root", 1);
                         stack1.push(t);
                     }
                     if(StringUtils.isNotBlank(array[1])){
                         count3.set(0);
-                        UniSupervise p = stack1.peek();
-                        UniSupervise t = build(id, array[1], p.getId(), 2);
+                        UniIndCtg p = stack1.peek();
+                        UniIndCtg t = build(id, array[1], p.getId(), 2);
                         stack2.push(t);
                     }
                     if(StringUtils.isNotBlank(array[2])){
-                        UniSupervise pp = stack1.peek();
-                        UniSupervise p = stack2.peek();
-                        UniSupervise t = build(id, array[2], p.getId(), 3);
+                        UniIndCtg pp = stack1.peek();
+                        UniIndCtg p = stack2.peek();
+                        UniIndCtg t = build(id, array[2], p.getId(), 3);
                         t.setNum(pp.getNum()  + p.getNum() + String.format("%02d", count3.incrementAndGet()));
                         list.add(t);
                     }
@@ -59,8 +59,8 @@ public class SuperviseSql {
 
     }
 
-    private UniSupervise build(String id, String name, String parentId, int level){
-        UniSupervise t = new UniSupervise();
+    private UniIndCtg build(String id, String name, String parentId, int level){
+        UniIndCtg t = new UniIndCtg();
 
         t.setId(id);
         t.setNum(num(name, level));
@@ -81,7 +81,7 @@ public class SuperviseSql {
         return "";
     }
 
-    private String buildSql(UniSupervise t){
+    private String buildSql(UniIndCtg t){
         return String.format("('%s', '%s', '%s', '%s', %d, now()),", t.getId(), t.getNum(), t.getName(), t.getParentId(), t.getLevel());
     }
 }

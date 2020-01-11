@@ -1,6 +1,6 @@
 package com.ts.server.safe.base.controller.sys.form;
 
-import com.ts.server.safe.base.domain.UniSupervise;
+import com.ts.server.safe.base.domain.UniIndCtg;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -50,8 +50,8 @@ public class UniSuperviseSaveForm {
         this.remark = remark;
     }
 
-    public UniSupervise toDomain(){
-        UniSupervise t = new UniSupervise();
+    public UniIndCtg toDomain(){
+        UniIndCtg t = new UniIndCtg();
 
         t.setName(name);
         t.setNum(num);

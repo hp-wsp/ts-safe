@@ -1,6 +1,6 @@
 package com.ts.server.safe.base.controller.sys.form;
 
-import com.ts.server.safe.base.domain.UniSupervise;
+import com.ts.server.safe.base.domain.UniIndCtg;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -21,8 +21,8 @@ public class UniSuperviseUpdateForm extends UniSuperviseSaveForm {
     }
 
     @Override
-    public UniSupervise toDomain() {
-         UniSupervise t = super.toDomain();
+    public UniIndCtg toDomain() {
+         UniIndCtg t = super.toDomain();
 
          t.setId(id);
 

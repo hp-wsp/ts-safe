@@ -1,11 +1,11 @@
 package com.ts.server.safe.task.service;
 
 import com.ts.server.safe.BaseException;
-import com.ts.server.safe.channel.domain.CompInfo;
-import com.ts.server.safe.channel.domain.ConService;
+import com.ts.server.safe.company.domain.CompInfo;
+import com.ts.server.safe.contract.domain.ConService;
 import com.ts.server.safe.channel.domain.Member;
-import com.ts.server.safe.channel.service.CompInfoService;
-import com.ts.server.safe.channel.service.ConServiceService;
+import com.ts.server.safe.company.service.CompInfoService;
+import com.ts.server.safe.contract.service.ConServiceService;
 import com.ts.server.safe.channel.service.MemberService;
 import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.task.dao.CheckTaskDao;
@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 检查任务业务服务
@@ -52,7 +53,7 @@ public class CheckTaskService {
         t.setId(IdGenerators.uuid());
         t.setStatus(CheckTask.Status.WAIT);
         setService(t);
-        setSups(t);
+        setIndCtgs(t);
         setCheckUser(t);
         dao.insert(t);
 
@@ -73,33 +74,27 @@ public class CheckTaskService {
         t.setCompName(conSer.getCompName());
     }
 
-    private void setSups(CheckTask t){
+    private void setIndCtgs(CheckTask t){
         CompInfo info = infoService.get(t.getCompId());
-        String[] supNames = new String[t.getCheckSupIds().length];
-        for(int i = 0; i < t.getCheckSupIds().length; i++){
-            String supId = t.getCheckSupIds()[i];
-            if(!info.getIndCtgIds().contains(supId)){
-                throw new BaseException("检查表不存在");
-            }
-            int index = info.getIndCtgIds().indexOf(supId);
-            String name = info.getIndCtgNames().get(index);
-            supNames[i] = name;
+        for(CheckTask.CheckIndCtg checkIndCtg: t.getCheckIndCtgs()){
+            CompInfo.IndCtg ctg = getIndCtgOpt(info.getIndCtgs(), checkIndCtg.getId())
+                    .orElseThrow(() ->new BaseException("行业分类不存在"));
+            checkIndCtg.setName(ctg.getName());
         }
-        t.setCheckSupNames(supNames);
+    }
+
+    private Optional<CompInfo.IndCtg> getIndCtgOpt(List<CompInfo.IndCtg> indCtgs, String ctgId){
+        return indCtgs.stream().filter(e -> StringUtils.equals(e.getId(), ctgId)).findFirst();
     }
 
     private void setCheckUser(CheckTask t){
-        int len = t.getCheckUserIds().length;
-        String[] userNames = new String[len];
-        for(int i = 0; i < len; i++){
-            String userId = t.getCheckUserIds()[i];
-            Member m = memberService.get(userId);
+        for(CheckTask.CheckUser u: t.getCheckUsers()){
+            Member m = memberService.get(u.getId());
             if(!StringUtils.equals(m.getChannelId(), t.getChannelId())){
                 throw new BaseException("不能添加检查员");
             }
-            userNames[i] = StringUtils.isNotBlank(m.getName())? m.getName(): m.getUsername();
+            u.setName(StringUtils.isBlank(m.getName())? m.getUsername(): m.getName());
         }
-        t.setCheckUserNames(userNames);
     }
 
     public CheckTask get(String id){
@@ -119,7 +114,7 @@ public class CheckTaskService {
         }
 
         setService(t);
-        setSups(t);
+        setIndCtgs(t);
         setCheckUser(t);
 
         if(!dao.update(t)){
@@ -149,15 +144,14 @@ public class CheckTaskService {
         return success;
     }
 
-    public Long count(String channelId, String compName, String checkUserName,
-                      CheckTask.Status status, Date checkTimeFrom, Date checkTimeTo){
+    public Long count(String channelId, String compName, CheckTask.Status status, Date checkTimeFrom, Date checkTimeTo){
 
-        return dao.count(channelId, compName, checkUserName, status, checkTimeFrom, checkTimeTo);
+        return dao.count(channelId, compName, status, checkTimeFrom, checkTimeTo);
     }
 
-    public List<CheckTask> query(String channelId, String compName, String checkUserName,
-                                 CheckTask.Status status, Date checkTimeFrom, Date checkTimeTo, int offset, int limit){
+    public List<CheckTask> query(String channelId, String compName, CheckTask.Status status,
+                                 Date checkTimeFrom, Date checkTimeTo, int offset, int limit){
 
-        return dao.find(channelId, compName, checkUserName, status, checkTimeFrom, checkTimeTo, offset, limit);
+        return dao.find(channelId, compName, status, checkTimeFrom, checkTimeTo, offset, limit);
     }
 }

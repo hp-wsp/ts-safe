@@ -93,7 +93,6 @@ public class CheckTaskManController {
     @ApiOperation("查询检查任务")
     public ResultPageVo<CheckTask> query(
             @RequestParam(required = false) @ApiParam(value = "公司名称") String compName,
-            @RequestParam(required = false) @ApiParam(value = "检查员姓名") String checkUserName,
             @RequestParam(required = false) @ApiParam(value = "状态") String status,
             @RequestParam(required = false) @ApiParam(value = "检查开始时间") Date checkTimeFrom,
             @RequestParam(required = false) @ApiParam(value = "检查结束时间") Date checkTimeTo,
@@ -103,8 +102,8 @@ public class CheckTaskManController {
 
         String channelId = getCredential().getChannelId();
         CheckTask.Status statusObj = status == null? null: CheckTask.Status.valueOf(status);
-        return new ResultPageVo.Builder<>(page, rows, service.query(channelId, compName, checkUserName, statusObj, checkTimeFrom, checkTimeTo, page * rows, rows))
-                .count(isCount, () -> service.count(channelId, compName, checkUserName, statusObj, checkTimeFrom, checkTimeTo))
+        return new ResultPageVo.Builder<>(page, rows, service.query(channelId, compName, statusObj, checkTimeFrom, checkTimeTo, page * rows, rows))
+                .count(isCount, () -> service.count(channelId, compName, statusObj, checkTimeFrom, checkTimeTo))
                 .build();
     }
 

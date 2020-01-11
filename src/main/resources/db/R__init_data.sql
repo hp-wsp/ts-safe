@@ -1,12 +1,18 @@
 #----------------------------------------------------------------
 # sequence
 #---------------------------------------------------------------
-INSERT INTO s_sequence (seq_key, cur_value, remark) VALUES ('seq_check_type', 3, "检查类别序号");
-INSERT INTO s_sequence (seq_key, cur_value, remark) VALUES ('seq_check_item', 16, "检查项目序号");
-INSERT INTO s_sequence (seq_key, cur_value, remark) VALUES ('seq_check_table', 107, "检查表序号");
-INSERT INTO s_sequence (seq_key, cur_value, remark) VALUES ('seq_risk_chemical', 1, "危化目录序号");
-INSERT INTO s_sequence (seq_key, cur_value, remark) VALUES ('seq_spe_industry', 1, "特种行业序号");
-INSERT INTO s_sequence (seq_key, cur_value, remark) VALUES ('seq_supervise', 1500, "行业分类序号");
+INSERT INTO s_sequence (seq_key, cur_value, remark)
+SELECT 'seq_check_type', 3, '检查类别序号' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_check_type');
+INSERT INTO s_sequence (seq_key, cur_value, remark)
+SELECT 'seq_check_item', 16, '检查项目序号' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_check_item');
+INSERT INTO s_sequence (seq_key, cur_value, remark)
+SELECT 'seq_check_table', 107, '检查表序号' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_check_table');
+INSERT INTO s_sequence (seq_key, cur_value, remark)
+SELECT 'seq_risk_chemical', 1, '危化目录序号' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_risk_chemical');
+INSERT INTO s_sequence (seq_key, cur_value, remark)
+SELECT 'seq_spe_industry', 1, '特种行业序号' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_spe_industry');
+INSERT INTO s_sequence (seq_key, cur_value, remark)
+SELECT 'seq_ind_ctg', 1600, '行业分类序号' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_ind_ctg');
 
 #-----------------------------------------------------------------
 #初始检查类别数据
@@ -301,9 +307,9 @@ INSERT INTO b_check_content (id, type_id, type_name, item_id, item_name, content
 #------------------------------------------------------------------------
 #初始行业数据
 #------------------------------------------------------------------------
-DELETE FROM b_supervise;
+DELETE FROM b_ind_ctg;
 
-INSERT INTO b_supervise (id, num, name, parent_id, level, create_time) VALUES
+INSERT INTO b_ind_ctg (id, num, name, parent_id, level, create_time) VALUES
 ('00001', 'A', 'A农、林、牧、渔业', 'root', 1, now()),
 ('00082', 'B', 'B采矿业', 'root', 1, now()),
 ('00132', 'C', 'C制造业', 'root', 1, now()),

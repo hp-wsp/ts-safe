@@ -7,7 +7,10 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 新增检查任务
@@ -30,8 +33,8 @@ public class CheckTaskSaveForm {
     @ApiModelProperty(value = "检查人员编号集合", required = true)
     private String[] checkUserIds;
     @NotEmpty
-    @ApiModelProperty(value = "行业（检查表）编号集合", required = true)
-    private String[] checkSupIds;
+    @ApiModelProperty(value = "行业编号集合", required = true)
+    private String[] checkIndCtgIds;
     @NotEmpty
     @ApiModelProperty(value = "检查内容编号")
     private String[] contentIds;
@@ -68,12 +71,12 @@ public class CheckTaskSaveForm {
         this.checkUserIds = checkUserIds;
     }
 
-    public String[] getCheckSupIds() {
-        return checkSupIds;
+    public String[] getCheckIndCtgIds() {
+        return checkIndCtgIds;
     }
 
-    public void setCheckSupIds(String[] checkSupIds) {
-        this.checkSupIds = checkSupIds;
+    public void setCheckIndCtgIds(String[] checkIndCtgIds) {
+        this.checkIndCtgIds = checkIndCtgIds;
     }
 
     public String[] getContentIds() {
@@ -90,9 +93,26 @@ public class CheckTaskSaveForm {
         t.setServiceId(serviceId);
         t.setCheckTimeFrom(checkTimeFrom);
         t.setCheckTimeTo(checkTimeTo);
-        t.setCheckSupIds(checkSupIds);
-        t.setCheckUserIds(checkUserIds);
+        t.setCheckIndCtgs(buildIndCtgs());
+        t.setCheckUsers(buildUsers());
 
         return t;
+    }
+
+    private List<CheckTask.CheckIndCtg> buildIndCtgs(){
+        return Arrays.stream(checkIndCtgIds).map(e -> {
+            CheckTask.CheckIndCtg t = new CheckTask.CheckIndCtg();
+            t.setId(e);
+            return t;
+        }).collect(Collectors.toList());
+    }
+
+    private List<CheckTask.CheckUser> buildUsers(){
+        return Arrays.stream(checkUserIds).map(e -> {
+            CheckTask.CheckUser t = new CheckTask.CheckUser();
+
+            t.setId(e);
+            return t;
+        }).collect(Collectors.toList());
     }
 }

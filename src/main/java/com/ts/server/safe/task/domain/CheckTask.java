@@ -3,8 +3,8 @@ package com.ts.server.safe.task.domain;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -29,14 +29,10 @@ public class CheckTask {
     private Date checkTimeFrom;
     @ApiModelProperty("检查结束时间")
     private Date checkTimeTo;
-    @ApiModelProperty("检查人员编号集合")
-    private String[] checkUserIds;
-    @ApiModelProperty("检查人员姓名集合")
-    private String[] checkUserNames;
-    @ApiModelProperty("行业(检查表)编号集合")
-    private String[] checkSupIds;
-    @ApiModelProperty("行业(检查表)名称集合")
-    private String[] checkSupNames;
+    @ApiModelProperty("检查人员集合")
+    private List<CheckUser> checkUsers;
+    @ApiModelProperty("行业分类集合")
+    private List<CheckIndCtg> checkIndCtgs;
     @ApiModelProperty("检查任务状态")
     private Status status;
     @ApiModelProperty("修改时间")
@@ -112,36 +108,20 @@ public class CheckTask {
         this.checkTimeTo = checkTimeTo;
     }
 
-    public String[] getCheckUserIds() {
-        return checkUserIds;
+    public List<CheckUser> getCheckUsers() {
+        return checkUsers;
     }
 
-    public void setCheckUserIds(String[] checkUserIds) {
-        this.checkUserIds = checkUserIds;
+    public void setCheckUsers(List<CheckUser> checkUsers) {
+        this.checkUsers = checkUsers;
     }
 
-    public String[] getCheckUserNames() {
-        return checkUserNames;
+    public List<CheckIndCtg> getCheckIndCtgs() {
+        return checkIndCtgs;
     }
 
-    public void setCheckUserNames(String[] checkUserNames) {
-        this.checkUserNames = checkUserNames;
-    }
-
-    public String[] getCheckSupIds() {
-        return checkSupIds;
-    }
-
-    public void setCheckSupIds(String[] checkSupIds) {
-        this.checkSupIds = checkSupIds;
-    }
-
-    public String[] getCheckSupNames() {
-        return checkSupNames;
-    }
-
-    public void setCheckSupNames(String[] checkSupNames) {
-        this.checkSupNames = checkSupNames;
+    public void setCheckIndCtgs(List<CheckIndCtg> checkIndCtgs) {
+        this.checkIndCtgs = checkIndCtgs;
     }
 
     public Status getStatus() {
@@ -181,10 +161,8 @@ public class CheckTask {
                 Objects.equals(compName, checkTask.compName) &&
                 Objects.equals(checkTimeFrom, checkTask.checkTimeFrom) &&
                 Objects.equals(checkTimeTo, checkTask.checkTimeTo) &&
-                Arrays.equals(checkUserIds, checkTask.checkUserIds) &&
-                Arrays.equals(checkUserNames, checkTask.checkUserNames) &&
-                Arrays.equals(checkSupIds, checkTask.checkSupIds) &&
-                Arrays.equals(checkSupNames, checkTask.checkSupNames) &&
+                Objects.equals(checkUsers, checkTask.checkUsers) &&
+                Objects.equals(checkIndCtgs, checkTask.checkIndCtgs) &&
                 status == checkTask.status &&
                 Objects.equals(updateTime, checkTask.updateTime) &&
                 Objects.equals(createTime, checkTask.createTime);
@@ -192,12 +170,7 @@ public class CheckTask {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, channelId, serviceId, serviceName, compId, compName, checkTimeFrom, checkTimeTo, status, updateTime, createTime);
-        result = 31 * result + Arrays.hashCode(checkUserIds);
-        result = 31 * result + Arrays.hashCode(checkUserNames);
-        result = 31 * result + Arrays.hashCode(checkSupIds);
-        result = 31 * result + Arrays.hashCode(checkSupNames);
-        return result;
+        return Objects.hash(id, channelId, serviceId, serviceName, compId, compName, checkTimeFrom, checkTimeTo, checkUsers, checkIndCtgs, status, updateTime, createTime);
     }
 
     @Override
@@ -211,13 +184,107 @@ public class CheckTask {
                 .append("compName", compName)
                 .append("checkTimeFrom", checkTimeFrom)
                 .append("checkTimeTo", checkTimeTo)
-                .append("checkUserIds", checkUserIds)
-                .append("checkUserNames", checkUserNames)
-                .append("checkSupIds", checkSupIds)
-                .append("checkSupNames", checkSupNames)
+                .append("checkUsers", checkUsers)
+                .append("checkIndCtgs", checkIndCtgs)
                 .append("status", status)
                 .append("updateTime", updateTime)
                 .append("createTime", createTime)
                 .toString();
+    }
+
+    /**
+     * 检查用户
+     */
+    public static class CheckUser {
+        @ApiModelProperty("检查员编号")
+        private String id;
+        @ApiModelProperty("检查员名")
+        private String name;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            CheckUser checkUser = (CheckUser) o;
+            return Objects.equals(id, checkUser.id) &&
+                    Objects.equals(name, checkUser.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, name);
+        }
+
+        @Override
+        public String toString() {
+            return new ToStringBuilder(this)
+                    .append("id", id)
+                    .append("name", name)
+                    .toString();
+        }
+    }
+
+    /**
+     * 检查行业
+     */
+    public static class CheckIndCtg {
+        @ApiModelProperty("行业分类")
+        private String id;
+        @ApiModelProperty("行业名称")
+        private String name;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            CheckIndCtg indCtg = (CheckIndCtg) o;
+            return Objects.equals(id, indCtg.id) &&
+                    Objects.equals(name, indCtg.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, name);
+        }
+
+        @Override
+        public String toString() {
+            return new ToStringBuilder(this)
+                    .append("id", id)
+                    .append("name", name)
+                    .toString();
+        }
     }
 }
