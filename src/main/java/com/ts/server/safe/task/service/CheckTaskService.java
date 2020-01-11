@@ -9,8 +9,10 @@ import com.ts.server.safe.contract.service.ConServiceService;
 import com.ts.server.safe.channel.service.MemberService;
 import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.task.dao.CheckTaskDao;
+import com.ts.server.safe.task.dao.CheckTaskOfMemberDao;
 import com.ts.server.safe.task.domain.CheckContent;
 import com.ts.server.safe.task.domain.CheckTask;
+import com.ts.server.safe.task.domain.CheckTaskOfMember;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -22,6 +24,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 检查任务业务服务
@@ -32,15 +35,18 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class CheckTaskService {
     private final CheckTaskDao dao;
+    private final CheckTaskOfMemberDao ofMemberDao;
     private final ConServiceService conService;
     private final CompInfoService infoService;
     private final CheckContentService contentService;
     private final MemberService memberService;
 
     @Autowired
-    public CheckTaskService(CheckTaskDao dao, ConServiceService conService, CompInfoService infoService,
+    public CheckTaskService(CheckTaskDao dao, CheckTaskOfMemberDao ofMemberDao,
+                            ConServiceService conService, CompInfoService infoService,
                             CheckContentService contentService, MemberService memberService) {
         this.dao = dao;
+        this.ofMemberDao = ofMemberDao;
         this.conService = conService;
         this.infoService = infoService;
         this.contentService = contentService;
@@ -60,6 +66,8 @@ public class CheckTaskService {
         for(String contentId: contentIds){
             contentService.save(t.getId(), contentId);
         }
+
+        saveMemberTask(t);
 
         return dao.findOne(t.getId());
     }
@@ -97,6 +105,18 @@ public class CheckTaskService {
         }
     }
 
+    private void saveMemberTask(CheckTask t){
+        ofMemberDao.deleteOfTask(t.getId());
+
+        t.getCheckUsers().forEach(e -> {
+            CheckTaskOfMember m = new CheckTaskOfMember();
+            m.setMemId(e.getId());
+            m.setTaskId(t.getId());
+            m.setStatus(t.getStatus());
+            ofMemberDao.insert(m);
+        });
+    }
+
     public CheckTask get(String id){
         try{
             return dao.findOne(id);
@@ -132,6 +152,8 @@ public class CheckTaskService {
             contentService.save(t.getId(), contentId);
         }
 
+        saveMemberTask(t);
+
         return get(t.getId());
     }
 
@@ -153,5 +175,11 @@ public class CheckTaskService {
                                  Date checkTimeFrom, Date checkTimeTo, int offset, int limit){
 
         return dao.find(channelId, compName, status, checkTimeFrom, checkTimeTo, offset, limit);
+    }
+
+    public List<CheckTask> queryOfMember(String memId, CheckTask.Status status, int offset, int limit){
+        List<String> taskIds = ofMemberDao.query(memId, status, offset, limit).
+                stream().map(CheckTaskOfMember::getTaskId).collect(Collectors.toList());
+        return dao.findIn(taskIds);
     }
 }

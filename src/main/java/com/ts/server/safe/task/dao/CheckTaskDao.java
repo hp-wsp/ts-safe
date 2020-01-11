@@ -7,13 +7,16 @@ import com.ts.server.safe.task.domain.CheckTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 检查任务数据操作
@@ -23,6 +26,7 @@ import java.util.List;
 @Repository
 public class CheckTaskDao {
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
     private final ObjectMapper objectMapper;
     private final RowMapper<CheckTask> mapper;
 
@@ -31,6 +35,7 @@ public class CheckTaskDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.objectMapper = objectMapper;
         this.mapper = new CheckTaskMapper(objectMapper);
+        this.namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     public void insert(CheckTask t){
@@ -143,6 +148,13 @@ public class CheckTaskDao {
         params[index] = offset;
 
         return jdbcTemplate.query(sql, params, mapper);
+    }
+
+    public List<CheckTask> findIn(List<String> ids){
+        final String sql = "SELECT * FROM c_check_task WHERE id IN (:ids)";
+        Map<String, List<String>> params = new LinkedHashMap<>(1,1);
+        params.put("ids", ids);
+        return namedJdbcTemplate.query(sql, params, mapper);
     }
 
     static class CheckTaskMapper implements RowMapper<CheckTask>{
