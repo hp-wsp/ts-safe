@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class CheckTaskOfMember {
+public class TaskOfMember {
     @ApiModelProperty("编号")
     private Integer id;
     @ApiModelProperty("检查员编号")
@@ -67,7 +67,7 @@ public class CheckTaskOfMember {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CheckTaskOfMember that = (CheckTaskOfMember) o;
+        TaskOfMember that = (TaskOfMember) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(memId, that.memId) &&
                 Objects.equals(taskId, that.taskId) &&

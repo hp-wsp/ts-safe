@@ -9,10 +9,10 @@ import com.ts.server.safe.contract.service.ConServiceService;
 import com.ts.server.safe.channel.service.MemberService;
 import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.task.dao.CheckTaskDao;
-import com.ts.server.safe.task.dao.CheckTaskOfMemberDao;
-import com.ts.server.safe.task.domain.CheckContent;
+import com.ts.server.safe.task.dao.TaskOfMemberDao;
+import com.ts.server.safe.task.domain.TaskContent;
 import com.ts.server.safe.task.domain.CheckTask;
-import com.ts.server.safe.task.domain.CheckTaskOfMember;
+import com.ts.server.safe.task.domain.TaskOfMember;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -35,16 +35,16 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class CheckTaskService {
     private final CheckTaskDao dao;
-    private final CheckTaskOfMemberDao ofMemberDao;
+    private final TaskOfMemberDao ofMemberDao;
     private final ConServiceService conService;
     private final CompInfoService infoService;
-    private final CheckContentService contentService;
+    private final TaskContentService contentService;
     private final MemberService memberService;
 
     @Autowired
-    public CheckTaskService(CheckTaskDao dao, CheckTaskOfMemberDao ofMemberDao,
+    public CheckTaskService(CheckTaskDao dao, TaskOfMemberDao ofMemberDao,
                             ConServiceService conService, CompInfoService infoService,
-                            CheckContentService contentService, MemberService memberService) {
+                            TaskContentService contentService, MemberService memberService) {
         this.dao = dao;
         this.ofMemberDao = ofMemberDao;
         this.conService = conService;
@@ -109,7 +109,7 @@ public class CheckTaskService {
         ofMemberDao.deleteOfTask(t.getId());
 
         t.getCheckUsers().forEach(e -> {
-            CheckTaskOfMember m = new CheckTaskOfMember();
+            TaskOfMember m = new TaskOfMember();
             m.setMemId(e.getId());
             m.setTaskId(t.getId());
             m.setStatus(t.getStatus());
@@ -141,7 +141,7 @@ public class CheckTaskService {
             throw new BaseException("修改检查任务失败");
         }
 
-        List<CheckContent> contents = contentService.query(t.getId());
+        List<TaskContent> contents = contentService.query(t.getId());
         List<String> contentIdLst = Arrays.asList(contentIds);
 
         contents.stream()
@@ -179,7 +179,7 @@ public class CheckTaskService {
 
     public List<CheckTask> queryOfMember(String memId, CheckTask.Status status, int offset, int limit){
         List<String> taskIds = ofMemberDao.query(memId, status, offset, limit).
-                stream().map(CheckTaskOfMember::getTaskId).collect(Collectors.toList());
+                stream().map(TaskOfMember::getTaskId).collect(Collectors.toList());
         return dao.findIn(taskIds);
     }
 }

@@ -3,6 +3,7 @@ package com.ts.server.safe.task.domain;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ import java.util.Objects;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class CheckContent {
+public class TaskContent {
     @ApiModelProperty("编号")
     private String id;
     @ApiModelProperty("任务编号")
@@ -32,10 +33,34 @@ public class CheckContent {
     private String conDetail;
     @ApiModelProperty("法律依据")
     private String lawItem;
+    @ApiModelProperty("检查结果")
+    private CheckResult checkResult;
+    @ApiModelProperty("隐患级别")
+    private DangerLevel danLevel;
+    @ApiModelProperty("隐患描述")
+    private String danDescribe;
+    @ApiModelProperty("整改建议")
+    private String danSuggest;
+    @ApiModelProperty("隐患图片")
+    private String[] images;
     @ApiModelProperty("修改时间")
     private Date updateTime;
     @ApiModelProperty("创建时间")
     private Date createTime;
+
+    /**
+     * 检查结果
+     */
+    public enum CheckResult {
+        WAIT, PASS, NOT_PASS
+    }
+
+    /**
+     * 隐患级别
+     */
+    public enum DangerLevel {
+        NONE, COMMON, GREAT
+    }
 
     public String getId() {
         return id;
@@ -117,6 +142,46 @@ public class CheckContent {
         this.lawItem = lawItem;
     }
 
+    public CheckResult getCheckResult() {
+        return checkResult;
+    }
+
+    public void setCheckResult(CheckResult checkResult) {
+        this.checkResult = checkResult;
+    }
+
+    public DangerLevel getDanLevel() {
+        return danLevel;
+    }
+
+    public void setDanLevel(DangerLevel danLevel) {
+        this.danLevel = danLevel;
+    }
+
+    public String getDanDescribe() {
+        return danDescribe;
+    }
+
+    public void setDanDescribe(String danDescribe) {
+        this.danDescribe = danDescribe;
+    }
+
+    public String getDanSuggest() {
+        return danSuggest;
+    }
+
+    public void setDanSuggest(String danSuggest) {
+        this.danSuggest = danSuggest;
+    }
+
+    public String[] getImages() {
+        return images;
+    }
+
+    public void setImages(String[] images) {
+        this.images = images;
+    }
+
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -137,7 +202,7 @@ public class CheckContent {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CheckContent that = (CheckContent) o;
+        TaskContent that = (TaskContent) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(taskId, that.taskId) &&
                 Objects.equals(contentId, that.contentId) &&
@@ -148,13 +213,20 @@ public class CheckContent {
                 Objects.equals(content, that.content) &&
                 Objects.equals(conDetail, that.conDetail) &&
                 Objects.equals(lawItem, that.lawItem) &&
+                checkResult == that.checkResult &&
+                danLevel == that.danLevel &&
+                Objects.equals(danDescribe, that.danDescribe) &&
+                Objects.equals(danSuggest, that.danSuggest) &&
+                Arrays.equals(images, that.images) &&
                 Objects.equals(updateTime, that.updateTime) &&
                 Objects.equals(createTime, that.createTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, taskId, contentId, typeId, typeName, itemId, itemName, content, conDetail, lawItem, updateTime, createTime);
+        int result = Objects.hash(id, taskId, contentId, typeId, typeName, itemId, itemName, content, conDetail, lawItem, checkResult, danLevel, danDescribe, danSuggest, updateTime, createTime);
+        result = 31 * result + Arrays.hashCode(images);
+        return result;
     }
 
     @Override
@@ -170,6 +242,11 @@ public class CheckContent {
                 .append("content", content)
                 .append("conDetail", conDetail)
                 .append("lawItem", lawItem)
+                .append("checkResult", checkResult)
+                .append("danLevel", danLevel)
+                .append("danDescribe", danDescribe)
+                .append("danSuggest", danSuggest)
+                .append("images", images)
                 .append("updateTime", updateTime)
                 .append("createTime", createTime)
                 .toString();

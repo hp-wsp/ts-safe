@@ -108,7 +108,6 @@ public class CompInfoManController {
             @ApiParam(value = "省份") @RequestParam(required = false)String province,
             @ApiParam(value = "城市") @RequestParam(required = false)String city,
             @ApiParam(value = "县区") @RequestParam(required = false)String country,
-            @ApiParam(value = "行业分类编号") @RequestParam(required = false)String indCtgId,
             @ApiParam(value = "联系人") @RequestParam(required = false)String contact,
             @ApiParam(value = "联系电话") @RequestParam(required = false) String phone,
             @RequestParam(defaultValue = "0") @ApiParam(value = "查询页数") int page,
@@ -116,8 +115,8 @@ public class CompInfoManController {
             @RequestParam(defaultValue = "15") @ApiParam(value = "查询每页记录数") int rows){
 
       String channelId = getCredential().getChannelId();
-        return new ResultPageVo.Builder<>(page, rows, service.query(channelId, name, province, city, country, indCtgId, contact, phone, page * rows, rows))
-                .count(isCount, () -> service.count(channelId, name, province, city, country, indCtgId, contact, phone))
+        return new ResultPageVo.Builder<>(page, rows, service.query(channelId, name, province, city, country, contact, phone, page * rows, rows))
+                .count(isCount, () -> service.count(channelId, name, province, city, country, contact, phone))
                 .build();
     }
 

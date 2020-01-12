@@ -1,6 +1,7 @@
 package com.ts.server.safe.task.dao;
 
-import com.ts.server.safe.task.domain.CheckContent;
+import com.ts.server.safe.common.utils.DaoUtils;
+import com.ts.server.safe.task.domain.TaskContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,11 +16,11 @@ import java.util.List;
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 @Repository
-public class CheckContentDao {
+public class TaskContentDao {
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<CheckContent> mapper = (r, i) -> {
-        CheckContent t = new CheckContent();
+    private final RowMapper<TaskContent> mapper = (r, i) -> {
+        TaskContent t = new TaskContent();
 
         t.setId(r.getString("id"));
         t.setTaskId(r.getString("task_id"));
@@ -31,6 +32,11 @@ public class CheckContentDao {
         t.setContent(r.getString("content"));
         t.setConDetail(r.getString("con_detail"));
         t.setLawItem(r.getString("law_item"));
+        t.setCheckResult(TaskContent.CheckResult.valueOf(r.getString("check_result")));
+        t.setDanLevel(TaskContent.DangerLevel.valueOf(r.getString("dan_level")));
+        t.setDanDescribe(r.getString("dan_describe"));
+        t.setDanSuggest(r.getString("dan_suggest"));
+        t.setImages(DaoUtils.toArray(r.getString("images")));
         t.setUpdateTime(r.getTimestamp("update_time"));
         t.setCreateTime(r.getTimestamp("create_time"));
 
@@ -38,11 +44,11 @@ public class CheckContentDao {
     };
 
     @Autowired
-    public CheckContentDao(DataSource dataSource){
+    public TaskContentDao(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public void insert(CheckContent t){
+    public void insert(TaskContent t){
         final String sql = "INSERT INTO c_check_content (id, task_id, content_id, type_id, type_name, item_id, item_name," +
                 "content, con_detail, law_item, update_time, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
@@ -50,12 +56,21 @@ public class CheckContentDao {
                 t.getItemName(), t.getContent(), t.getConDetail(), t.getLawItem());
     }
 
-    public boolean update(CheckContent t){
+    public boolean update(TaskContent t){
         final String sql = "UPDATE c_check_content SET content_id = ?, type_id = ?, type_name = ?, item_id = ?, item_name = ?," +
                 "content = ?, con_detail = ?, law_item = ?, update_time = now() WHERE id = ?";
 
         return jdbcTemplate.update(sql, t.getContentId(), t.getTypeId(), t.getTypeName(), t.getItemId(), t.getItemName(),
                 t.getContent(), t.getConDetail(), t.getLawItem(), t.getId()) > 0;
+    }
+
+    public boolean updateResult(String id, TaskContent.CheckResult result, TaskContent.DangerLevel danLevel,
+                                String danDesc, String danSuggest, String[] images){
+
+        final String sql = "UPDATE c_check_content SET check_result =?, dan_level=?, " +
+                "dan_describe = ?, dan_suggest = ?, images = ?, update_time = now() WHERE id = ?";
+
+        return jdbcTemplate.update(sql, result.name(), danLevel.name(), danDesc, danSuggest, DaoUtils.join(images), id) > 0;
     }
 
     public boolean has(String taskId, String contentId){
@@ -64,12 +79,12 @@ public class CheckContentDao {
         return count != null && count > 0;
     }
 
-    public CheckContent findOne(String id){
+    public TaskContent findOne(String id){
         final String sql = "SELECT * FROM c_check_content WHERE id =?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
     }
 
-    public CheckContent findOne(String taskId, String contentId){
+    public TaskContent findOne(String taskId, String contentId){
         final String sql = "SELECT * FROM c_check_content WHERE task_id = ? AND content_id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{taskId, contentId}, mapper);
     }
@@ -84,7 +99,7 @@ public class CheckContentDao {
         jdbcTemplate.update(sql, taskId);
     }
 
-    public List<CheckContent> find(String taskId){
+    public List<TaskContent> find(String taskId){
         final String sql = "SELECT * FROM c_check_content WHERE task_id = ? ORDER BY content_id ASC";
         return jdbcTemplate.query(sql, new Object[]{taskId}, mapper);
     }

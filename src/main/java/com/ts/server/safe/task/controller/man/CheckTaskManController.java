@@ -10,9 +10,9 @@ import com.ts.server.safe.security.annotation.ApiACL;
 import com.ts.server.safe.task.controller.man.form.CheckTaskSaveForm;
 import com.ts.server.safe.task.controller.man.form.CheckTaskUpdateForm;
 import com.ts.server.safe.task.controller.man.vo.CheckTaskVo;
-import com.ts.server.safe.task.domain.CheckContent;
+import com.ts.server.safe.task.domain.TaskContent;
 import com.ts.server.safe.task.domain.CheckTask;
-import com.ts.server.safe.task.service.CheckContentService;
+import com.ts.server.safe.task.service.TaskContentService;
 import com.ts.server.safe.task.service.CheckTaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,10 +39,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Api(value = "/man/checkTask", tags = "M-管理检查任务API接口")
 public class CheckTaskManController {
     private final CheckTaskService service;
-    private final CheckContentService contentService;
+    private final TaskContentService contentService;
 
     @Autowired
-    public CheckTaskManController(CheckTaskService service, CheckContentService contentService) {
+    public CheckTaskManController(CheckTaskService service, TaskContentService contentService) {
         this.service = service;
         this.contentService = contentService;
     }
@@ -53,7 +53,7 @@ public class CheckTaskManController {
         CheckTask t = form.toDomain();
         t.setChannelId(getCredential().getChannelId());
         CheckTask n = service.save(t, form.getContentIds());
-        List<CheckContent> contents = contentService.query(n.getId());
+        List<TaskContent> contents = contentService.query(n.getId());
         return ResultVo.success(new CheckTaskVo(n, contents));
     }
 
@@ -67,7 +67,7 @@ public class CheckTaskManController {
         CheckTask t = form.toDomain();
         t.setChannelId(getCredential().getChannelId());
         CheckTask n = service.update(t, form.getContentIds());
-        List<CheckContent> contents = contentService.query(n.getId());
+        List<TaskContent> contents = contentService.query(n.getId());
         return ResultVo.success(new CheckTaskVo(n, contents));
     }
 
@@ -75,7 +75,7 @@ public class CheckTaskManController {
     @ApiOperation("得到检查任务")
     public ResultVo<CheckTaskVo> get(@PathVariable("id")String id){
         CheckTask t = service.get(id);
-        List<CheckContent> contents = contentService.query(id);
+        List<TaskContent> contents = contentService.query(id);
         return ResultVo.success(new CheckTaskVo(t, contents));
     }
 

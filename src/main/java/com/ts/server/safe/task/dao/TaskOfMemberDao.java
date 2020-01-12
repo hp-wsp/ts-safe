@@ -1,7 +1,7 @@
 package com.ts.server.safe.task.dao;
 
 import com.ts.server.safe.task.domain.CheckTask;
-import com.ts.server.safe.task.domain.CheckTaskOfMember;
+import com.ts.server.safe.task.domain.TaskOfMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,21 +11,21 @@ import javax.sql.DataSource;
 import java.util.List;
 
 /**
- * {@link CheckTaskOfMember}数据操作
+ * {@link TaskOfMember}数据操作
  *
  * <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 @Repository
-public class CheckTaskOfMemberDao {
+public class TaskOfMemberDao {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public CheckTaskOfMemberDao(DataSource dataSource){
+    public TaskOfMemberDao(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    private final RowMapper<CheckTaskOfMember> mapper = (r, i) -> {
-        CheckTaskOfMember t = new CheckTaskOfMember();
+    private final RowMapper<TaskOfMember> mapper = (r, i) -> {
+        TaskOfMember t = new TaskOfMember();
 
         t.setId(r.getInt("id"));
         t.setMemId(r.getString("mem_id"));
@@ -36,7 +36,7 @@ public class CheckTaskOfMemberDao {
         return t;
     };
 
-    public void insert(CheckTaskOfMember t){
+    public void insert(TaskOfMember t){
         final String sql = "INSERT INTO c_task_of_member (mem_id, task_id, status, create_time) VALUES (?, ?, ?, now())";
         jdbcTemplate.update(sql, t.getMemId(), t.getTaskId(), t.getStatus().name());
     }
@@ -51,7 +51,7 @@ public class CheckTaskOfMemberDao {
         jdbcTemplate.update(sql, status.name(), taskId);
     }
 
-    public List<CheckTaskOfMember> query(String memId, CheckTask.Status status, int offset, int limit){
+    public List<TaskOfMember> query(String memId, CheckTask.Status status, int offset, int limit){
         String sql = "SELECT * FROM c_task_of_member WHERE mem_id = ? ";
         if(status != null){
             sql = sql + "AND status = ? ";
