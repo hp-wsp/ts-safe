@@ -1,6 +1,6 @@
 package com.ts.server.safe.base.controller.logger;
 
-import com.ts.server.safe.base.controller.sys.form.UniCheckTableUpdateForm;
+import com.ts.server.safe.base.controller.sys.form.UniCheckContentUpdateForm;
 import com.ts.server.safe.base.domain.UniCheckContent;
 import com.ts.server.safe.controller.vo.OkVo;
 import com.ts.server.safe.controller.vo.ResultVo;
@@ -49,7 +49,7 @@ public class UniCheckTableLogDetailBuilder {
     public final static class UpdateBuilder implements ApiLogDetailBuilder {
         @Override
         public String build(JoinPoint joinPoint, ServletRequestAttributes attributes, Object returnObj) {
-            UniCheckTableUpdateForm form = (UniCheckTableUpdateForm) joinPoint.getArgs()[0];
+            UniCheckContentUpdateForm form = (UniCheckContentUpdateForm) joinPoint.getArgs()[0];
             return String.format("编号:%s;检查内容:%s", form.getId(), form.toDomain().getContent());
         }
     }

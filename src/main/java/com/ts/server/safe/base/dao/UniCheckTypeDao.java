@@ -37,7 +37,7 @@ public class UniCheckTypeDao {
     public UniCheckTypeDao(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.idGenerator = IdGenerators.seqId(
-                dataSource, "seq_check_type", e -> String.format("%03d", e));
+                dataSource, "seq_u_check_type", e -> String.format("%03d", e));
     }
 
     public String insert(UniCheckType t){

@@ -1,16 +1,16 @@
-package com.ts.server.safe.base.controller.sys.form;
+package com.ts.server.safe.channel.controller.man.form;
 
-import com.ts.server.safe.base.domain.UniCheckContent;
+import com.ts.server.safe.channel.domain.CheckContent;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotBlank;
 
 /**
- * 新增检查表提交数据
+ * 新增检查内容提交数据
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class UniCheckTableSaveForm {
+public class CheckContentSaveForm {
     @ApiModelProperty(value = "检查内容", required = true)
     @NotBlank
     private String content;
@@ -56,13 +56,14 @@ public class UniCheckTableSaveForm {
         this.itemId = itemId;
     }
 
-    public UniCheckContent toDomain(){
-        UniCheckContent t = new UniCheckContent();
+    public CheckContent toDomain(String channelId){
+        CheckContent t = new CheckContent();
 
+        t.setChannelId(channelId);
         t.setContent(content);
         t.setConDetail(conDetail);
-        t.setLawItem(lawItem);
         t.setItemId(itemId);
+        t.setLawItem(lawItem);
 
         return t;
     }

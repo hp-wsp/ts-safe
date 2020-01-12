@@ -49,7 +49,7 @@ public class TaskContentDao {
     }
 
     public void insert(TaskContent t){
-        final String sql = "INSERT INTO c_check_content (id, task_id, content_id, type_id, type_name, item_id, item_name," +
+        final String sql = "INSERT INTO c_task_content (id, task_id, content_id, type_id, type_name, item_id, item_name," +
                 "content, con_detail, law_item, update_time, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getTaskId(), t.getContentId(), t.getTypeId(), t.getTypeName(), t.getItemId(),
@@ -57,7 +57,7 @@ public class TaskContentDao {
     }
 
     public boolean update(TaskContent t){
-        final String sql = "UPDATE c_check_content SET content_id = ?, type_id = ?, type_name = ?, item_id = ?, item_name = ?," +
+        final String sql = "UPDATE c_task_content SET content_id = ?, type_id = ?, type_name = ?, item_id = ?, item_name = ?," +
                 "content = ?, con_detail = ?, law_item = ?, update_time = now() WHERE id = ?";
 
         return jdbcTemplate.update(sql, t.getContentId(), t.getTypeId(), t.getTypeName(), t.getItemId(), t.getItemName(),
@@ -67,40 +67,40 @@ public class TaskContentDao {
     public boolean updateResult(String id, TaskContent.CheckResult result, TaskContent.DangerLevel danLevel,
                                 String danDesc, String danSuggest, String[] images){
 
-        final String sql = "UPDATE c_check_content SET check_result =?, dan_level=?, " +
+        final String sql = "UPDATE c_task_content SET check_result =?, dan_level=?, " +
                 "dan_describe = ?, dan_suggest = ?, images = ?, update_time = now() WHERE id = ?";
 
         return jdbcTemplate.update(sql, result.name(), danLevel.name(), danDesc, danSuggest, DaoUtils.join(images), id) > 0;
     }
 
     public boolean has(String taskId, String contentId){
-        final String sql = "SELECT COUNT(id) FROM c_check_content WHERE task_id = ? AND content_id = ?";
+        final String sql = "SELECT COUNT(id) FROM c_task_content WHERE task_id = ? AND content_id = ?";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{taskId, contentId}, Integer.class);
         return count != null && count > 0;
     }
 
     public TaskContent findOne(String id){
-        final String sql = "SELECT * FROM c_check_content WHERE id =?";
+        final String sql = "SELECT * FROM c_task_content WHERE id =?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
     }
 
     public TaskContent findOne(String taskId, String contentId){
-        final String sql = "SELECT * FROM c_check_content WHERE task_id = ? AND content_id = ?";
+        final String sql = "SELECT * FROM c_task_content WHERE task_id = ? AND content_id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{taskId, contentId}, mapper);
     }
 
     public boolean delete(String id){
-        final String sql = "DELETE FROM c_check_content WHERE id = ?";
+        final String sql = "DELETE FROM c_task_content WHERE id = ?";
         return jdbcTemplate.update(sql, id) > 0;
     }
 
     public void deleteTask(String taskId){
-        final String sql = "DELETE FROM c_check_content WHERE task_id = ?";
+        final String sql = "DELETE FROM c_task_content WHERE task_id = ?";
         jdbcTemplate.update(sql, taskId);
     }
 
     public List<TaskContent> find(String taskId){
-        final String sql = "SELECT * FROM c_check_content WHERE task_id = ? ORDER BY content_id ASC";
+        final String sql = "SELECT * FROM c_task_content WHERE task_id = ? ORDER BY content_id ASC";
         return jdbcTemplate.query(sql, new Object[]{taskId}, mapper);
     }
 }

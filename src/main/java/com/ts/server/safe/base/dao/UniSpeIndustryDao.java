@@ -37,7 +37,7 @@ public class UniSpeIndustryDao {
     public UniSpeIndustryDao(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.idGenerator = IdGenerators.seqId(
-                dataSource, "seq_spe_industry", e -> String.format("%05d", e));
+                dataSource, "seq_u_spe_industry", e -> String.format("%05d", e));
     }
 
     public String insert(UniSpeIndustry t){

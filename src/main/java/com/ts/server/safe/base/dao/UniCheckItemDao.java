@@ -39,7 +39,7 @@ public class UniCheckItemDao {
     public UniCheckItemDao(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.idGenerator = IdGenerators.seqId(
-                dataSource, "seq_check_item", e -> String.format("%03d", e));
+                dataSource, "seq_u_check_item", e -> String.format("%03d", e));
     }
 
     public String insert(UniCheckItem t){

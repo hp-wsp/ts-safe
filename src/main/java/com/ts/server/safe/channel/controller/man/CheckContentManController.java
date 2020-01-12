@@ -1,17 +1,18 @@
-package com.ts.server.safe.base.controller.sys;
+package com.ts.server.safe.channel.controller.man;
 
-import com.ts.server.safe.base.controller.logger.UniCheckTableLogDetailBuilder;
-import com.ts.server.safe.base.controller.sys.form.UniCheckContentSaveForm;
-import com.ts.server.safe.base.controller.sys.form.UniCheckContentUpdateForm;
-import com.ts.server.safe.base.domain.UniCheckItem;
 import com.ts.server.safe.base.domain.UniCheckContent;
-import com.ts.server.safe.base.service.UniCheckItemService;
+import com.ts.server.safe.base.domain.UniCheckItem;
 import com.ts.server.safe.base.service.UniCheckContentService;
+import com.ts.server.safe.base.service.UniCheckItemService;
+import com.ts.server.safe.channel.controller.man.form.CheckContentSaveForm;
+import com.ts.server.safe.channel.controller.man.form.CheckContentUpdateForm;
+import com.ts.server.safe.channel.domain.CheckContent;
+import com.ts.server.safe.channel.service.CheckContentService;
+import com.ts.server.safe.controller.credential.ManCredential;
 import com.ts.server.safe.controller.vo.OkVo;
 import com.ts.server.safe.controller.vo.ResultPageVo;
 import com.ts.server.safe.controller.vo.ResultVo;
-import com.ts.server.safe.logger.aop.annotation.EnableApiLogger;
-import com.ts.server.safe.security.annotation.ApiACL;
+import com.ts.server.safe.security.CredentialContextUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -20,37 +21,42 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
- * 管理检查内容API接口
+ * 查询检查项目API接口
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 @RestController
-@RequestMapping("/sys/checkContent")
-@ApiACL(value = "ROLE_SYS")
-@Api(value = "/sys/checkContent", tags = "S-管理检查内容API接口")
-public class UniCheckContentSysController {
-    private final UniCheckContentService service;
+@RequestMapping("/man/check/content")
+@Api(value = "/man/check/content", tags = "M-查询检查项目")
+public class CheckContentManController {
+    private final UniCheckContentService uniService;
     private final UniCheckItemService itemService;
+    private final CheckContentService service;
 
     @Autowired
-    public UniCheckContentSysController(UniCheckContentService service, UniCheckItemService itemService) {
-        this.service = service;
+    public CheckContentManController(UniCheckContentService uniService,
+                                     UniCheckItemService itemService, CheckContentService service) {
+
+        this.uniService = uniService;
         this.itemService = itemService;
+        this.service = service;
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @EnableApiLogger(name = "新增检查内容", buildDetail = UniCheckTableLogDetailBuilder.SaveBuilder.class)
     @ApiOperation("新增检查表")
-    public ResultVo<UniCheckContent> save(@Valid @RequestBody UniCheckContentSaveForm form){
-        UniCheckContent t = form.toDomain();
+    public ResultVo<UniCheckContent> save(@Valid @RequestBody CheckContentSaveForm form){
+        CheckContent t = form.toDomain(getCredential().getChannelId());
         setItem(t);
         return ResultVo.success(service.save(t));
     }
 
-    private void setItem(UniCheckContent t){
+    private void setItem(CheckContent t){
         UniCheckItem item = itemService.get(t.getItemId());
         t.setTypeId(item.getTypeId());
         t.setTypeName(item.getTypeName());
@@ -58,22 +64,20 @@ public class UniCheckContentSysController {
     }
 
     @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    @EnableApiLogger(name = "修改检查内容", buildDetail = UniCheckTableLogDetailBuilder.UpdateBuilder.class)
     @ApiOperation("修改检查表")
-    public ResultVo<UniCheckContent> update(@Valid @RequestBody UniCheckContentUpdateForm form){
-        UniCheckContent t = form.toDomain();
+    public ResultVo<UniCheckContent> update(@Valid @RequestBody CheckContentUpdateForm form){
+        CheckContent t = form.toDomain(getCredential().getChannelId());
         setItem(t);
         return ResultVo.success(service.update(t));
     }
 
     @GetMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
     @ApiOperation("得到检查内容")
-    public ResultVo<UniCheckContent> get(@PathVariable("id")String id){
+    public ResultVo<CheckContent> get(@PathVariable("id")String id){
         return ResultVo.success(service.get(id));
     }
 
     @DeleteMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
-    @EnableApiLogger(name = "删除检查内容", buildDetail = UniCheckTableLogDetailBuilder.DeleteBuilder.class)
     @ApiOperation("删除检查表")
     public ResultVo<OkVo> delete(@PathVariable("id")String id){
         return ResultVo.success(new OkVo(service.delete(id)));
@@ -81,7 +85,7 @@ public class UniCheckContentSysController {
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ApiOperation("查询检查内容")
-    public ResultPageVo<UniCheckContent> query(
+    public ResultPageVo<CheckContent> query(
             @ApiParam(value = "检查类型") @RequestParam(required = false) String typeName,
             @ApiParam(value = "检查项目") @RequestParam(required = false) String itemName,
             @ApiParam(value = "检查内容") @RequestParam(required = false) String content,
@@ -90,8 +94,23 @@ public class UniCheckContentSysController {
             @RequestParam(defaultValue = "0") @ApiParam(value = "查询页数") int page,
             @RequestParam(defaultValue = "15") @ApiParam(value = "查询每页记录数") int rows){
 
-        return new ResultPageVo.Builder<>(page, rows, service.query(typeName, itemName, content, lawItem, page * rows, rows))
-                .count(isCount, () -> service.count(typeName, itemName, content, lawItem))
+        String channelId = getCredential().getChannelId();
+        return new ResultPageVo.Builder<>(page, rows, service.query(channelId, typeName, itemName, content, lawItem, page * rows, rows))
+                .count(isCount, () -> service.count(channelId, typeName, itemName, content, lawItem))
                 .build();
+    }
+
+    @GetMapping(value = "item/{itemId}", produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("查询检查内容")
+    public ResultVo<List<UniCheckContent>> queryOfItem(@PathVariable("itemId") String itemId){
+        List<UniCheckContent> all = new ArrayList<>();
+        String channelId = getCredential().getChannelId();
+        all.addAll(uniService.queryOfItem(itemId));
+        all.addAll(service.queryOfItem(channelId, itemId));
+        return ResultVo.success(all);
+    }
+
+    private ManCredential getCredential(){
+        return (ManCredential) CredentialContextUtils.getCredential();
     }
 }

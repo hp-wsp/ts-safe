@@ -39,7 +39,7 @@ public class UniRiskChemicalDao {
     public UniRiskChemicalDao(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.idGenerator = IdGenerators.seqId(
-                dataSource, "seq_risk_chemical", e -> String.format("%05d", e));
+                dataSource, "seq_u_risk_chemical", e -> String.format("%05d", e));
     }
 
     public String insert(UniRiskChemical t){

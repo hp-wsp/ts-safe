@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
  *
  * <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class UniCheckTableUpdateForm extends UniCheckTableSaveForm{
+public class UniCheckContentUpdateForm extends UniCheckContentSaveForm {
     @ApiModelProperty(value = "编号", required = true)
     @NotBlank
     private String id;
