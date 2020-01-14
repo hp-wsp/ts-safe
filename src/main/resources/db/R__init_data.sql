@@ -13,6 +13,10 @@ INSERT INTO s_sequence (seq_key, cur_value, remark)
 SELECT 'seq_u_spe_industry', 10, '特种行业序号' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_u_spe_industry');
 INSERT INTO s_sequence (seq_key, cur_value, remark)
 SELECT 'seq_u_ind_ctg', 1600, '行业分类序号' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_u_ind_ctg');
+INSERT INTO s_sequence (seq_key, cur_value, remark)
+SELECT 'seq_risk_chemical', 1, '存储危化品' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_risk_chemical');
+INSERT INTO s_sequence (seq_key, cur_value, remark)
+SELECT 'seq_spe_equipment', 1, '企业特殊设备' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_spe_equipment');
 
 #-----------------------------------------------------------------
 #初始检查类别数据

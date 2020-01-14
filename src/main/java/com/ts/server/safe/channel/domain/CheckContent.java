@@ -1,5 +1,6 @@
 package com.ts.server.safe.channel.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ts.server.safe.base.domain.UniCheckContent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -11,6 +12,7 @@ import java.util.Objects;
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 public class CheckContent extends UniCheckContent {
+    @JsonIgnore
     private String channelId;
 
     public String getChannelId() {

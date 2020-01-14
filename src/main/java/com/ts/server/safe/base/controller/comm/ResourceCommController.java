@@ -56,18 +56,21 @@ public class ResourceCommController {
     @ApiOperation("上传资源")
     public ResultVo<Resource> save(@RequestParam(value = "file") @ApiParam(value = "上传文件", required = true) MultipartFile file){
         String filename = file.getOriginalFilename();
-
+        LOGGER.debug("-------------1--------------");
         if(StringUtils.isBlank(filename)){
             throw new BaseException("文件名不能为空");
         }
 
+        LOGGER.debug("-------------2--------------");
         if(StringUtils.length(filename) > 64){
             throw new BaseException("文件名不能超过64个字符");
         }
 
         String id = IdGenerators.uuid();
+        LOGGER.debug("-------------3--------------");
         Resource t = saveFile(id, file).map(e -> saveResource(id, e, file))
                 .orElseThrow(() -> new BaseException("上传文件失败"));
+        LOGGER.debug("-------------4--------------");
         return ResultVo.success(t);
     }
 
@@ -114,7 +117,7 @@ public class ResourceCommController {
      * @param range header range
      * @param response {@link HttpServletResponse}
      */
-    @GetMapping(value = "{id}")
+    @GetMapping(value = "download/{id}")
     @ApiOperation("下载资源")
     public void download(@PathVariable(value = "id")String id,
                          @RequestHeader(value = HttpHeaders.RANGE, required = false) String range,
@@ -190,6 +193,41 @@ public class ResourceCommController {
         HttpUtils.setContentDisposition(response, filename);
         String contentRange = "bytes " + rangeSetting.getStart() + "-" + rangeSetting.getEnd() + "/" + rangeSetting.getTotalLen();
         response.setHeader(HttpHeaders.CONTENT_RANGE, contentRange);
+    }
+
+    /**
+     * 获取显示资源
+     *
+     * @param id 资源编号
+     * @param response {@link HttpServletResponse}
+     */
+    @GetMapping(value = "{id}")
+    public void get(@PathVariable("id")String id, HttpServletResponse response){
+        Optional<Resource> optional = service.get(id);
+        if(optional.isEmpty()){
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            LOGGER.error("View resource not exist fail id={}", id);
+            return;
+        }
+
+        Resource t = optional.get();
+        File file = new File(t.getPath());
+        if(!file.isFile()){
+            LOGGER.warn("View file not exist id={}, path={}", id, t.getPath());
+            responseNotFound(response);
+            return ;
+        }
+
+        response.setContentType(t.getContentType());
+        response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(t.getFileSize()));
+        try(OutputStream outputStream = response.getOutputStream();
+            WritableByteChannel writableByteChannel = Channels.newChannel(outputStream);
+            RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r")){
+            randomAccessFile.getChannel().transferTo(0, t.getFileSize(), writableByteChannel);
+        }catch (IOException e){
+            LOGGER.debug("View resource fail id={}, throw={}", id, e.getMessage());
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
     }
 
     private Credential getCredential(){

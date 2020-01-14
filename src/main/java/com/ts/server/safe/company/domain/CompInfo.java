@@ -445,8 +445,10 @@ public class CompInfo {
      * 行业分类
      */
     public static class IndCtg {
-        @ApiModelProperty("行业分类")
+        @ApiModelProperty("行业分类编号")
         private String id;
+        @ApiModelProperty("上级分类编号")
+        private String parentIds;
         @ApiModelProperty("行业名称")
         private String name;
 
@@ -456,6 +458,14 @@ public class CompInfo {
 
         public void setId(String id) {
             this.id = id;
+        }
+
+        public String getParentIds() {
+            return parentIds;
+        }
+
+        public void setParentIds(String parentIds) {
+            this.parentIds = parentIds;
         }
 
         public String getName() {
@@ -472,18 +482,20 @@ public class CompInfo {
             if (o == null || getClass() != o.getClass()) return false;
             IndCtg indCtg = (IndCtg) o;
             return Objects.equals(id, indCtg.id) &&
+                    Objects.equals(parentIds, indCtg.parentIds) &&
                     Objects.equals(name, indCtg.name);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(id, name);
+            return Objects.hash(id, parentIds, name);
         }
 
         @Override
         public String toString() {
             return new ToStringBuilder(this)
                     .append("id", id)
+                    .append("parentIds", parentIds)
                     .append("name", name)
                     .toString();
         }

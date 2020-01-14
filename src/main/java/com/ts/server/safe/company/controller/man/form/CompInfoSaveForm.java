@@ -3,6 +3,7 @@ package com.ts.server.safe.company.controller.man.form;
 import com.ts.server.safe.company.domain.CompInfo;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.util.Collections;
@@ -61,7 +62,7 @@ public class CompInfoSaveForm {
     private String postCode;
     @ApiModelProperty(value = "行业分类编号集合", required = true)
     @NotEmpty
-    private List<String> indCtgIds;
+    private List<IndCtgForm> indCtgs;
     @ApiModelProperty("联系电话")
     private String indPhone;
     @ApiModelProperty("企业规模")
@@ -229,12 +230,12 @@ public class CompInfoSaveForm {
         this.postCode = postCode;
     }
 
-    public List<String> getIndCtgIds() {
-        return indCtgIds;
+    public List<IndCtgForm> getIndCtgs() {
+        return indCtgs;
     }
 
-    public void setIndCtgIds(List<String> indCtgIds) {
-        this.indCtgIds = indCtgIds;
+    public void setIndCtgs(List<IndCtgForm> indCtgs) {
+        this.indCtgs = indCtgs;
     }
 
     public String getIndPhone() {
@@ -329,14 +330,43 @@ public class CompInfoSaveForm {
 
     private List<CompInfo.IndCtg> buildIndCtgs(){
 
-        if(Objects.isNull(indCtgIds)){
+        if(Objects.isNull(indCtgs)){
             return Collections.emptyList();
         }
 
-        return indCtgIds.stream().map(e -> {
+        return indCtgs.stream().map(e -> {
             CompInfo.IndCtg t = new CompInfo.IndCtg();
-            t.setId(e);
+            t.setId(e.getId());
+            t.setParentIds(e.getParentIds());
             return t;
         }).collect(Collectors.toList());
+    }
+
+    /**
+     * 行业分类提交数据
+     */
+    @Valid
+    public static class IndCtgForm{
+        @ApiModelProperty(value = "编号", required = true)
+        @NotBlank
+        private String id;
+        @ApiModelProperty(value = "上级分类编号")
+        private String parentIds;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getParentIds() {
+            return parentIds;
+        }
+
+        public void setParentIds(String parentIds) {
+            this.parentIds = parentIds;
+        }
     }
 }
