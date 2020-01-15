@@ -42,7 +42,7 @@ public class UniCheckContentDao {
     public UniCheckContentDao(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.idGenerator = IdGenerators.seqId(
-                dataSource, "seq_u_check_content", e -> String.format("%05d", e));
+                dataSource, "seq_u_check_content", e -> String.format("%07d", e));
     }
 
     public String insert(UniCheckContent t){
