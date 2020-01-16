@@ -38,6 +38,8 @@ public class CheckTaskSaveForm {
     @NotEmpty
     @ApiModelProperty(value = "检查内容编号")
     private String[] contentIds;
+    @ApiModelProperty(value = "复查以前查出的隐患")
+    private boolean review;
 
     public String getServiceId() {
         return serviceId;
@@ -87,6 +89,14 @@ public class CheckTaskSaveForm {
         this.contentIds = contentIds;
     }
 
+    public boolean isReview() {
+        return review;
+    }
+
+    public void setReview(boolean review) {
+        this.review = review;
+    }
+
     public CheckTask toDomain(){
         CheckTask t = new CheckTask();
 
@@ -95,6 +105,7 @@ public class CheckTaskSaveForm {
         t.setCheckTimeTo(checkTimeTo);
         t.setCheckIndCtgs(buildIndCtgs());
         t.setCheckUsers(buildUsers());
+        t.setReview(review);
 
         return t;
     }

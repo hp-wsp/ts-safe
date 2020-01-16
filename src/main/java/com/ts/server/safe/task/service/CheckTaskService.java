@@ -1,6 +1,7 @@
 package com.ts.server.safe.task.service;
 
 import com.ts.server.safe.BaseException;
+import com.ts.server.safe.channel.domain.CheckContent;
 import com.ts.server.safe.company.domain.CompInfo;
 import com.ts.server.safe.contract.domain.ConService;
 import com.ts.server.safe.channel.domain.Member;
@@ -9,6 +10,7 @@ import com.ts.server.safe.contract.service.ConServiceService;
 import com.ts.server.safe.channel.service.MemberService;
 import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.task.dao.CheckTaskDao;
+import com.ts.server.safe.task.dao.TaskContentDao;
 import com.ts.server.safe.task.dao.TaskOfMemberDao;
 import com.ts.server.safe.task.domain.TaskContent;
 import com.ts.server.safe.task.domain.CheckTask;
@@ -20,10 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -62,6 +61,12 @@ public class CheckTaskService {
         setIndCtgs(t);
         setCheckUser(t);
         dao.insert(t);
+
+        if(t.isReview()){
+            for(TaskContent content: getLastCheckContents(t.getServiceId())){
+                contentService.save(t.getId(), content.getContentId());
+            }
+        }
 
         for(String contentId: contentIds){
             contentService.save(t.getId(), contentId);
@@ -117,6 +122,13 @@ public class CheckTaskService {
         });
     }
 
+    private List<TaskContent> getLastCheckContents(String serviceId){
+        Optional<CheckTask> last = dao.findLast(serviceId);
+        return last.map(e -> contentService.query(e.getId()).stream()
+                .filter(c -> c.getCheckResult() == TaskContent.CheckResult.NOT_PASS).collect(Collectors.toList()))
+                .orElseGet(Collections::emptyList);
+    }
+
     public CheckTask get(String id){
         try{
             return dao.findOne(id);
@@ -143,6 +155,13 @@ public class CheckTaskService {
 
         List<TaskContent> contents = contentService.query(t.getId());
         List<String> contentIdLst = Arrays.asList(contentIds);
+        if(t.isReview()){
+            getLastCheckContents(o.getServiceId()).forEach(e -> {
+                if(contentIdLst.contains(e.getContentId())){
+                    contentIdLst.add(e.getContentId());
+                }
+            });
+        }
 
         contents.stream()
                 .filter(e -> !contentIdLst.contains(e.getContentId()))

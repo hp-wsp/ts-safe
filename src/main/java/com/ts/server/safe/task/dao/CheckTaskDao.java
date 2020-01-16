@@ -13,10 +13,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 检查任务数据操作
@@ -40,12 +37,12 @@ public class CheckTaskDao {
 
     public void insert(CheckTask t){
         final String sql = "INSERT INTO c_check_task (id, channel_id, service_id, service_name, comp_id, comp_name, " +
-                "check_time_from, check_time_to, check_users, check_ind_ctgs, status, update_time, create_time) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+                "check_time_from, check_time_to, check_users, check_ind_ctgs, is_review, status, update_time, create_time) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getServiceId(), t.getServiceName(),
                 t.getCompId(), t.getCompName(), t.getCheckTimeFrom(), t.getCheckTimeTo(),
-                toJson(t.getCheckUsers()), toJson(t.getCheckIndCtgs()), t.getStatus().name());
+                toJson(t.getCheckUsers()), toJson(t.getCheckIndCtgs()), t.isReview(), t.getStatus().name());
     }
 
     private String toJson(List<?> values){
@@ -58,12 +55,12 @@ public class CheckTaskDao {
 
     public boolean update(CheckTask t){
         final String sql = "UPDATE c_check_task SET service_id = ?, service_name = ?, comp_id = ?, comp_name = ?," +
-                "check_time_from = ?, check_time_to = ?, check_users = ?, check_ind_ctgs = ?, status = ?, update_time = now() " +
-                "WHERE id = ?";
+                "check_time_from = ?, check_time_to = ?, check_users = ?, check_ind_ctgs = ?, is_review = ?, " +
+                "status = ?, update_time = now() WHERE id = ?";
 
         return jdbcTemplate.update(sql, t.getServiceId(), t.getServiceName(), t.getCompId(), t.getCompName(),
                 t.getCheckTimeFrom(), t.getCheckTimeTo(), toJson(t.getCheckUsers()), toJson(t.getCheckIndCtgs()),
-                t.getStatus().name(), t.getId()) > 0;
+                t.isReview(), t.getStatus().name(), t.getId()) > 0;
     }
 
     public boolean delete(String id){
@@ -74,6 +71,12 @@ public class CheckTaskDao {
     public CheckTask findOne(String id){
         final String sql = "SELECT * FROM c_check_task WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
+    }
+
+    public Optional<CheckTask> findLast(String serviceId){
+        final String sql = "SELECT * FROM c_check_task WHERE service_id = ? ORDER BY create_time DESC";
+        List<CheckTask> tasks = jdbcTemplate.query(sql, new Object[]{serviceId}, mapper);
+        return tasks.isEmpty()? Optional.empty(): Optional.of(tasks.get(0));
     }
 
     public boolean updateStatus(String id, CheckTask.Status status){
@@ -182,6 +185,7 @@ public class CheckTaskDao {
             t.setCheckTimeTo(r.getDate("check_time_to"));
             t.setCheckUsers(toObject(r.getString("check_users"), usersType));
             t.setCheckIndCtgs(toObject(r.getString("check_ind_ctgs"), indCtgsType));
+            t.setReview(r.getBoolean("is_review"));
             t.setStatus(CheckTask.Status.valueOf(r.getString("status")));
             t.setUpdateTime(r.getTimestamp("update_time"));
             t.setCreateTime(r.getTimestamp("create_time"));

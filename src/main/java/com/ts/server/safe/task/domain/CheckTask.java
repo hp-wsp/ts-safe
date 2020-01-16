@@ -33,6 +33,8 @@ public class CheckTask {
     private List<CheckUser> checkUsers;
     @ApiModelProperty("行业分类集合")
     private List<CheckIndCtg> checkIndCtgs;
+    @ApiModelProperty("复查以前查出的隐患")
+    private boolean review;
     @ApiModelProperty("检查任务状态")
     private Status status;
     @ApiModelProperty("修改时间")
@@ -124,6 +126,14 @@ public class CheckTask {
         this.checkIndCtgs = checkIndCtgs;
     }
 
+    public boolean isReview() {
+        return review;
+    }
+
+    public void setReview(boolean review) {
+        this.review = review;
+    }
+
     public Status getStatus() {
         return status;
     }
@@ -153,7 +163,8 @@ public class CheckTask {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CheckTask checkTask = (CheckTask) o;
-        return Objects.equals(id, checkTask.id) &&
+        return review == checkTask.review &&
+                Objects.equals(id, checkTask.id) &&
                 Objects.equals(channelId, checkTask.channelId) &&
                 Objects.equals(serviceId, checkTask.serviceId) &&
                 Objects.equals(serviceName, checkTask.serviceName) &&
@@ -170,7 +181,7 @@ public class CheckTask {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, channelId, serviceId, serviceName, compId, compName, checkTimeFrom, checkTimeTo, checkUsers, checkIndCtgs, status, updateTime, createTime);
+        return Objects.hash(id, channelId, serviceId, serviceName, compId, compName, checkTimeFrom, checkTimeTo, checkUsers, checkIndCtgs, review, status, updateTime, createTime);
     }
 
     @Override
@@ -186,6 +197,7 @@ public class CheckTask {
                 .append("checkTimeTo", checkTimeTo)
                 .append("checkUsers", checkUsers)
                 .append("checkIndCtgs", checkIndCtgs)
+                .append("review", review)
                 .append("status", status)
                 .append("updateTime", updateTime)
                 .append("createTime", createTime)
