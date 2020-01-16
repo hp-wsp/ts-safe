@@ -30,7 +30,7 @@ public class UniIndCtgService {
     @Transactional(propagation = Propagation.REQUIRED)
     public UniIndCtg save(UniIndCtg t){
         if(!hasParentId(t.getParentId())){
-            throw new BaseException("上级监管分类不存在");
+            throw new BaseException("上级行业分类不存在");
         }
 
         t.setLevel(getLevel(t.getParentId()));
@@ -54,7 +54,7 @@ public class UniIndCtgService {
     @Transactional(propagation = Propagation.REQUIRED)
     public UniIndCtg update(UniIndCtg t){
         if(!dao.update(t)){
-            throw new BaseException("修改监管分类失败");
+            throw new BaseException("修改行业分类失败");
         }
         return dao.findOne(t.getId());
     }
@@ -63,7 +63,7 @@ public class UniIndCtgService {
         try{
             return dao.findOne(id);
         }catch (DataAccessException e){
-            throw new BaseException("监管分类不存在");
+            throw new BaseException("行业分类不存在");
         }
     }
 

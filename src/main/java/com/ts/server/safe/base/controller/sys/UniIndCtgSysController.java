@@ -4,8 +4,8 @@ import com.ts.server.safe.controller.vo.OkVo;
 import com.ts.server.safe.controller.vo.ResultPageVo;
 import com.ts.server.safe.controller.vo.ResultVo;
 import com.ts.server.safe.base.controller.logger.UniIndCtgLogDetailBuilder;
-import com.ts.server.safe.base.controller.sys.form.UniSuperviseSaveForm;
-import com.ts.server.safe.base.controller.sys.form.UniSuperviseUpdateForm;
+import com.ts.server.safe.base.controller.sys.form.UniIndCtgSaveForm;
+import com.ts.server.safe.base.controller.sys.form.UniIndCtgUpdateForm;
 import com.ts.server.safe.base.domain.UniIndCtg;
 import com.ts.server.safe.base.service.UniIndCtgService;
 import com.ts.server.safe.logger.aop.annotation.EnableApiLogger;
@@ -42,14 +42,14 @@ public class UniIndCtgSysController {
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @EnableApiLogger(name = "新增监管分类", buildDetail = UniIndCtgLogDetailBuilder.SaveBuilder.class)
     @ApiOperation("新增监管分类")
-    public ResultVo<UniIndCtg> save(@Valid @RequestBody UniSuperviseSaveForm form){
+    public ResultVo<UniIndCtg> save(@Valid @RequestBody UniIndCtgSaveForm form){
         return ResultVo.success(service.save(form.toDomain()));
     }
 
     @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @EnableApiLogger(name = "修改监管分类", buildDetail = UniIndCtgLogDetailBuilder.UpdateBuilder.class)
     @ApiOperation("修改监管分类")
-    public ResultVo<UniIndCtg> update(@Valid @RequestBody UniSuperviseUpdateForm form){
+    public ResultVo<UniIndCtg> update(@Valid @RequestBody UniIndCtgUpdateForm form){
         return ResultVo.success(service.update(form.toDomain()));
     }
 

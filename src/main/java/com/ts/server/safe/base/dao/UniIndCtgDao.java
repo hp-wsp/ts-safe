@@ -52,8 +52,8 @@ public class UniIndCtgDao {
     }
 
     public boolean update(UniIndCtg t){
-        final String sql = "UPDATE b_ind_ctg SET name = ?, num = ?, level = ?, remark = ? WHERE id = ?";
-        return jdbcTemplate.update(sql, t.getName(), t.getNum(), t.getLevel(), t.getRemark(), t.getId()) >0;
+        final String sql = "UPDATE b_ind_ctg SET name = ?, num = ?, remark = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, t.getName(), t.getNum(), t.getRemark(), t.getId()) >0;
     }
 
     public boolean delete (String id){

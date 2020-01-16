@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class UniSuperviseUpdateForm extends UniSuperviseSaveForm {
+public class UniIndCtgUpdateForm extends UniIndCtgSaveForm {
     @ApiModelProperty("编号")
     private String id;
 

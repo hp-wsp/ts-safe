@@ -2,7 +2,7 @@ package com.ts.server.safe.base.controller.logger;
 
 import com.ts.server.safe.controller.vo.OkVo;
 import com.ts.server.safe.controller.vo.ResultVo;
-import com.ts.server.safe.base.controller.sys.form.UniSuperviseUpdateForm;
+import com.ts.server.safe.base.controller.sys.form.UniIndCtgUpdateForm;
 import com.ts.server.safe.base.domain.UniIndCtg;
 import com.ts.server.safe.logger.aop.annotation.ApiLogDetailBuilder;
 import org.aspectj.lang.JoinPoint;
@@ -49,7 +49,7 @@ public class UniIndCtgLogDetailBuilder {
     public final static class UpdateBuilder implements ApiLogDetailBuilder {
         @Override
         public String build(JoinPoint joinPoint, ServletRequestAttributes attributes, Object returnObj) {
-            UniSuperviseUpdateForm form = (UniSuperviseUpdateForm) joinPoint.getArgs()[0];
+            UniIndCtgUpdateForm form = (UniIndCtgUpdateForm) joinPoint.getArgs()[0];
             return String.format("编号:%s;详情:%s", form.getId(), form.toDomain().toString());
         }
     }
