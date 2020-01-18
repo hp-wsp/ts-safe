@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS c_check_report (
   channel_name VARCHAR(30) NOT NULL COMMENT '服务商名称',
   comp_id CHAR(32) NOT NULL COMMENT '企业编号',
   comp_name VARCHAR(30) NOT NULL COMMENT '企业名称',
+  service_id CHAR(32) NOT NULL COMMENT '服务系统编号',
+  service_name VARCHAR(30) NOT NULL COMMENT '服务名称',
   task_id CHAR(32) NOT NULL COMMENT '检查任务编号',
   task_detail VARCHAR(60) NOT NULL COMMENT '检查任务描述',
   cycle_name VARCHAR(30) NOT NULL COMMENT '周期名称',
@@ -24,9 +26,3 @@ CREATE TABLE IF NOT EXISTS c_check_report (
   INDEX idx_channel_id (channel_id),
   INDEX idx_comp_name (comp_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-
-#-----------------------------------------------------------------------
-#修改检查任务
-#-----------------------------------------------------------------------
-ALTER TABLE c_check_task ADD num CHAR(32) NOT NULL COMMENT '检查任务编号';
-CREATE UNIQUE INDEX idx_num ON c_check_task(num);

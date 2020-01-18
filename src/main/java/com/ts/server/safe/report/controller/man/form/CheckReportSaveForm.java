@@ -11,9 +11,12 @@ import javax.validation.constraints.NotBlank;
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 public class CheckReportSaveForm {
-    @ApiModelProperty(value = "企业编号", required = true)
+    @ApiModelProperty(value = "任务编号", required = true)
     @NotBlank
-    private String compId;
+    private String taskId;
+    @ApiModelProperty(value = "任务描述", required = true)
+    @NotBlank
+    private String taskDetail;
     @ApiModelProperty(value = "检查周期", required = true)
     @NotBlank
     private String cycleName;
@@ -35,12 +38,20 @@ public class CheckReportSaveForm {
     @ApiModelProperty(value = "安全生产社会化检查服务", required = true)
     private CheckReport.SafeProduct safeProduct;
 
-    public String getCompId() {
-        return compId;
+    public String getTaskId() {
+        return taskId;
     }
 
-    public void setCompId(String compId) {
-        this.compId = compId;
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
+
+    public String getTaskDetail() {
+        return taskDetail;
+    }
+
+    public void setTaskDetail(String taskDetail) {
+        this.taskDetail = taskDetail;
     }
 
     public String getCycleName() {
@@ -118,7 +129,8 @@ public class CheckReportSaveForm {
     public CheckReport toDomain(){
         CheckReport t = new CheckReport();
 
-        t.setCompId(compId);
+        t.setTaskId(taskId);
+        t.setTaskDetail(taskDetail);
         t.setCycleName(cycleName);
         t.setEntCompType(entCompType);
         t.setIndustry(industry);

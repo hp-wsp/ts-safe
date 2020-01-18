@@ -24,6 +24,10 @@ public class Member {
     private String name;
     @ApiModelProperty(value = "联系电话")
     private String phone;
+    @ApiModelProperty(value = "移动电话")
+    private String mobile;
+    @ApiModelProperty(value = "职务")
+    private String job;
     @ApiModelProperty(value = "出生年月日")
     private String birthday;
     @ApiModelProperty(value = "擅长领域")
@@ -86,6 +90,22 @@ public class Member {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
     }
 
     public String getBirthday() {
@@ -163,6 +183,8 @@ public class Member {
                 Objects.equals(username, member.username) &&
                 Objects.equals(name, member.name) &&
                 Objects.equals(phone, member.phone) &&
+                Objects.equals(mobile, member.mobile) &&
+                Objects.equals(job, member.job) &&
                 Objects.equals(birthday, member.birthday) &&
                 Objects.equals(profession, member.profession) &&
                 Objects.equals(password, member.password) &&
@@ -174,7 +196,7 @@ public class Member {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, channelId, username, name, phone, birthday, profession, password, root, status, updateTime, createTime);
+        int result = Objects.hash(id, channelId, username, name, phone, mobile, job, birthday, profession, password, root, status, updateTime, createTime);
         result = 31 * result + Arrays.hashCode(roles);
         return result;
     }
@@ -187,6 +209,8 @@ public class Member {
                 .append("username", username)
                 .append("name", name)
                 .append("phone", phone)
+                .append("mobile", mobile)
+                .append("job", job)
                 .append("birthday", birthday)
                 .append("profession", profession)
                 .append("password", password)

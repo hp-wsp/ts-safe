@@ -30,6 +30,8 @@ public class MemberDao {
         t.setBirthday(r.getString("birthday"));
         t.setProfession(r.getString("profession"));
         t.setPhone(r.getString("phone"));
+        t.setMobile(r.getString("mobile"));
+        t.setJob(r.getString("job"));
         t.setPassword(r.getString("password"));
         t.setRoot(r.getBoolean("is_root"));
         t.setRoles(DaoUtils.toArray(r.getString("roles")));
@@ -46,21 +48,21 @@ public class MemberDao {
     }
 
     public void insert(Member t){
-        final String sql = "INSERT INTO c_member (id, username, name, password, phone, channel_id, " +
+        final String sql = "INSERT INTO c_member (id, username, name, password, phone, mobile, job, channel_id, " +
                 "birthday, profession, is_root, roles, status, update_time, create_time) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
-        jdbcTemplate.update(sql, t.getId(), t.getUsername(), t.getName(), t.getPassword(), t.getPhone(),
-                t.getChannelId(), t.getBirthday(), t.getProfession(), t.isRoot(), DaoUtils.join(t.getRoles()),
+        jdbcTemplate.update(sql, t.getId(), t.getUsername(), t.getName(), t.getPassword(), t.getPhone(), t.getMobile(),
+                t.getJob(), t.getChannelId(), t.getBirthday(), t.getProfession(), t.isRoot(), DaoUtils.join(t.getRoles()),
                 t.getStatus().name());
     }
 
     public boolean update(Member t){
-        final String sql = "UPDATE c_member SET name = ?, phone = ?, birthday = ?, profession = ?, roles = ?, " +
-                "status = ?, update_time = now() WHERE id = ? AND is_delete = false";
+        final String sql = "UPDATE c_member SET name = ?, phone = ?, mobile = ?, job = ?, birthday = ?, profession = ?, " +
+                "roles = ?, status = ?, update_time = now() WHERE id = ? AND is_delete = false";
 
-        return jdbcTemplate.update(sql, t.getName(), t.getPhone(), t.getBirthday(), t.getProfession(),
-                DaoUtils.join(t.getRoles()), t.getStatus().name(), t.getId()) > 0;
+        return jdbcTemplate.update(sql, t.getName(), t.getPhone(), t.getMobile(), t.getJob(), t.getBirthday(),
+                t.getProfession(), DaoUtils.join(t.getRoles()), t.getStatus().name(), t.getId()) > 0;
     }
 
     public boolean notHasMember(String channelId){

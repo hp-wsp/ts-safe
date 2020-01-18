@@ -54,6 +54,10 @@ public class RiskChemicalService {
         return dao.delete(id);
     }
 
+    public List<RiskChemical> queryByCompId(String compId){
+        return dao.findByCompId(compId);
+    }
+
     public Long count(String compId, String name, String cas){
         return dao.count(compId, name, cas);
     }

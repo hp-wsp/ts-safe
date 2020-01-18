@@ -67,6 +67,11 @@ public class RiskChemicalDao {
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
     }
 
+    public List<RiskChemical> findByCompId(String compId){
+        final String sql = "SELECT * FROM c_risk_chemical WHERE comp_id = ? ORDER BY create_time ASC";
+        return jdbcTemplate.query(sql, new Object[]{compId}, mapper);
+    }
+
     public Long count(String compId, String name, String cas){
         final String sql = "SELECT COUNT(id) FROM c_risk_chemical WHERE comp_id LIKE ? AND name LIKE ? AND cas LIKE ?";
 

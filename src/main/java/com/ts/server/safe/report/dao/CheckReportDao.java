@@ -37,12 +37,13 @@ public class CheckReportDao {
 
     public void insert(CheckReport t){
         final String sql = "INSERT INTO c_check_report (id, channel_id, channel_name, comp_id, comp_name, task_id, task_detail, " +
-                "cycle_name, ent_comp_type, industry, ent_scale, area, check_date, bz_detail, comp_base_info, safe_product, " +
-                "update_time, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+                "service_id, service_name, cycle_name, ent_comp_type, industry, ent_scale, area, check_date, bz_detail, " +
+                "comp_base_info, safe_product, update_time, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getChannelName(), t.getCompId(), t.getCompName(), t.getTaskId(),
-                t.getTaskDetail(), t.getCycleName(), t.getEntCompType(), t.getIndustry(), t.getEntScale(), t.getArea(),
-                t.getCheckDate(), toJson(t.getBzDetail()), toJson(t.getCompBaseInfo()), toJson(t.getSafeProduct()));
+                t.getTaskDetail(), t.getServiceId(), t.getServiceName(), t.getCycleName(), t.getEntCompType(),
+                t.getIndustry(), t.getEntScale(), t.getArea(), t.getCheckDate(), toJson(t.getBzDetail()),
+                toJson(t.getCompBaseInfo()), toJson(t.getSafeProduct()));
     }
 
     private String toJson(Object object){
@@ -54,13 +55,14 @@ public class CheckReportDao {
     }
 
     public boolean update(CheckReport t){
-        final String sql = "UPDATE c_check_report SET comp_id = ?, comp_name = ?, task_id = ?, task_name = ?, " +
-                "cycle_name = ?, ent_comp_type = ?, industry = ?, ent_scale = ?,area = ?, check_date = ?, bz_detail = ?, " +
-                "comp_base_info = ?, safe_product = ?, update_time = now() WHERE id = ?";
+        final String sql = "UPDATE c_check_report SET comp_id = ?, comp_name = ?, task_id = ?, task_detail = ?, service_id = ?," +
+                "service_name = ?, cycle_name = ?, ent_comp_type = ?, industry = ?, ent_scale = ?,area = ?, " +
+                "check_date = ?, bz_detail = ?, comp_base_info = ?, safe_product = ?, update_time = now() WHERE id = ?";
 
-        return jdbcTemplate.update(sql, t.getCompId(), t.getCompName(), t.getTaskId(), t.getTaskDetail(),
-                t.getCycleName(), t.getEntCompType(), t.getIndustry(), t.getEntScale(), t.getArea(), t.getCheckDate(),
-                toJson(t.getBzDetail()), toJson(t.getCompBaseInfo()), toJson(t.getSafeProduct()), t.getId()) > 0;
+        return jdbcTemplate.update(sql, t.getCompId(), t.getCompName(), t.getTaskId(), t.getTaskDetail(), t.getServiceId(),
+                t.getServiceName(), t.getCycleName(), t.getEntCompType(), t.getIndustry(), t.getEntScale(),
+                t.getArea(), t.getCheckDate(), toJson(t.getBzDetail()), toJson(t.getCompBaseInfo()), toJson(t.getSafeProduct()),
+                t.getId()) > 0;
     }
 
     public CheckReport findOne(String id){
@@ -113,6 +115,8 @@ public class CheckReportDao {
             t.setCompName(r.getString("comp_name"));
             t.setTaskId(r.getString("task_id"));
             t.setTaskDetail(r.getString("task_detail"));
+            t.setServiceId(r.getString("service_id"));
+            t.setServiceName(r.getString("service_name"));
             t.setCycleName(r.getString("cycle_name"));
             t.setEntCompType(r.getInt("ent_comp_type"));
             t.setIndustry(r.getString("industry"));

@@ -31,6 +31,10 @@ public class CheckReport {
     private String taskId;
     @ApiModelProperty("检查任务描述")
     private String taskDetail;
+    @ApiModelProperty("服务系统编号")
+    private String serviceId;
+    @ApiModelProperty("服务名称")
+    private String serviceName;
     @ApiModelProperty("检查周期")
     private String cycleName;
     @ApiModelProperty("委托单位形式")
@@ -76,6 +80,22 @@ public class CheckReport {
 
     public void setTaskDetail(String taskDetail) {
         this.taskDetail = taskDetail;
+    }
+
+    public String getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
     }
 
     public String getChannelId() {
@@ -212,6 +232,8 @@ public class CheckReport {
                 Objects.equals(compName, that.compName) &&
                 Objects.equals(taskId, that.taskId) &&
                 Objects.equals(taskDetail, that.taskDetail) &&
+                Objects.equals(serviceId, that.serviceId) &&
+                Objects.equals(serviceName, that.serviceName) &&
                 Objects.equals(cycleName, that.cycleName) &&
                 Objects.equals(industry, that.industry) &&
                 Objects.equals(area, that.area) &&
@@ -225,7 +247,7 @@ public class CheckReport {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, channelId, channelName, compId, compName, taskId, taskDetail, cycleName, entCompType, industry, entScale, area, checkDate, bzDetail, compBaseInfo, safeProduct, updateTime, createTime);
+        return Objects.hash(id, channelId, channelName, compId, compName, taskId, taskDetail, serviceId, serviceName, cycleName, entCompType, industry, entScale, area, checkDate, bzDetail, compBaseInfo, safeProduct, updateTime, createTime);
     }
 
     @Override
@@ -238,6 +260,8 @@ public class CheckReport {
                 .append("compName", compName)
                 .append("taskId", taskId)
                 .append("taskDetail", taskDetail)
+                .append("serviceId", serviceId)
+                .append("serviceName", serviceName)
                 .append("cycleName", cycleName)
                 .append("entCompType", entCompType)
                 .append("industry", industry)
@@ -279,7 +303,7 @@ public class CheckReport {
         @ApiModelProperty(value = "手机")
         private String chanMobile;
         @ApiModelProperty(value = "法人")
-        private String chanContact;
+        private PersonInfo chanContact;
         @ApiModelProperty("组长")
         private PersonInfo leader;
         @ApiModelProperty("分工")
@@ -379,11 +403,11 @@ public class CheckReport {
             this.chanMobile = chanMobile;
         }
 
-        public String getChanContact() {
+        public PersonInfo getChanContact() {
             return chanContact;
         }
 
-        public void setChanContact(String chanContact) {
+        public void setChanContact(PersonInfo chanContact) {
             this.chanContact = chanContact;
         }
 
@@ -483,11 +507,9 @@ public class CheckReport {
     /**
      * 人员信息
      */
-    static class PersonInfo {
+    public static class PersonInfo {
         @ApiModelProperty("名称")
         private String name;
-        @ApiModelProperty("职务")
-        private String duty;
         @ApiModelProperty("联系电话")
         private String phone;
         @ApiModelProperty("手机")
@@ -499,14 +521,6 @@ public class CheckReport {
 
         public void setName(String name) {
             this.name = name;
-        }
-
-        public String getDuty() {
-            return duty;
-        }
-
-        public void setDuty(String duty) {
-            this.duty = duty;
         }
 
         public String getPhone() {
@@ -529,7 +543,6 @@ public class CheckReport {
         public String toString() {
             return new ToStringBuilder(this)
                     .append("name", name)
-                    .append("duty", duty)
                     .append("phone", phone)
                     .append("mobile", mobile)
                     .toString();
