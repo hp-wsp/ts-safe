@@ -1,8 +1,13 @@
 package com.ts.server.safe.report.domain;
 
+import com.ts.server.safe.channel.domain.CheckContent;
+import com.ts.server.safe.company.domain.CompProduct;
+import com.ts.server.safe.company.domain.RiskChemical;
+import com.ts.server.safe.company.domain.SpePerson;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,6 +27,12 @@ public class CheckReport {
     private String compId;
     @ApiModelProperty(value = "企业名称")
     private String compName;
+    @ApiModelProperty("检查任务编号")
+    private String taskId;
+    @ApiModelProperty("检查任务描述")
+    private String taskDetail;
+    @ApiModelProperty("检查周期")
+    private String cycleName;
     @ApiModelProperty("委托单位形式")
     private int entCompType;
     @ApiModelProperty("所属行业")
@@ -32,7 +43,214 @@ public class CheckReport {
     private String area;
     @ApiModelProperty("检查日期")
     private String checkDate;
+    @ApiModelProperty("编制说明")
+    private BzDetail bzDetail;
+    @ApiModelProperty("受检企业基本情况")
+    private CompBaseInfo compBaseInfo;
+    @ApiModelProperty("安全生产社会化检查服务")
+    private SafeProduct safeProduct;
+    @ApiModelProperty("修改时间")
+    private Date updateTime;
+    @ApiModelProperty("创建时间")
+    private Date createTime;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
+
+    public String getTaskDetail() {
+        return taskDetail;
+    }
+
+    public void setTaskDetail(String taskDetail) {
+        this.taskDetail = taskDetail;
+    }
+
+    public String getChannelId() {
+        return channelId;
+    }
+
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
+    }
+
+    public String getCompId() {
+        return compId;
+    }
+
+    public void setCompId(String compId) {
+        this.compId = compId;
+    }
+
+    public String getCompName() {
+        return compName;
+    }
+
+    public void setCompName(String compName) {
+        this.compName = compName;
+    }
+
+    public String getCycleName() {
+        return cycleName;
+    }
+
+    public void setCycleName(String cycleName) {
+        this.cycleName = cycleName;
+    }
+
+    public int getEntCompType() {
+        return entCompType;
+    }
+
+    public void setEntCompType(int entCompType) {
+        this.entCompType = entCompType;
+    }
+
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
+    }
+
+    public int getEntScale() {
+        return entScale;
+    }
+
+    public void setEntScale(int entScale) {
+        this.entScale = entScale;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getCheckDate() {
+        return checkDate;
+    }
+
+    public void setCheckDate(String checkDate) {
+        this.checkDate = checkDate;
+    }
+
+    public BzDetail getBzDetail() {
+        return bzDetail;
+    }
+
+    public void setBzDetail(BzDetail bzDetail) {
+        this.bzDetail = bzDetail;
+    }
+
+    public CompBaseInfo getCompBaseInfo() {
+        return compBaseInfo;
+    }
+
+    public void setCompBaseInfo(CompBaseInfo compBaseInfo) {
+        this.compBaseInfo = compBaseInfo;
+    }
+
+    public SafeProduct getSafeProduct() {
+        return safeProduct;
+    }
+
+    public void setSafeProduct(SafeProduct safeProduct) {
+        this.safeProduct = safeProduct;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CheckReport that = (CheckReport) o;
+        return entCompType == that.entCompType &&
+                entScale == that.entScale &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(channelId, that.channelId) &&
+                Objects.equals(channelName, that.channelName) &&
+                Objects.equals(compId, that.compId) &&
+                Objects.equals(compName, that.compName) &&
+                Objects.equals(taskId, that.taskId) &&
+                Objects.equals(taskDetail, that.taskDetail) &&
+                Objects.equals(cycleName, that.cycleName) &&
+                Objects.equals(industry, that.industry) &&
+                Objects.equals(area, that.area) &&
+                Objects.equals(checkDate, that.checkDate) &&
+                Objects.equals(bzDetail, that.bzDetail) &&
+                Objects.equals(compBaseInfo, that.compBaseInfo) &&
+                Objects.equals(safeProduct, that.safeProduct) &&
+                Objects.equals(updateTime, that.updateTime) &&
+                Objects.equals(createTime, that.createTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, channelId, channelName, compId, compName, taskId, taskDetail, cycleName, entCompType, industry, entScale, area, checkDate, bzDetail, compBaseInfo, safeProduct, updateTime, createTime);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("channelId", channelId)
+                .append("channelName", channelName)
+                .append("compId", compId)
+                .append("compName", compName)
+                .append("taskId", taskId)
+                .append("taskDetail", taskDetail)
+                .append("cycleName", cycleName)
+                .append("entCompType", entCompType)
+                .append("industry", industry)
+                .append("entScale", entScale)
+                .append("area", area)
+                .append("checkDate", checkDate)
+                .append("bzDetail", bzDetail)
+                .append("compBaseInfo", compBaseInfo)
+                .append("safeProduct", safeProduct)
+                .append("updateTime", updateTime)
+                .append("createTime", createTime)
+                .toString();
+    }
 
     /**
      * 编制说明
@@ -321,15 +539,252 @@ public class CheckReport {
     /**
      * 受检企业基本情况
      */
-    static class CompBaseInfo {
+    public static class CompBaseInfo {
+        @ApiModelProperty("企业名称")
         private String compName;
+        @ApiModelProperty("注册地址")
         private String regAddress;
         @ApiModelProperty("社会信用代码")
         private String creditCode;
+        @ApiModelProperty("法定代表人")
         private PersonInfo conPerson;
+        @ApiModelProperty("安全管理人")
         private PersonInfo safePerson;
+        @ApiModelProperty("联系人")
         private PersonInfo contractPerson;
+        @ApiModelProperty("企业简介")
         private String profile;
+        @ApiModelProperty("生产信息")
+        private List<CompProduct> products;
+        @ApiModelProperty("危险化学品")
+        private List<RiskChemical> riskChemicals;
 
+        public String getCompName() {
+            return compName;
+        }
+
+        public void setCompName(String compName) {
+            this.compName = compName;
+        }
+
+        public String getRegAddress() {
+            return regAddress;
+        }
+
+        public void setRegAddress(String regAddress) {
+            this.regAddress = regAddress;
+        }
+
+        public String getCreditCode() {
+            return creditCode;
+        }
+
+        public void setCreditCode(String creditCode) {
+            this.creditCode = creditCode;
+        }
+
+        public PersonInfo getConPerson() {
+            return conPerson;
+        }
+
+        public void setConPerson(PersonInfo conPerson) {
+            this.conPerson = conPerson;
+        }
+
+        public PersonInfo getSafePerson() {
+            return safePerson;
+        }
+
+        public void setSafePerson(PersonInfo safePerson) {
+            this.safePerson = safePerson;
+        }
+
+        public PersonInfo getContractPerson() {
+            return contractPerson;
+        }
+
+        public void setContractPerson(PersonInfo contractPerson) {
+            this.contractPerson = contractPerson;
+        }
+
+        public String getProfile() {
+            return profile;
+        }
+
+        public void setProfile(String profile) {
+            this.profile = profile;
+        }
+
+        public List<CompProduct> getProducts() {
+            return products;
+        }
+
+        public void setProducts(List<CompProduct> products) {
+            this.products = products;
+        }
+
+        public List<RiskChemical> getRiskChemicals() {
+            return riskChemicals;
+        }
+
+        public void setRiskChemicals(List<RiskChemical> riskChemicals) {
+            this.riskChemicals = riskChemicals;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            CompBaseInfo that = (CompBaseInfo) o;
+            return Objects.equals(compName, that.compName) &&
+                    Objects.equals(regAddress, that.regAddress) &&
+                    Objects.equals(creditCode, that.creditCode) &&
+                    Objects.equals(conPerson, that.conPerson) &&
+                    Objects.equals(safePerson, that.safePerson) &&
+                    Objects.equals(contractPerson, that.contractPerson) &&
+                    Objects.equals(profile, that.profile) &&
+                    Objects.equals(products, that.products) &&
+                    Objects.equals(riskChemicals, that.riskChemicals);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(compName, regAddress, creditCode, conPerson, safePerson, contractPerson, profile, products, riskChemicals);
+        }
+
+        @Override
+        public String toString() {
+            return new ToStringBuilder(this)
+                    .append("compName", compName)
+                    .append("regAddress", regAddress)
+                    .append("creditCode", creditCode)
+                    .append("conPerson", conPerson)
+                    .append("safePerson", safePerson)
+                    .append("contractPerson", contractPerson)
+                    .append("profile", profile)
+                    .append("products", products)
+                    .append("riskChemicals", riskChemicals)
+                    .toString();
+        }
+    }
+
+    /**
+     * 安全生产社会化检查服务
+     */
+    public static class SafeProduct {
+        @ApiModelProperty("基础管理隐患描述及治理措施")
+        private List<CheckContent> baseContents;
+        @ApiModelProperty("现场管理隐患描述及治理措施")
+        private List<CheckContent> sceneContents;
+        @ApiModelProperty("涉及特种人员和证书")
+        private boolean spePerson;
+        @ApiModelProperty("涉及特种人员和证书")
+        private List<SpePerson> spePersons;
+        @ApiModelProperty("检查判定企业综合安全风险状况")
+        private int safeRiskLevel;
+        @ApiModelProperty("风险判定说明")
+        private String riskExplain;
+        @ApiModelProperty("安全生产事故类型风险辨识")
+        private String safeProductRisk;
+        @ApiModelProperty("受检查企业意见")
+        private String checkCompany;
+
+        public List<CheckContent> getBaseContents() {
+            return baseContents;
+        }
+
+        public void setBaseContents(List<CheckContent> baseContents) {
+            this.baseContents = baseContents;
+        }
+
+        public List<CheckContent> getSceneContents() {
+            return sceneContents;
+        }
+
+        public void setSceneContents(List<CheckContent> sceneContents) {
+            this.sceneContents = sceneContents;
+        }
+
+        public boolean isSpePerson() {
+            return spePerson;
+        }
+
+        public void setSpePerson(boolean spePerson) {
+            this.spePerson = spePerson;
+        }
+
+        public List<SpePerson> getSpePersons() {
+            return spePersons;
+        }
+
+        public void setSpePersons(List<SpePerson> spePersons) {
+            this.spePersons = spePersons;
+        }
+
+        public int getSafeRiskLevel() {
+            return safeRiskLevel;
+        }
+
+        public void setSafeRiskLevel(int safeRiskLevel) {
+            this.safeRiskLevel = safeRiskLevel;
+        }
+
+        public String getRiskExplain() {
+            return riskExplain;
+        }
+
+        public void setRiskExplain(String riskExplain) {
+            this.riskExplain = riskExplain;
+        }
+
+        public String getSafeProductRisk() {
+            return safeProductRisk;
+        }
+
+        public void setSafeProductRisk(String safeProductRisk) {
+            this.safeProductRisk = safeProductRisk;
+        }
+
+        public String getCheckCompany() {
+            return checkCompany;
+        }
+
+        public void setCheckCompany(String checkCompany) {
+            this.checkCompany = checkCompany;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            SafeProduct that = (SafeProduct) o;
+            return spePerson == that.spePerson &&
+                    safeRiskLevel == that.safeRiskLevel &&
+                    Objects.equals(baseContents, that.baseContents) &&
+                    Objects.equals(sceneContents, that.sceneContents) &&
+                    Objects.equals(spePersons, that.spePersons) &&
+                    Objects.equals(riskExplain, that.riskExplain) &&
+                    Objects.equals(safeProductRisk, that.safeProductRisk) &&
+                    Objects.equals(checkCompany, that.checkCompany);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(baseContents, sceneContents, spePerson, spePersons, safeRiskLevel, riskExplain, safeProductRisk, checkCompany);
+        }
+
+        @Override
+        public String toString() {
+            return new ToStringBuilder(this)
+                    .append("baseContents", baseContents)
+                    .append("sceneContents", sceneContents)
+                    .append("spePerson", spePerson)
+                    .append("spePersons", spePersons)
+                    .append("safeRiskLevel", safeRiskLevel)
+                    .append("riskExplain", riskExplain)
+                    .append("safeProductRisk", safeProductRisk)
+                    .append("checkCompany", checkCompany)
+                    .toString();
+        }
     }
 }

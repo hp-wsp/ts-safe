@@ -19,6 +19,8 @@ INSERT INTO s_sequence (seq_key, cur_value, remark)
 SELECT 'seq_spe_equipment', 1, '企业特殊设备' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_spe_equipment');
 INSERT INTO s_sequence (seq_key, cur_value, remark)
 SELECT 'seq_spe_person', 1, '特殊作业人员和证书' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_spe_person');
+INSERT INTO s_sequence (seq_key, cur_value, remark)
+SELECT 'seq_check_task_num', 1, '检查任务编号序号' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_check_task_num');
 
 #-----------------------------------------------------------------
 #初始检查类别数据

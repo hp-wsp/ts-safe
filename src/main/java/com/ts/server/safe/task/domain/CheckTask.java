@@ -25,6 +25,8 @@ public class CheckTask {
     private String compId;
     @ApiModelProperty("公司名称")
     private String compName;
+    @ApiModelProperty("检查任务编号")
+    private String num;
     @ApiModelProperty("检查开始时间")
     private Date checkTimeFrom;
     @ApiModelProperty("检查结束时间")
@@ -92,6 +94,14 @@ public class CheckTask {
 
     public void setCompName(String compName) {
         this.compName = compName;
+    }
+
+    public String getNum() {
+        return num;
+    }
+
+    public void setNum(String num) {
+        this.num = num;
     }
 
     public Date getCheckTimeFrom() {
@@ -170,6 +180,7 @@ public class CheckTask {
                 Objects.equals(serviceName, checkTask.serviceName) &&
                 Objects.equals(compId, checkTask.compId) &&
                 Objects.equals(compName, checkTask.compName) &&
+                Objects.equals(num, checkTask.num) &&
                 Objects.equals(checkTimeFrom, checkTask.checkTimeFrom) &&
                 Objects.equals(checkTimeTo, checkTask.checkTimeTo) &&
                 Objects.equals(checkUsers, checkTask.checkUsers) &&
@@ -181,7 +192,7 @@ public class CheckTask {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, channelId, serviceId, serviceName, compId, compName, checkTimeFrom, checkTimeTo, checkUsers, checkIndCtgs, review, status, updateTime, createTime);
+        return Objects.hash(id, channelId, serviceId, serviceName, compId, compName, num, checkTimeFrom, checkTimeTo, checkUsers, checkIndCtgs, review, status, updateTime, createTime);
     }
 
     @Override
@@ -193,6 +204,7 @@ public class CheckTask {
                 .append("serviceName", serviceName)
                 .append("compId", compId)
                 .append("compName", compName)
+                .append("num", num)
                 .append("checkTimeFrom", checkTimeFrom)
                 .append("checkTimeTo", checkTimeTo)
                 .append("checkUsers", checkUsers)

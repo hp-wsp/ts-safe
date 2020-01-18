@@ -1,7 +1,6 @@
 package com.ts.server.safe.task.service;
 
 import com.ts.server.safe.BaseException;
-import com.ts.server.safe.channel.domain.CheckContent;
 import com.ts.server.safe.company.domain.CompInfo;
 import com.ts.server.safe.contract.domain.ConService;
 import com.ts.server.safe.channel.domain.Member;
@@ -10,11 +9,11 @@ import com.ts.server.safe.contract.service.ConServiceService;
 import com.ts.server.safe.channel.service.MemberService;
 import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.task.dao.CheckTaskDao;
-import com.ts.server.safe.task.dao.TaskContentDao;
 import com.ts.server.safe.task.dao.TaskOfMemberDao;
 import com.ts.server.safe.task.domain.TaskContent;
 import com.ts.server.safe.task.domain.CheckTask;
 import com.ts.server.safe.task.domain.TaskOfMember;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -22,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,6 +57,7 @@ public class CheckTaskService {
     public CheckTask save(CheckTask t, String[] contentIds){
 
         t.setId(IdGenerators.uuid());
+        t.setNum(buildNum());
         t.setStatus(CheckTask.Status.WAIT);
         setService(t);
         setIndCtgs(t);
@@ -75,6 +77,13 @@ public class CheckTaskService {
         saveMemberTask(t);
 
         return dao.findOne(t.getId());
+    }
+
+    private String buildNum(){
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String num = dao.genNum();
+        String random = String.format("%02d", RandomUtils.nextInt(0, 100));
+        return "JCRW" + date + num + random;
     }
 
     private void setService(CheckTask t){

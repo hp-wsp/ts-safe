@@ -2,6 +2,8 @@ package com.ts.server.safe.task.dao;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ts.server.safe.common.id.IdGenerator;
+import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.common.utils.DaoUtils;
 import com.ts.server.safe.task.domain.CheckTask;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import java.util.*;
 public class CheckTaskDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
+    private final IdGenerator<String> numIdGenerator;
     private final ObjectMapper objectMapper;
     private final RowMapper<CheckTask> mapper;
 
@@ -33,14 +36,20 @@ public class CheckTaskDao {
         this.objectMapper = objectMapper;
         this.mapper = new CheckTaskMapper(objectMapper);
         this.namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+        this.numIdGenerator = IdGenerators.seqId(dataSource, "seq_check_task_num",
+                e -> String.format("%05d", (e % 100000)));
+    }
+
+    public String genNum(){
+        return numIdGenerator.generate();
     }
 
     public void insert(CheckTask t){
-        final String sql = "INSERT INTO c_check_task (id, channel_id, service_id, service_name, comp_id, comp_name, " +
+        final String sql = "INSERT INTO c_check_task (id, num, channel_id, service_id, service_name, comp_id, comp_name, " +
                 "check_time_from, check_time_to, check_users, check_ind_ctgs, is_review, status, update_time, create_time) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
-        jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getServiceId(), t.getServiceName(),
+        jdbcTemplate.update(sql, t.getId(), t.getNum(), t.getChannelId(), t.getServiceId(), t.getServiceName(),
                 t.getCompId(), t.getCompName(), t.getCheckTimeFrom(), t.getCheckTimeTo(),
                 toJson(t.getCheckUsers()), toJson(t.getCheckIndCtgs()), t.isReview(), t.getStatus().name());
     }
@@ -176,6 +185,7 @@ public class CheckTaskDao {
             CheckTask t = new CheckTask();
 
             t.setId(r.getString("id"));
+            t.setNum(r.getString("num"));
             t.setChannelId(r.getString("channel_id"));
             t.setServiceId(r.getString("service_id"));
             t.setServiceName(r.getString("service_name"));

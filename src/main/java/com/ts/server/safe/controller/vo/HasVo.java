@@ -5,11 +5,11 @@ package com.ts.server.safe.controller.vo;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class HasVo<T> {
+public class HasVo {
     private final boolean has;
-    private final T data;
+    private final Object data;
 
-    private HasVo(boolean has, T data) {
+    private HasVo(boolean has, Object data) {
         this.has = has;
         this.data = data;
     }
@@ -18,15 +18,15 @@ public class HasVo<T> {
         return has;
     }
 
-    public T getData() {
+    public Object getData() {
         return data;
     }
 
-    public static <T> HasVo<T> has(T t){
-        return new HasVo<>(true, t);
+    public static  HasVo hasData(boolean has, Object t){
+        return new HasVo(has, t);
     }
 
-    public static <T> HasVo<T> notHas(){
-        return new HasVo<>(false, null);
+    public static HasVo noneData(boolean has){
+        return new HasVo(has, null);
     }
 }
