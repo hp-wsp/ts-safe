@@ -86,6 +86,11 @@ public class ConServiceManController {
         return ResultVo.success(new ConServiceVo(service.get(id), service.queryItems(id)));
     }
 
+    @GetMapping(value = "ofCompany", produces = APPLICATION_JSON_VALUE)
+    public ResultVo<List<ConService>> queryOfCompany(@RequestParam("compId") String compId){
+        return ResultVo.success(service.queryByCompId(compId));
+    }
+
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ApiOperation("查询合同服务")
     public ResultPageVo<ConService> query(

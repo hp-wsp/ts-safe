@@ -147,4 +147,8 @@ public class ConServiceService {
     public List<ConService> query(String channelId, String name, String compName, ConService.Status status, int offset, int limit){
         return dao.find(channelId, name, compName, status, offset, limit);
     }
+
+    public List<ConService> queryByCompId(String compId){
+        return dao.findByCompId(compId);
+    }
 }

@@ -18,6 +18,8 @@ public class UniIndCtg {
     private String num;
     @ApiModelProperty("分类名称")
     private String name;
+    @ApiModelProperty("分类完整名称")
+    private String fullName;
     @ApiModelProperty("上级分类编号")
     private String parentId;
     @ApiModelProperty("分类级别")
@@ -49,6 +51,14 @@ public class UniIndCtg {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getParentId() {
@@ -87,19 +97,20 @@ public class UniIndCtg {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UniIndCtg that = (UniIndCtg) o;
-        return level == that.level &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(num, that.num) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(parentId, that.parentId) &&
-                Objects.equals(remark, that.remark) &&
-                Objects.equals(createTime, that.createTime);
+        UniIndCtg uniIndCtg = (UniIndCtg) o;
+        return level == uniIndCtg.level &&
+                Objects.equals(id, uniIndCtg.id) &&
+                Objects.equals(num, uniIndCtg.num) &&
+                Objects.equals(name, uniIndCtg.name) &&
+                Objects.equals(fullName, uniIndCtg.fullName) &&
+                Objects.equals(parentId, uniIndCtg.parentId) &&
+                Objects.equals(remark, uniIndCtg.remark) &&
+                Objects.equals(createTime, uniIndCtg.createTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, num, name, parentId, level, remark, createTime);
+        return Objects.hash(id, num, name, fullName, parentId, level, remark, createTime);
     }
 
     @Override
@@ -108,6 +119,7 @@ public class UniIndCtg {
                 .append("id", id)
                 .append("num", num)
                 .append("name", name)
+                .append("fullName", fullName)
                 .append("parentId", parentId)
                 .append("level", level)
                 .append("remark", remark)

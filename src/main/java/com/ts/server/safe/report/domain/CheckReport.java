@@ -1,9 +1,9 @@
 package com.ts.server.safe.report.domain;
 
-import com.ts.server.safe.channel.domain.CheckContent;
 import com.ts.server.safe.company.domain.CompProduct;
 import com.ts.server.safe.company.domain.RiskChemical;
 import com.ts.server.safe.company.domain.SpePerson;
+import com.ts.server.safe.task.domain.TaskContent;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -686,35 +686,35 @@ public class CheckReport {
      */
     public static class SafeProduct {
         @ApiModelProperty("基础管理隐患描述及治理措施")
-        private List<CheckContent> baseContents;
+        private List<TaskContent> baseContents;
         @ApiModelProperty("现场管理隐患描述及治理措施")
-        private List<CheckContent> sceneContents;
+        private List<TaskContent> sceneContents;
         @ApiModelProperty("涉及特种人员和证书")
-        private boolean spePerson;
+        private boolean spePerson = false;
         @ApiModelProperty("涉及特种人员和证书")
         private List<SpePerson> spePersons;
         @ApiModelProperty("检查判定企业综合安全风险状况")
-        private int safeRiskLevel;
+        private int safeRiskLevel = 0;
         @ApiModelProperty("风险判定说明")
         private String riskExplain;
         @ApiModelProperty("安全生产事故类型风险辨识")
         private String safeProductRisk;
         @ApiModelProperty("受检查企业意见")
-        private String checkCompany;
+        private String checkCompanyIdea;
 
-        public List<CheckContent> getBaseContents() {
+        public List<TaskContent> getBaseContents() {
             return baseContents;
         }
 
-        public void setBaseContents(List<CheckContent> baseContents) {
+        public void setBaseContents(List<TaskContent> baseContents) {
             this.baseContents = baseContents;
         }
 
-        public List<CheckContent> getSceneContents() {
+        public List<TaskContent> getSceneContents() {
             return sceneContents;
         }
 
-        public void setSceneContents(List<CheckContent> sceneContents) {
+        public void setSceneContents(List<TaskContent> sceneContents) {
             this.sceneContents = sceneContents;
         }
 
@@ -758,12 +758,12 @@ public class CheckReport {
             this.safeProductRisk = safeProductRisk;
         }
 
-        public String getCheckCompany() {
-            return checkCompany;
+        public String getCheckCompanyIdea() {
+            return checkCompanyIdea;
         }
 
-        public void setCheckCompany(String checkCompany) {
-            this.checkCompany = checkCompany;
+        public void setCheckCompanyIdea(String checkCompanyIdea) {
+            this.checkCompanyIdea = checkCompanyIdea;
         }
 
         @Override
@@ -778,12 +778,12 @@ public class CheckReport {
                     Objects.equals(spePersons, that.spePersons) &&
                     Objects.equals(riskExplain, that.riskExplain) &&
                     Objects.equals(safeProductRisk, that.safeProductRisk) &&
-                    Objects.equals(checkCompany, that.checkCompany);
+                    Objects.equals(checkCompanyIdea, that.checkCompanyIdea);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(baseContents, sceneContents, spePerson, spePersons, safeRiskLevel, riskExplain, safeProductRisk, checkCompany);
+            return Objects.hash(baseContents, sceneContents, spePerson, spePersons, safeRiskLevel, riskExplain, safeProductRisk, checkCompanyIdea);
         }
 
         @Override
@@ -796,7 +796,7 @@ public class CheckReport {
                     .append("safeRiskLevel", safeRiskLevel)
                     .append("riskExplain", riskExplain)
                     .append("safeProductRisk", safeProductRisk)
-                    .append("checkCompany", checkCompany)
+                    .append("checkCompanyIdea", checkCompanyIdea)
                     .toString();
         }
     }

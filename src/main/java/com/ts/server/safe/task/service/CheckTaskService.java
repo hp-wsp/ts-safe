@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.LinkOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -149,6 +150,7 @@ public class CheckTaskService {
     @Transactional(propagation = Propagation.REQUIRED)
     public CheckTask update(CheckTask t, String[] contentIds){
         CheckTask o = get(t.getId());
+        t.setStatus(o.getStatus());
 
         if(!StringUtils.equals(t.getChannelId(), o.getChannelId())){
             throw new BaseException("不能修改检查任务");
@@ -209,5 +211,9 @@ public class CheckTaskService {
         List<String> taskIds = ofMemberDao.query(memId, status, offset, limit).
                 stream().map(TaskOfMember::getTaskId).collect(Collectors.toList());
         return dao.findIn(taskIds);
+    }
+
+    public List<CheckTask> queryByServiceId(String serviceId){
+        return dao.findByServiceId(serviceId);
     }
 }

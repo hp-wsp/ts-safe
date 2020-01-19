@@ -65,11 +65,11 @@ public class CheckTaskDao {
     public boolean update(CheckTask t){
         final String sql = "UPDATE c_check_task SET service_id = ?, service_name = ?, comp_id = ?, comp_name = ?," +
                 "check_time_from = ?, check_time_to = ?, check_users = ?, check_ind_ctgs = ?, is_review = ?, " +
-                "status = ?, update_time = now() WHERE id = ?";
+                "update_time = now() WHERE id = ?";
 
         return jdbcTemplate.update(sql, t.getServiceId(), t.getServiceName(), t.getCompId(), t.getCompName(),
                 t.getCheckTimeFrom(), t.getCheckTimeTo(), toJson(t.getCheckUsers()), toJson(t.getCheckIndCtgs()),
-                t.isReview(), t.getStatus().name(), t.getId()) > 0;
+                t.isReview(), t.getId()) > 0;
     }
 
     public boolean delete(String id){
@@ -91,6 +91,11 @@ public class CheckTaskDao {
     public boolean updateStatus(String id, CheckTask.Status status){
         final String sql = "UPDATE c_check_task SET status = ? WHERE id = ?";
         return jdbcTemplate.update(sql, status.name(), id) > 0;
+    }
+
+    public List<CheckTask> findByServiceId(String serviceId){
+        final String sql = "SELECT * FROM c_check_task WHERE service_id = ? ORDER BY create_time DESC";
+        return jdbcTemplate.query(sql, new Object[]{serviceId}, mapper);
     }
 
     public Long count(String channelId, String compName, CheckTask.Status status, Date checkTimeFrom, Date checkTimeTo){

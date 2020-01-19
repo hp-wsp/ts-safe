@@ -73,6 +73,11 @@ public class ConServiceDao {
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
     }
 
+    public List<ConService> findByCompId(String compId){
+        final String sql = "SELECT * FROM c_service WHERE comp_id = ? ORDER BY create_time DESC";
+        return jdbcTemplate.query(sql, new Object[]{compId}, mapper);
+    }
+
     public Long count(String channelId, String name, String compName, ConService.Status status){
         final String sql = "SELECT COUNT(id) FROM c_service WHERE channel_id LIKE ? " +
                 "AND name LIKE ? AND comp_name LIKE ? AND status LIKE ?";

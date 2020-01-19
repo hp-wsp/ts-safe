@@ -29,26 +29,26 @@ public class SuperviseSql {
                     String[] array = StringUtils.splitByWholeSeparatorPreserveAllTokens(e, ",");
                     String id = String.format("%05d", index);
                     if(StringUtils.isNotBlank(array[0])){
-                        UniIndCtg t = build(id, array[0], "root", 1);
+                        UniIndCtg t = build(id, array[0], array[0], "root", 1);
                         stack1.push(t);
                     }
                     if(StringUtils.isNotBlank(array[1])){
                         count3.set(0);
                         UniIndCtg p = stack1.peek();
-                        UniIndCtg t = build(id, array[1], p.getId(), 2);
+                        UniIndCtg t = build(id, array[1], p.getFullName() + "/" + StringUtils.trim(array[1]), p.getId(), 2);
                         stack2.push(t);
                     }
                     if(StringUtils.isNotBlank(array[2])){
                         UniIndCtg pp = stack1.peek();
                         UniIndCtg p = stack2.peek();
-                        UniIndCtg t = build(id, array[2], p.getId(), 3);
+                        UniIndCtg t = build(id, array[2], p.getFullName() + "/" + StringUtils.trim(array[2]), p.getId(), 3);
                         t.setNum(pp.getNum()  + p.getNum() + String.format("%02d", count3.incrementAndGet()));
                         list.add(t);
                     }
                 }
             });
 
-            System.out.println("INSERT INTO b_supervise (id, num, name, parent_id, level, create_time) VALUES ");
+            System.out.println("INSERT INTO b_supervise (id, num, name, full_name, parent_id, level, create_time) VALUES ");
             stack1.forEach(e -> System.out.println(buildSql(e)));
             stack2.forEach(e -> System.out.println(buildSql(e)));
             list.forEach(e -> System.out.println(buildSql(e)));
@@ -59,12 +59,13 @@ public class SuperviseSql {
 
     }
 
-    private UniIndCtg build(String id, String name, String parentId, int level){
+    private UniIndCtg build(String id, String name, String fullName, String parentId, int level){
         UniIndCtg t = new UniIndCtg();
 
         t.setId(id);
         t.setNum(num(name, level));
         t.setName(StringUtils.trim(name));
+        t.setFullName(StringUtils.trim(fullName));
         t.setParentId(parentId);
         t.setLevel(level);
 
@@ -82,6 +83,6 @@ public class SuperviseSql {
     }
 
     private String buildSql(UniIndCtg t){
-        return String.format("('%s', '%s', '%s', '%s', %d, now()),", t.getId(), t.getNum(), t.getName(), t.getParentId(), t.getLevel());
+        return String.format("('%s', '%s', '%s', '%s', '%s', %d, now()),", t.getId(), t.getNum(), t.getName(), t.getFullName(), t.getParentId(), t.getLevel());
     }
 }

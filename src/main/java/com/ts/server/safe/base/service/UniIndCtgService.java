@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,11 +33,32 @@ public class UniIndCtgService {
         if(!hasParentId(t.getParentId())){
             throw new BaseException("上级行业分类不存在");
         }
-
+        if(isRoot(t.getParentId())){
+            t.setFullName(t.getName());
+        }else{
+            t.setFullName(buildFullName(t.getParentId(), t.getName()));
+        }
         t.setLevel(getLevel(t.getParentId()));
         String id = dao.insert(t);
 
         return dao.findOne(id);
+    }
+
+    private boolean isRoot(String parentId){
+        return StringUtils.isBlank(parentId) || StringUtils.equalsIgnoreCase(parentId, "root");
+    }
+
+    private String buildFullName(String parentId, String name){
+        List<String> names = new ArrayList<>(3);
+        names.add(name);
+        for (int i = 0 ; i < 5; i++){
+            UniIndCtg p = get(parentId);
+            names.add(0, p.getName());
+            if(isRoot(p.getParentId())){
+                break;
+            }
+        }
+        return StringUtils.join(names, "/");
     }
 
     private boolean hasParentId(String parentId){
@@ -53,6 +75,16 @@ public class UniIndCtgService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public UniIndCtg update(UniIndCtg t){
+        UniIndCtg o = get(t.getId());
+
+        if(!StringUtils.equals(o.getName(), t.getName())){
+            if(isRoot(t.getParentId())){
+                t.setFullName(t.getName());
+            }else{
+                t.setFullName(buildFullName(t.getParentId(), t.getName()));
+            }
+        }
+
         if(!dao.update(t)){
             throw new BaseException("修改行业分类失败");
         }

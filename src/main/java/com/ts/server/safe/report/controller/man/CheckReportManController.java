@@ -4,11 +4,13 @@ import com.ts.server.safe.BaseException;
 import com.ts.server.safe.channel.domain.Channel;
 import com.ts.server.safe.channel.domain.Member;
 import com.ts.server.safe.channel.service.ChannelService;
+import com.ts.server.safe.channel.service.CheckContentService;
 import com.ts.server.safe.channel.service.MemberService;
 import com.ts.server.safe.company.domain.CompInfo;
 import com.ts.server.safe.company.service.CompInfoService;
 import com.ts.server.safe.company.service.CompProductService;
 import com.ts.server.safe.company.service.RiskChemicalService;
+import com.ts.server.safe.company.service.SpePersonService;
 import com.ts.server.safe.contract.domain.ConService;
 import com.ts.server.safe.contract.domain.Contract;
 import com.ts.server.safe.contract.service.ConServiceService;
@@ -24,7 +26,9 @@ import com.ts.server.safe.report.domain.CheckReport;
 import com.ts.server.safe.report.service.CheckReportService;
 import com.ts.server.safe.security.CredentialContextUtils;
 import com.ts.server.safe.task.domain.CheckTask;
+import com.ts.server.safe.task.domain.TaskContent;
 import com.ts.server.safe.task.service.CheckTaskService;
+import com.ts.server.safe.task.service.TaskContentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -34,6 +38,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -55,13 +61,14 @@ public class CheckReportManController {
     private final MemberService memberService;
     private final CompProductService productService;
     private final RiskChemicalService riskChemicalService;
+    private final TaskContentService taskContentService;
 
     @Autowired
     public CheckReportManController(CheckReportService service, ChannelService channelService,
                                     CheckTaskService taskService, ConServiceService conService,
                                     ContractService contractService, CompInfoService compInfoService,
                                     MemberService memberService, CompProductService productService,
-                                    RiskChemicalService riskChemicalService) {
+                                    RiskChemicalService riskChemicalService, TaskContentService taskContentService) {
 
         this.service = service;
         this.channelService = channelService;
@@ -72,11 +79,12 @@ public class CheckReportManController {
         this.memberService = memberService;
         this.productService = productService;
         this.riskChemicalService = riskChemicalService;
+        this.taskContentService = taskContentService;
     }
 
-    @GetMapping(value = "init/taskId", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "init/{taskId}", produces = APPLICATION_JSON_VALUE)
     @ApiOperation("初始化检查报表")
-    public ResultVo<CheckReport> init(@PathVariable("taskId")String taskId, String ownerId){
+    public ResultVo<CheckReport> init(@PathVariable("taskId")String taskId){
         CheckTask task = taskService.get(taskId);
         String channelId = getCredential().getChannelId();
         if(!StringUtils.equals(task.getChannelId(), channelId)){
@@ -84,24 +92,35 @@ public class CheckReportManController {
         }
 
         CheckReport report = new CheckReport();
+        report.setChannelId(task.getChannelId());
+        Channel channel = channelService.get(channelId);
+        report.setChannelName(channel.getName());
+        report.setCompId(task.getCompId());
+        report.setCompName(task.getCompName());
+        report.setServiceId(task.getServiceId());
+        report.setServiceName(task.getServiceName());
+        report.setTaskId(taskId);
+        DateFormat dateForm = new SimpleDateFormat("yyyy-MM-dd");
+        report.setTaskDetail(task.getNum() + " 检查日期 " + dateForm.format(task.getCheckTimeFrom()));
+        report.setCheckDate(dateForm.format(task.getCheckTimeFrom()) + "至" + dateForm.format(task.getCheckTimeTo()));
+        CompInfo compInfo = compInfoService.get(task.getCompId());
+        report.setEntScale(compInfo.getEntScale());
         CheckReport.BzDetail detail = new CheckReport.BzDetail();
         detail.setCompany(task.getCompName());
         ConService conSer = conService.get(task.getServiceId());
         Contract contract = contractService.get(conSer.getConId());
         detail.setConNum(contract.getNum());
-        detail.setCycleContent(buildCycleContent(contract));
-        Channel channel = channelService.get(channelId);
+        detail.setCycleContent(buildCycleContent(contract, dateForm));
         detail.setChanName(channel.getName());
         detail.setChanAddress(channel.getAddress());
         detail.setChanBusScope(channel.getBusScope());
         detail.setChanPhone(channel.getPhone());
         detail.setChanMobile(channel.getMobile());
-        CompInfo compInfo = compInfoService.get(task.getCompId());
         CheckReport.PersonInfo conPerson = buildChanContact(compInfo);
         detail.setChanContact(conPerson);
         detail.setLeader(buildPerson(conSer.getLeaId()));
         detail.setAuditPerson(conPerson);
-        detail.setReportPerson(buildPerson(ownerId));
+        detail.setReportPerson(buildPerson(getCredential().getId()));
         report.setBzDetail(detail);
 
         CheckReport.CompBaseInfo compBaseInfo = new CheckReport.CompBaseInfo();
@@ -117,6 +136,9 @@ public class CheckReportManController {
         report.setCompBaseInfo(compBaseInfo);
 
         CheckReport.SafeProduct safeProduct = new CheckReport.SafeProduct();
+        List<TaskContent> taskContents = taskContentService.query(taskId);
+        safeProduct.setBaseContents(filterTaskContents(taskContents, "001"));
+        safeProduct.setSceneContents(filterTaskContents(taskContents, "002"));
         report.setSafeProduct(safeProduct);
 
         return ResultVo.success(report);
@@ -159,9 +181,12 @@ public class CheckReportManController {
         return t;
     }
 
-    private String buildCycleContent(Contract t){
-        DateFormat dataForm = new SimpleDateFormat("yyyy-MM-dd");
+    private String buildCycleContent(Contract t, DateFormat dataForm){
         return dataForm.format(t.getSerConDateFrom()) + " 至 " + dataForm.format(t.getSerConDateTo());
+    }
+
+    private List<TaskContent> filterTaskContents(List<TaskContent> contents, String typeId){
+        return contents.stream().filter(e -> StringUtils.equals(e.getTypeId(), typeId)).collect(Collectors.toList());
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)

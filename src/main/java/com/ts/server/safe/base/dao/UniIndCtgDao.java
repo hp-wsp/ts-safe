@@ -27,6 +27,7 @@ public class UniIndCtgDao {
 
         t.setId(r.getString("id"));
         t.setName(r.getString("name"));
+        t.setFullName(r.getString("full_name"));
         t.setNum(r.getString("num"));
         t.setLevel(r.getInt("level"));
         t.setParentId(r.getString("parent_id"));
@@ -45,15 +46,15 @@ public class UniIndCtgDao {
 
     public String insert(UniIndCtg t){
         String id = idGenerator.generate();
-        final String sql = "INSERT INTO b_ind_ctg (id, name, num, level, parent_id, remark, create_time) " +
-                "VALUES (?, ?, ?, ?, ?, ?, now())";
-        jdbcTemplate.update(sql, id, t.getName(), t.getNum(), t.getLevel(), t.getParentId(), t.getRemark());
+        final String sql = "INSERT INTO b_ind_ctg (id, name, full_name, num, level, parent_id, remark, create_time) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, now())";
+        jdbcTemplate.update(sql, id, t.getName(), t.getFullName(), t.getNum(), t.getLevel(), t.getParentId(), t.getRemark());
         return id;
     }
 
     public boolean update(UniIndCtg t){
-        final String sql = "UPDATE b_ind_ctg SET name = ?, num = ?, remark = ? WHERE id = ?";
-        return jdbcTemplate.update(sql, t.getName(), t.getNum(), t.getRemark(), t.getId()) >0;
+        final String sql = "UPDATE b_ind_ctg SET name = ?, full_name, num = ?, remark = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, t.getName(), t.getFullName(), t.getNum(), t.getRemark(), t.getId()) >0;
     }
 
     public boolean delete (String id){

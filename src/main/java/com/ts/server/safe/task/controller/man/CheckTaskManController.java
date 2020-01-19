@@ -89,6 +89,12 @@ public class CheckTaskManController {
         return ResultVo.success(new OkVo(service.delete(id)));
     }
 
+    @GetMapping(value = "ofService", produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("查询服务所属任务")
+    public ResultVo<List<CheckTask>> queryOfService(@RequestParam("serviceId") String serviceId){
+        return ResultVo.success(service.queryByServiceId(serviceId));
+    }
+
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ApiOperation("查询检查任务")
     public ResultPageVo<CheckTask> query(
