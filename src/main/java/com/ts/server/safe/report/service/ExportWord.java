@@ -58,9 +58,7 @@ public class ExportWord {
 
         XWPFTable table = doc.createTable(5, 2);
         CTTblGridCol  col = table.getCTTbl().addNewTblGrid().addNewGridCol();
-        col.s
         STTwipsMeasure measure = STTwipsMeasure.Factory.newInstance();
-        col.xsetW(STTwipsMeasure);
         table.setTableAlignment(TableRowAlign.CENTER);
         setTableNoneBorder(table);
 
