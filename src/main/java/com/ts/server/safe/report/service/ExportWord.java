@@ -1,6 +1,7 @@
 package com.ts.server.safe.report.service;
 
 import com.ts.server.safe.report.domain.CheckReport;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
@@ -8,6 +9,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 
 /**
  * 导出WORD报表
@@ -26,15 +28,31 @@ public class ExportWord {
     public void export(OutputStream outputStream, CheckReport report)throws IOException {
 
         try(XWPFDocument doc = new XWPFDocument()){
-
-            setTitle(doc, report);
-
+            renderCover(doc, report);
             doc.write(outputStream);
         }
 
     }
 
-    private void setTitle(XWPFDocument doc, CheckReport report){
+    /**
+     * 构建封面页
+     *
+     * @param doc {@link XWPFDocument}
+     * @param report {@link CheckReport}
+     */
+    private void renderCover(XWPFDocument doc, CheckReport report){
+
+        renderTitle(doc);
+
+        renderCoverContent(doc, report);
+    }
+
+    /**
+     * 标题
+     *
+     * @param doc {@link XWPFDocument}
+     */
+    private void renderTitle(XWPFDocument doc){
         XWPFParagraph paragraph = doc.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         paragraph.setVerticalAlignment(TextAlignment.CENTER);
@@ -51,53 +69,91 @@ public class ExportWord {
         run.setText("检查报告");
         run.setFontSize(18);
         run.setBold(true);
-
-        paragraph = doc.createParagraph();
-        run = paragraph.createRun();
         run.setTextPosition(200);
-
-        XWPFTable table = doc.createTable(5, 2);
-        CTTblGridCol  col = table.getCTTbl().addNewTblGrid().addNewGridCol();
-        STTwipsMeasure measure = STTwipsMeasure.Factory.newInstance();
-        table.setTableAlignment(TableRowAlign.CENTER);
-        setTableNoneBorder(table);
-
-        XWPFTableCell cell = table.getRow(0).getCell(0);
-        setTitleTableLabel(cell, "企业名称:");
-        cell = table.getRow(1).getCell(0);
-        setTitleTableLabel(cell, "委托检查单位:");
-        cell = table.getRow(2).getCell(0);
-        setTitleTableLabel(cell, "所属行业:");
-        cell = table.getRow(3).getCell(0);
-        setTitleTableLabel(cell, "所属区域:");
-        cell = table.getRow(4).getCell(0);
-        setTitleTableLabel(cell, "检查日期:");
-
-        setTitleTableValue(doc, table);
     }
 
-    private void setTableNoneBorder(XWPFTable table){
-        table.setTopBorder(XWPFTable.XWPFBorderType.NIL, 0, 0, "");
-        table.setLeftBorder(XWPFTable.XWPFBorderType.NIL, 0, 0, "");
-        table.setRightBorder(XWPFTable.XWPFBorderType.NIL, 0, 0, "");
-        table.setBottomBorder(XWPFTable.XWPFBorderType.NIL, 0, 0, "");
-        table.setInsideHBorder(XWPFTable.XWPFBorderType.NIL, 0, 0, "");
-        table.setInsideVBorder(XWPFTable.XWPFBorderType.NIL, 0, 0, "");
+    private void renderCoverContent(XWPFDocument doc, CheckReport report){
+        String[] labels = new String[]{"企业名称", "委托检查单位,企业规模", "所属行业", "所属区域", "检查日期"};
+
+        for(int i = 0; i < 5; i++){
+            XWPFTable table = doc.createTable(1, i == 1? 4: 2);
+            table.setTableAlignment(TableRowAlign.CENTER);
+            XWPFTableRow row = table.getRow(0);
+            setTitleTableRow(row);
+            if(i == 1){
+                String[] array = StringUtils.split(labels[i], ",");
+                setTitleTableLabel(row.getCell(0), array[0], 360 * 4);
+                setTitleTableValue(row.getCell(1), i, report, 360 * 6);
+                setTitleTableLabel(row.getCell(2), array[1], 360 * 3);
+                setTitleTableValue(row.getCell(3), i, report, 360 * 3);
+            }else {
+                setTitleTableLabel(row.getCell(0), labels[i], 360 * 4);
+                setTitleTableValue(row.getCell(1), i, report, 360 * 12);
+            }
+        }
     }
 
-    private void setTitleTableLabel(XWPFTableCell cell, String title){
+    private void setTitleTableRow(XWPFTableRow row){
+        CTTrPr trPr = row.getCtRow().addNewTrPr();
+        CTHeight th = trPr.addNewTrHeight();
+        th.setVal(BigInteger.valueOf(380));
+    }
+
+    private void setTitleTableLabel(XWPFTableCell cell, String title, int widthPix){
+        CTTcPr tcpr = cell.getCTTc().addNewTcPr();
+        CTTblWidth width = tcpr.addNewTcW();
+        width.setW(BigInteger.valueOf(widthPix));
+        CTVerticalJc va = tcpr.addNewVAlign();
+        va.setVal(STVerticalJc.CENTER);
+        CTTcBorders borders =  tcpr.addNewTcBorders();
+        borders.addNewTop().setVal(STBorder.NIL);
+        borders.addNewBottom().setVal(STBorder.NIL);
+        borders.addNewLeft().setVal(STBorder.NIL);
+        borders.addNewRight().setVal(STBorder.NIL);
         XWPFParagraph paragraph  = cell.getParagraphArray(0);
         paragraph.setAlignment(ParagraphAlignment.RIGHT);
         XWPFRun run = paragraph.createRun();
-        run.setText(title);
+        run.setText(title + ": ");
         run.setBold(true);
         run.setFontSize(9);
     }
 
-    private void setTitleTableValue(XWPFDocument doc, XWPFTable table){
-        for(int i = 0; i < 5; i++){
-            XWPFTableCell cell = table.getRow(i).getCell(1);
-            cell.setWidth("80%");
+    private void setTitleTableValue(XWPFTableCell cell, int rowIndex, CheckReport report, int widthPix){
+        CTTcPr tcpr = cell.getCTTc().addNewTcPr();
+        CTTblWidth width = tcpr.addNewTcW();
+        width.setW(BigInteger.valueOf(widthPix));
+        CTVerticalJc va = tcpr.addNewVAlign();
+        va.setVal(STVerticalJc.CENTER);
+        CTTcBorders borders =  tcpr.addNewTcBorders();
+        borders.addNewTop().setVal(STBorder.NIL);
+        borders.addNewBottom().setVal(STBorder.NIL);
+        borders.addNewLeft().setVal(STBorder.NIL);
+        borders.addNewRight().setVal(STBorder.NIL);
+        CTBorder bottomBorder = borders.addNewBottom();
+        bottomBorder.setVal(STBorder.SINGLE);
+        bottomBorder.setSz(BigInteger.valueOf(5));
+        XWPFParagraph paragraph  = cell.getParagraphArray(0);
+
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        XWPFRun run = paragraph.createRun();
+        run.setBold(false);
+        run.setFontSize(9);
+
+        switch (rowIndex){
+            case 0:
+                run.setText(" " + report.getCompName());
+                break;
+            case 1:
+                run.setText(" " + report.getChannelName());
+                break;
+            case 2:
+                run.setText(" " + report.getIndustry());
+                break;
+            case 3:
+                run.setText(" " + report.getArea());
+                break;
+            default:
+                run.setText(" " + report.getCheckDate());
         }
     }
 }

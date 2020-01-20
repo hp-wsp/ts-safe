@@ -14,7 +14,19 @@ public class ExportWordTest {
     public void testExport()throws IOException {
         ExportWord exportWord = new ExportWord();
         try (OutputStream os = new FileOutputStream(new File("word.docx"))) {
-            exportWord.export(os, new CheckReport());
+            exportWord.export(os, buildReport());
         }
+    }
+
+    private CheckReport buildReport(){
+        CheckReport t = new CheckReport();
+
+        t.setCompName("测试单位");
+        t.setChannelName("委托检查单位");
+        t.setIndustry("酒店");
+        t.setArea("上海");
+        t.setCheckDate("2020-01-01至2020-01-20");
+
+        return t;
     }
 }

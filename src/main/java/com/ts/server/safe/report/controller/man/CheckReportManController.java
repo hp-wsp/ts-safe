@@ -105,6 +105,9 @@ public class CheckReportManController {
         report.setCheckDate(dateForm.format(task.getCheckTimeFrom()) + "至" + dateForm.format(task.getCheckTimeTo()));
         CompInfo compInfo = compInfoService.get(task.getCompId());
         report.setEntScale(compInfo.getEntScale());
+        if(!compInfo.getIndCtgs().isEmpty()){
+            report.setIndustry(compInfo.getIndCtgs().get(0).getName());
+        }
         CheckReport.BzDetail detail = new CheckReport.BzDetail();
         detail.setCompany(task.getCompName());
         ConService conSer = conService.get(task.getServiceId());

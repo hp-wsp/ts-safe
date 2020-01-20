@@ -66,6 +66,7 @@ public class CompInfoManController {
         t.getIndCtgs().forEach(e -> {
             UniIndCtg s = indCtgService.get(e.getId());
             e.setName(s.getName());
+            e.setFullName(s.getFullName());
         });
     }
 

@@ -41,7 +41,7 @@ public class SuperviseSql {
                         String v = StringUtils.trim(array[1]);
                         String num = num(v, 2);
                         String name = StringUtils.substring(v, 2);
-                        UniIndCtg t = build(id, num, name, p.getFullName() + "/" + name, p.getId(), 2);
+                        UniIndCtg t = build(id, p.getNum() + num, name, p.getFullName() + "/" + name, p.getId(), 2);
                         stack2.push(t);
                     }
                     if(StringUtils.isNotBlank(array[2])){
@@ -49,13 +49,13 @@ public class SuperviseSql {
                         UniIndCtg p = stack2.peek();
                         String name = StringUtils.trim(array[2]);
                         UniIndCtg t = build(id, "", name, p.getFullName() + "/" + name, p.getId(), 3);
-                        t.setNum(pp.getNum()  + p.getNum() + String.format("%02d", count3.incrementAndGet()));
+                        t.setNum(p.getNum() + String.format("%02d", count3.incrementAndGet()));
                         list.add(t);
                     }
                 }
             });
 
-            System.out.println("INSERT INTO b_supervise (id, num, name, full_name, parent_id, level, create_time) VALUES ");
+            System.out.println("INSERT INTO b_ind_ctg (id, num, name, full_name, parent_id, level, create_time) VALUES ");
             stack1.forEach(e -> System.out.println(buildSql(e)));
             stack2.forEach(e -> System.out.println(buildSql(e)));
             list.forEach(e -> System.out.println(buildSql(e)));

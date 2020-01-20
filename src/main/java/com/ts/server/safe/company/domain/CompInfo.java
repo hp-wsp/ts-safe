@@ -1,7 +1,6 @@
 package com.ts.server.safe.company.domain;
 
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Date;
@@ -449,8 +448,8 @@ public class CompInfo {
         private String id;
         @ApiModelProperty("上级分类编号")
         private String parentIds;
-        @ApiModelProperty("顶级分类")
-        private String root;
+        @ApiModelProperty("完整名称")
+        private String fullName;
         @ApiModelProperty("行业名称")
         private String name;
 
@@ -462,12 +461,12 @@ public class CompInfo {
             this.id = id;
         }
 
-        public String getRoot() {
-            return root;
+        public String getFullName() {
+            return fullName;
         }
 
-        public void setRoot(String root) {
-            this.root = root;
+        public void setFullName(String fullName) {
+            this.fullName = fullName;
         }
 
         public String getParentIds() {
@@ -493,13 +492,13 @@ public class CompInfo {
             IndCtg indCtg = (IndCtg) o;
             return Objects.equals(id, indCtg.id) &&
                     Objects.equals(parentIds, indCtg.parentIds) &&
-                    Objects.equals(root, indCtg.root) &&
+                    Objects.equals(fullName, indCtg.fullName) &&
                     Objects.equals(name, indCtg.name);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(id, parentIds, root, name);
+            return Objects.hash(id, parentIds, fullName, name);
         }
 
         @Override
@@ -507,7 +506,7 @@ public class CompInfo {
             return new ToStringBuilder(this)
                     .append("id", id)
                     .append("parentIds", parentIds)
-                    .append("root", root)
+                    .append("fullName", fullName)
                     .append("name", name)
                     .toString();
         }
