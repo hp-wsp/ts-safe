@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * 验证码API
@@ -39,7 +39,7 @@ public class CodeController {
         this.kaptchaService = kaptchaService;
     }
 
-    @GetMapping(value = "key",  produces = APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "key",  produces = APPLICATION_JSON_VALUE)
     @ApiOperation("创建验证码key")
     public ResultVo<CodeVo> codeKey(){
         return ResultVo.success(new CodeVo(StringUtils.remove(UUID.randomUUID().toString(), "-")));
