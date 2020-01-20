@@ -10,9 +10,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SuperviseSql {
 
-    public static void main(String[] args){
-        SuperviseSql sql = new SuperviseSql();
-    }
+//    public static void main(String[] args){
+//        SuperviseSql sql = new SuperviseSql();
+//    }
 
     public SuperviseSql(){
         Stack<UniIndCtg> stack1 = new Stack<>();
@@ -29,19 +29,26 @@ public class SuperviseSql {
                     String[] array = StringUtils.splitByWholeSeparatorPreserveAllTokens(e, ",");
                     String id = String.format("%05d", index);
                     if(StringUtils.isNotBlank(array[0])){
-                        UniIndCtg t = build(id, array[0], array[0], "root", 1);
+                        String v = StringUtils.trim(array[0]);
+                        String num = num(v, 1);
+                        String name = StringUtils.substring(v, 1);
+                        UniIndCtg t = build(id, num, name, name, "root", 1);
                         stack1.push(t);
                     }
                     if(StringUtils.isNotBlank(array[1])){
                         count3.set(0);
                         UniIndCtg p = stack1.peek();
-                        UniIndCtg t = build(id, array[1], p.getFullName() + "/" + StringUtils.trim(array[1]), p.getId(), 2);
+                        String v = StringUtils.trim(array[1]);
+                        String num = num(v, 2);
+                        String name = StringUtils.substring(v, 2);
+                        UniIndCtg t = build(id, num, name, p.getFullName() + "/" + name, p.getId(), 2);
                         stack2.push(t);
                     }
                     if(StringUtils.isNotBlank(array[2])){
                         UniIndCtg pp = stack1.peek();
                         UniIndCtg p = stack2.peek();
-                        UniIndCtg t = build(id, array[2], p.getFullName() + "/" + StringUtils.trim(array[2]), p.getId(), 3);
+                        String name = StringUtils.trim(array[2]);
+                        UniIndCtg t = build(id, "", name, p.getFullName() + "/" + name, p.getId(), 3);
                         t.setNum(pp.getNum()  + p.getNum() + String.format("%02d", count3.incrementAndGet()));
                         list.add(t);
                     }
@@ -59,19 +66,6 @@ public class SuperviseSql {
 
     }
 
-    private UniIndCtg build(String id, String name, String fullName, String parentId, int level){
-        UniIndCtg t = new UniIndCtg();
-
-        t.setId(id);
-        t.setNum(num(name, level));
-        t.setName(StringUtils.trim(name));
-        t.setFullName(StringUtils.trim(fullName));
-        t.setParentId(parentId);
-        t.setLevel(level);
-
-        return t;
-    }
-
     private String num(String name, int level){
         if(level == 1){
             return StringUtils.left(name, 1);
@@ -80,6 +74,19 @@ public class SuperviseSql {
             return StringUtils.left(name, 2);
         }
         return "";
+    }
+
+    private UniIndCtg build(String id, String num, String name, String fullName, String parentId, int level){
+        UniIndCtg t = new UniIndCtg();
+
+        t.setId(id);
+        t.setNum(num);
+        t.setName(StringUtils.trim(name));
+        t.setFullName(StringUtils.trim(fullName));
+        t.setParentId(parentId);
+        t.setLevel(level);
+
+        return t;
     }
 
     private String buildSql(UniIndCtg t){

@@ -77,10 +77,11 @@ public class TaskContentService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public TaskContent saveResult(String id, TaskContent.CheckResult result, TaskContent.DangerLevel level,
-                                String danDesc, String danSuggest, String[] images){
+    public TaskContent saveResult(String id, TaskContent.CheckResult result,
+                                  TaskContent.DangerLevel level, String danDesc,
+                                  String danSuggest, String[] images){
 
-        if(dao.updateResult(id, result, level, danDesc, danSuggest, images)){
+        if(!dao.updateResult(id, result, level, danDesc, danSuggest, images)){
             throw new BaseException("保存检查结果失败");
         }
 
