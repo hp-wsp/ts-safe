@@ -79,24 +79,24 @@ class BzPageBuilder implements PageBuilder {
         table = createTable(doc,4, 2);
         row = table.getRow(0);
         cell = row.getCell(0);
-        setCellLabel(cell, "30%", "周期和内容");
+        setCellLabel(cell, "25%", "周期和内容");
         cell = row.getCell(1);
-        setCellValue(cell, "70%", report.getCheckDate());
+        setCellValue(cell, "75%", report.getCheckDate());
         row = table.getRow(1);
         cell = row.getCell(0);
-        setCellLabel(cell, "30%", "服务主要依据");
+        setCellLabel(cell, "25%", "服务主要依据");
         cell = row.getCell(1);
-        setCellValue(cell, "70%", report.getBzDetail().getServiceBase());
+        setCellValue(cell, "75%", report.getBzDetail().getServiceBase());
         row = table.getRow(2);
         cell = row.getCell(0);
-        setCellLabel(cell, "30%", "服务方法");
+        setCellLabel(cell, "25%", "服务方法");
         cell = row.getCell(1);
-        setCellValue(cell, "70%", report.getBzDetail().getServiceMethod());
+        setCellValue(cell, "75%", report.getBzDetail().getServiceMethod());
         row = table.getRow(3);
         cell = row.getCell(0);
-        setCellLabel(cell, "30%", "服务范围");
+        setCellLabel(cell, "25%", "服务范围");
         cell = row.getCell(1);
-        setCellValue(cell, "70%", report.getBzDetail().getServiceRange());
+        setCellValue(cell, "75%", report.getBzDetail().getServiceRange());
     }
 
 
@@ -106,6 +106,33 @@ class BzPageBuilder implements PageBuilder {
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, "100%", "3.受委托单位信息");
 
+        table = createTable(doc, 3, 2);
+        row = table.getRow(0);
+        cell = row.getCell(0);
+        setCellLabel(cell, "25%", "单位名称");
+        cell = row.getCell(1);
+        setCellValue(cell, "75%", report.getBzDetail().getChanName());
+        row = table.getRow(1);
+        cell = row.getCell(0);
+        setCellLabel(cell, "25%", "单位地址");
+        cell = row.getCell(1);
+        setCellValue(cell, "75%", report.getBzDetail().getChanAddress());
+        row = table.getRow(2);
+        cell = row.getCell(0);
+        setCellLabel(cell, "25%", "经营范围");
+        cell = row.getCell(1);
+        setCellValue(cell, "75%",  report.getBzDetail().getChanBusScope());
+    }
 
+    private void setContactPerson(XWPFDocument doc, CheckReport report){
+        XWPFTable table = createTable(doc, 1, 6);
+        XWPFTableRow row = table.getRow(0);
+        XWPFTableCell cell = row.getCell(0);
+        setCellLabel(cell, "10%", "法人");
+        cell = row.getCell(1);
+        setCellValue(cell, "20%", "");
+        row = table.getRow(1);
+        cell = row.getCell(0);
+        setCellLabel(cell, "10%", );
     }
 }
