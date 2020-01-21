@@ -108,10 +108,11 @@ public class CheckReportManController {
         if(!compInfo.getIndCtgs().isEmpty()){
             report.setIndustry(compInfo.getIndCtgs().get(0).getName());
         }
-        CheckReport.BzDetail detail = new CheckReport.BzDetail();
-        detail.setCompany(task.getCompName());
         ConService conSer = conService.get(task.getServiceId());
         Contract contract = contractService.get(conSer.getConId());
+        report.setEntCompType(contract.getEntCompType());
+        CheckReport.BzDetail detail = new CheckReport.BzDetail();
+        detail.setCompany(task.getCompName());
         detail.setConNum(contract.getNum());
         detail.setCycleContent(buildCycleContent(contract, dateForm));
         detail.setChanName(channel.getName());

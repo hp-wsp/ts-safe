@@ -1,6 +1,7 @@
 package com.ts.server.safe.report.service;
 
 import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.service.export.ExportWord;
 import org.junit.Test;
 
 import java.io.File;
@@ -26,6 +27,13 @@ public class ExportWordTest {
         t.setIndustry("酒店");
         t.setArea("上海");
         t.setCheckDate("2020-01-01至2020-01-20");
+
+        CheckReport.BzDetail bzDetail = new CheckReport.BzDetail();
+        bzDetail.setConNum("1111-222222-333");
+        bzDetail.setServiceBase("测试");
+        bzDetail.setServiceMethod("测试一");
+        bzDetail.setServiceRange("检查");
+        t.setBzDetail(bzDetail);
 
         return t;
     }
