@@ -1,6 +1,7 @@
-package com.ts.server.safe.report.service.export;
+package com.ts.server.safe.report.service.export.wps;
 
 import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.service.export.PageBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
@@ -12,7 +13,7 @@ import java.math.BigInteger;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-class CoverPageBuilder implements PageBuilder {
+class CoverBuilder implements PageBuilder {
     private static final String[] CONTENT_LABELS = new String[]{"企业名称", "委托检查单位,企业规模", "所属行业", "所属区域", "检查日期"};
     private static final String[] ENT_SCALES = new String[]{"", "大型", "中型", "小型", "微型"};
     private static final String[] ENT_COMP_TYPES = new String[]{"主管部门", "乡镇", "企业"};
@@ -62,11 +63,18 @@ class CoverPageBuilder implements PageBuilder {
             if(i == 1){
                 String[] array = StringUtils.split(label, ",");
                 setContentTableLabel(row.getCell(0), array[0], 360 * 4);
-                String v = getContentValue(report, i, 0);
-                setContentTableValue(row.getCell(1), v, 360 * 6);
+
+                XWPFTableCell cell = row.getCell(1);
+                setBottomLine(cell,360 * 8);
+                XWPFParagraph paragraph  = cell.getParagraphArray(0);
+                paragraph.setIndentationFirstLine(WpsUtils.CM_UNIT / 4);
+                WpsUtils.checkBox(paragraph, "主管部门", report.getEntCompType() == 0);
+                WpsUtils.checkBox(paragraph, "乡镇", report.getEntCompType() == 1);
+                WpsUtils.checkBox(paragraph, "企业", report.getEntCompType() == 2);
+
                 setContentTableLabel(row.getCell(2), array[1], 320 * 3);
-                v = getContentValue(report, i, 1);
-                setContentTableValue(row.getCell(3), v, 360 * 5 + 120);
+                String v = getContentValue(report, i, 1);
+                setContentTableValue(row.getCell(3), v, 360 * 3 + 120);
             }else {
                 setContentTableLabel(row.getCell(0), label, 360 * 4);
                 String v = getContentValue(report, i, 0);
@@ -103,6 +111,18 @@ class CoverPageBuilder implements PageBuilder {
     }
 
     private void setContentTableValue(XWPFTableCell cell, String value, int widthPix){
+        setBottomLine(cell, widthPix);
+
+        XWPFParagraph paragraph  = cell.getParagraphArray(0);
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setIndentationFirstLine(WpsUtils.CM_UNIT / 4);
+        XWPFRun run = paragraph.createRun();
+        run.setBold(false);
+        run.setFontSize(9);
+        run.setText(value);
+    }
+
+    private void setBottomLine(XWPFTableCell cell, int widthPix){
         CTTcPr tcPr = cell.getCTTc().addNewTcPr();
         CTTblWidth width = tcPr.addNewTcW();
         width.setW(BigInteger.valueOf(widthPix));
@@ -116,13 +136,6 @@ class CoverPageBuilder implements PageBuilder {
         CTBorder bottomBorder = borders.addNewBottom();
         bottomBorder.setVal(STBorder.SINGLE);
         bottomBorder.setSz(BigInteger.valueOf(5));
-
-        XWPFParagraph paragraph  = cell.getParagraphArray(0);
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
-        XWPFRun run = paragraph.createRun();
-        run.setBold(false);
-        run.setFontSize(9);
-        run.setText(" " + value);
     }
 
     private String getContentValue(CheckReport report, int i, int col){

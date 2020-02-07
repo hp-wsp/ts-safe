@@ -43,6 +43,8 @@ public class TaskContent {
     private String danSuggest;
     @ApiModelProperty("隐患图片")
     private String[] images;
+    @ApiModelProperty("备注")
+    private String remark;
     @ApiModelProperty("修改时间")
     private Date updateTime;
     @ApiModelProperty("创建时间")
@@ -182,6 +184,14 @@ public class TaskContent {
         this.images = images;
     }
 
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -218,13 +228,14 @@ public class TaskContent {
                 Objects.equals(danDescribe, that.danDescribe) &&
                 Objects.equals(danSuggest, that.danSuggest) &&
                 Arrays.equals(images, that.images) &&
+                Objects.equals(remark, that.remark) &&
                 Objects.equals(updateTime, that.updateTime) &&
                 Objects.equals(createTime, that.createTime);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, taskId, contentId, typeId, typeName, itemId, itemName, content, conDetail, lawItem, checkResult, danLevel, danDescribe, danSuggest, updateTime, createTime);
+        int result = Objects.hash(id, taskId, contentId, typeId, typeName, itemId, itemName, content, conDetail, lawItem, checkResult, danLevel, danDescribe, danSuggest, remark, updateTime, createTime);
         result = 31 * result + Arrays.hashCode(images);
         return result;
     }
@@ -247,6 +258,7 @@ public class TaskContent {
                 .append("danDescribe", danDescribe)
                 .append("danSuggest", danSuggest)
                 .append("images", images)
+                .append("remark", remark)
                 .append("updateTime", updateTime)
                 .append("createTime", createTime)
                 .toString();
