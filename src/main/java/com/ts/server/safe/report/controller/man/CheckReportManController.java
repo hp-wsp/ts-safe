@@ -195,10 +195,12 @@ public class CheckReportManController {
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("新增检查报表")
-    public ResultVo<CheckReport> save(CheckReportSaveForm form){
+    public ResultVo<CheckReport> save(@RequestBody CheckReportSaveForm form){
         String channelId = getCredential().getChannelId();
         CheckReport t = form.toDomain();
         Channel channel = channelService.get(channelId);
+        t.setChannelId(channel.getId());
+        t.setChannelName(channel.getName());
         t.setCompName(channel.getName());
         CheckTask task = taskService.get(form.getTaskId());
         if(!StringUtils.equals(task.getChannelId(), channelId)){
@@ -208,12 +210,13 @@ public class CheckReportManController {
         t.setCompName(task.getCompName());
         t.setServiceId(task.getServiceId());
         t.setServiceName(task.getServiceName());
+
         return ResultVo.success(service.save(t));
     }
 
     @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("修改检查报表")
-    public ResultVo<CheckReport> update(CheckReportUpdateForm form){
+    public ResultVo<CheckReport> update(@RequestBody CheckReportUpdateForm form){
         CheckReport t = form.toDomain();
         String channelId = getCredential().getChannelId();
         CheckReport o = service.get(form.getId());

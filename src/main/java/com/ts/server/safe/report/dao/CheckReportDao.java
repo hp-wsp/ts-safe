@@ -38,7 +38,8 @@ public class CheckReportDao {
     public void insert(CheckReport t){
         final String sql = "INSERT INTO c_check_report (id, channel_id, channel_name, comp_id, comp_name, task_id, task_detail, " +
                 "service_id, service_name, cycle_name, ent_comp_type, industry, ent_scale, area, check_date, bz_detail, " +
-                "comp_base_info, safe_product, update_time, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+                "comp_base_info, safe_product, update_time, create_time) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getChannelName(), t.getCompId(), t.getCompName(), t.getTaskId(),
                 t.getTaskDetail(), t.getServiceId(), t.getServiceName(), t.getCycleName(), t.getEntCompType(),
