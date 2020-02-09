@@ -1,16 +1,24 @@
 package com.ts.server.safe.report.service;
 
 import com.ts.server.safe.BaseException;
+import com.ts.server.safe.channel.service.CheckContentService;
 import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.report.dao.CheckReportDao;
 import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.service.export.ExportWord;
+import com.ts.server.safe.report.service.export.ms.MsExportWord;
+import com.ts.server.safe.report.service.export.wps.WpsExportWord;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -21,6 +29,8 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class CheckReportService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CheckContentService.class);
+
     private final CheckReportDao dao;
 
     @Autowired
@@ -80,5 +90,10 @@ public class CheckReportService {
 
     public List<CheckReport> query(String channelId, String compName, String cycleName, int offset, int limit){
         return dao.find(channelId, compName, cycleName, offset, limit);
+    }
+
+    public void exportReport(OutputStream outputStream, String format, String id)throws IOException{
+        ExportWord export = StringUtils.equals(format, "WPS")? new WpsExportWord(): new MsExportWord();
+        export.export(outputStream, get(id));
     }
 }

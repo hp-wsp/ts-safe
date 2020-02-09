@@ -6,6 +6,7 @@ import com.ts.server.safe.channel.domain.Member;
 import com.ts.server.safe.channel.service.ChannelService;
 import com.ts.server.safe.channel.service.CheckContentService;
 import com.ts.server.safe.channel.service.MemberService;
+import com.ts.server.safe.common.utils.HttpUtils;
 import com.ts.server.safe.company.domain.CompInfo;
 import com.ts.server.safe.company.service.CompInfoService;
 import com.ts.server.safe.company.service.CompProductService;
@@ -36,6 +37,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -277,6 +282,25 @@ public class CheckReportManController {
         return new ResultPageVo.Builder<>(page, rows, service.query(channelId, compName, cycleName, page * rows, rows))
                 .count(isCount, () -> service.count(channelId, compName, cycleName))
                 .build();
+    }
+
+    @GetMapping(value = "export")
+    public void export(@ApiParam("报表编号") @RequestParam("id") String id,
+                       @ApiParam(value = "报表格式:WPS和MS", defaultValue = "WPS") @RequestParam(value = "format", required = false, defaultValue = "WPS") String format,
+                       HttpServletResponse response){
+
+        CheckReport report = service.get(id);
+        if(!StringUtils.equalsIgnoreCase(report.getChannelId(), getCredential().getChannelId())){
+            throw new BaseException("没有导出权限");
+        }
+
+        HttpUtils.setContentDisposition(response, report.getCycleName(), "docx");
+        try(OutputStream outputStream = response.getOutputStream()){
+            service.exportReport(outputStream, StringUtils.upperCase(format), id);
+            outputStream.flush();
+        }catch (IOException e){
+            throw new BaseException("导出失败");
+        }
     }
 
     private ManCredential getCredential(){

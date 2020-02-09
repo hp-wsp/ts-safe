@@ -4,6 +4,8 @@ import com.ts.server.safe.report.domain.CheckReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import org.apache.poi.xwpf.usermodel.*;
 
+import java.util.Objects;
+
 /**
  * 构建编制说明页
  *
@@ -185,43 +187,49 @@ class EntrustBuilder implements PageBuilder {
     private void renderSignature(XWPFDocument doc, CheckReport report){
         XWPFTable table = createTable(doc, 3, 6);
 
+        CheckReport.PersonInfo personInfo = report.getBzDetail().getPrincipalPerson() == null?
+                new CheckReport.PersonInfo(): report.getBzDetail().getPrincipalPerson();
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, "15%", "主要负责人");
         cell = row.getCell(1);
-        setCellValueCenter(cell, "20%", report.getBzDetail().getPrincipalPerson().getName());
+        setCellValueCenter(cell, "20%", personInfo.getName());
         cell = row.getCell(2);
         setCellLabel(cell, "10%", "手机");
         cell = row.getCell(3);
-        setCellValueCenter(cell, "25%", report.getBzDetail().getPrincipalPerson().getMobile());
+        setCellValueCenter(cell, "25%", personInfo.getMobile());
         cell = row.getCell(4);
         setCellLabel(cell, "10%", "签名");
         cell = row.getCell(5);
         setCellValueCenter(cell, "20%", "");
 
+        personInfo = report.getBzDetail().getAuditPerson() == null?
+                new CheckReport.PersonInfo(): report.getBzDetail().getAuditPerson();
         row = table.getRow(1);
         cell = row.getCell(0);
         setCellLabel(cell, "15%", "报告审核人");
         cell = row.getCell(1);
-        setCellValueCenter(cell, "20%", report.getBzDetail().getAuditPerson().getName());
+        setCellValueCenter(cell, "20%", personInfo.getName());
         cell = row.getCell(2);
         setCellLabel(cell, "10%", "手机");
         cell = row.getCell(3);
-        setCellValueCenter(cell, "25%", report.getBzDetail().getAuditPerson().getMobile());
+        setCellValueCenter(cell, "25%", personInfo.getMobile());
         cell = row.getCell(4);
         setCellLabel(cell, "10%", "");
         cell = row.getCell(5);
         setCellValueCenter(cell, "20%", "");
 
+        personInfo = report.getBzDetail().getReportPerson() == null?
+                new CheckReport.PersonInfo(): report.getBzDetail().getReportPerson();
         row = table.getRow(2);
         cell = row.getCell(0);
         setCellLabel(cell, "15%", "报告审核人");
         cell = row.getCell(1);
-        setCellValueCenter(cell, "20%", report.getBzDetail().getReportPerson().getName());
+        setCellValueCenter(cell, "20%", personInfo.getName());
         cell = row.getCell(2);
         setCellLabel(cell, "10%", "手机");
         cell = row.getCell(3);
-        setCellValueCenter(cell, "25%", report.getBzDetail().getReportPerson().getMobile());
+        setCellValueCenter(cell, "25%", personInfo.getMobile());
         cell = row.getCell(4);
         setCellLabel(cell, "10%", "");
         cell = row.getCell(5);

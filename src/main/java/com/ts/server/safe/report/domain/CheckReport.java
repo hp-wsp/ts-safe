@@ -7,6 +7,7 @@ import com.ts.server.safe.task.domain.TaskContent;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -307,7 +308,7 @@ public class CheckReport {
         @ApiModelProperty("组长")
         private PersonInfo leader;
         @ApiModelProperty("分工")
-        private List<PersonInfo> workers;
+        private List<PersonInfo> workers = new ArrayList<>();
         @ApiModelProperty("主要负责人")
         private PersonInfo principalPerson;
         @ApiModelProperty("报告审核人")
@@ -509,11 +510,11 @@ public class CheckReport {
      */
     public static class PersonInfo {
         @ApiModelProperty("名称")
-        private String name;
+        private String name = "";
         @ApiModelProperty("联系电话")
-        private String phone;
+        private String phone = "";
         @ApiModelProperty("手机")
-        private String mobile;
+        private String mobile = "";
 
         public String getName() {
             return name;
@@ -568,9 +569,9 @@ public class CheckReport {
         @ApiModelProperty("企业简介")
         private String profile;
         @ApiModelProperty("生产信息")
-        private List<CompProduct> products;
+        private List<CompProduct> products = new ArrayList<>();
         @ApiModelProperty("危险化学品")
-        private List<RiskChemical> riskChemicals;
+        private List<RiskChemical> riskChemicals = new ArrayList<>();
 
         public String getCompName() {
             return compName;
@@ -686,13 +687,13 @@ public class CheckReport {
      */
     public static class SafeProduct {
         @ApiModelProperty("基础管理隐患描述及治理措施")
-        private List<TaskContent> baseContents;
+        private List<TaskContent> baseContents = new ArrayList<>();
         @ApiModelProperty("现场管理隐患描述及治理措施")
-        private List<TaskContent> sceneContents;
+        private List<TaskContent> sceneContents = new ArrayList<>();
         @ApiModelProperty("涉及特种人员和证书")
         private boolean spePerson = false;
         @ApiModelProperty("涉及特种人员和证书")
-        private List<SpePerson> spePersons;
+        private List<SpePerson> spePersons = new ArrayList<>();
         @ApiModelProperty("检查判定企业综合安全风险状况")
         private int safeRiskLevel = 0;
         @ApiModelProperty("风险判定说明")
