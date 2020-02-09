@@ -231,6 +231,7 @@ class EntrustBuilder implements PageBuilder {
     }
 
     private void renderSignaturePerson(XWPFTable table, int rowIndex, String label, CheckReport.PersonInfo person){
+        person = person == null? new CheckReport.PersonInfo(): person;
         XWPFTableRow row = table.getRow(rowIndex);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, label);
