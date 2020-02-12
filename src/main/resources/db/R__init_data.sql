@@ -21,6 +21,8 @@ INSERT INTO s_sequence (seq_key, cur_value, remark)
 SELECT 'seq_spe_person', 1, '特殊作业人员和证书' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_spe_person');
 INSERT INTO s_sequence (seq_key, cur_value, remark)
 SELECT 'seq_check_task_num', 1, '检查任务编号序号' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_check_task_num');
+INSERT INTO s_sequence (seq_key, cur_value, remark)
+SELECT 'seq_u_risk', 100, '危险识别序号' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_u_risk');
 
 #-----------------------------------------------------------------
 #初始检查类别数据
@@ -52,6 +54,33 @@ INSERT INTO b_check_item (id, type_id, type_name, name, create_time) VALUES
 ('013','002', '现场管理', '特种设备现场管理', now()),
 ('014','002', '现场管理', '危险化学品', now()),
 ('015','002', '现场管理', '有限空间安全', now());
+
+#------------------------------------------------------------------
+#初始危险识别数据
+#-----------------------------------------------------------------
+DELETE FROM b_risk;
+
+INSERT INTO b_risk (id, name, remark, create_time) VALUES
+('001', '物体打击', '', now()),
+('002', '车辆伤害', '', now()),
+('003', '机械伤害', '', now()),
+('004', '起重伤害', '', now()),
+('005', '触电', '', now()),
+('006', '淹溺', '', now()),
+('007', '灼烫', '', now()),
+('008', '火灾', '', now()),
+('009', '高处坠落', '', now()),
+('010', '坍塌', '', now()),
+('011', '冒顶片帮', '', now()),
+('012', '透水', '', now()),
+('013', '放炮', '', now()),
+('014', '火药爆炸', '', now()),
+('015', '瓦斯爆炸', '', now()),
+('016', '锅炉爆炸', '', now()),
+('017', '容器爆炸', '', now()),
+('018', '其它爆炸', '', now()),
+('019', '中毒和窒息', '', now()),
+('020', '其它伤害', '', now());
 
 #-------------------------------------------------------------------
 #初始检查表数据
