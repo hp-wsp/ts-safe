@@ -25,9 +25,7 @@ class WpsUtils {
         XWPFParagraph paragraph = doc.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun run = paragraph.createRun();
-        run.setText(title);
-        run.setFontSize(16);
-        run.setBold(true);
+        setItemRun(run, 16, true, title);
     }
 
     /**
@@ -94,7 +92,7 @@ class WpsUtils {
     public static void checkBox(XWPFParagraph paragraph, String label, boolean enable){
         XWPFRun run = paragraph.createRun();
         run.setText(label);
-        run.setFontSize(9);
+        run.setFontSize(12);
         run.setBold(false);
         run = paragraph.createRun();
         run.setVerticalAlignment("baseline");
@@ -108,5 +106,61 @@ class WpsUtils {
         }
         run = paragraph.createRun();
         run.setText("  ");
+    }
+
+    /**
+     * 设置表格头cell内容
+     *
+     * @param cell {@link XWPFTableCell}
+     * @param width cell宽度
+     * @param content 内容
+     * @param alignment 对齐方式
+     */
+    public static void setCellWidth(XWPFTableCell cell, String width, String content, ParagraphAlignment alignment){
+        cell.setWidth(width);
+        setCell(cell, content, alignment);
+    }
+
+    /**
+     * 设置表格cell内容
+     *
+     * @param cell {@link XWPFTableCell}
+     * @param content 内容
+     * @param alignment 对齐方式
+     */
+    public static void setCell(XWPFTableCell cell, String content, ParagraphAlignment alignment){
+        XWPFParagraph paragraph = cell.getParagraphArray(0);
+        paragraph.setAlignment(alignment);
+        XWPFRun run = paragraph.createRun();
+        setItemRun(run, 12, false, content);
+    }
+
+    /**
+     * 设置显示内容
+     *
+     * @param run {@link XWPFRun}
+     * @param fontSize 字体大小
+     * @param bold true:粗体
+     * @param content 显示内容
+     */
+    public static void setItemRun(XWPFRun run, int fontSize, boolean bold, String content){
+        run.setText(content);
+        run.setFontSize(fontSize);
+        run.setFontFamily("宋体");
+        run.setBold(bold);
+    }
+
+    /**
+     * 设置缩段落
+     *
+     * @param paragraph {@link XWPFParagraph}
+     * @param fontSize 字体大小
+     * @param bold true:粗体
+     * @param content 显示内容
+     */
+    public static void setInd2Paragraph(XWPFParagraph paragraph, int fontSize, boolean bold, String content){
+        paragraph.setIndentationFirstLine(CM_UNIT/2);
+        XWPFRun run = paragraph.createRun();
+        setItemRun(run, fontSize, bold, content);
     }
 }

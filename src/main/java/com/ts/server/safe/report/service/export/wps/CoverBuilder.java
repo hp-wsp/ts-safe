@@ -153,9 +153,7 @@ class CoverBuilder implements PageBuilder {
             case 3:
                 return report.getArea();
             default:
-                //TODO 日期
-                //return report.getCheckDate();
-                return "";
+                return String.format("%s 至 %s",report.getCheckTimeFrom(), report.getCheckTimeTo());
         }
     }
 

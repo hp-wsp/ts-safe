@@ -28,7 +28,7 @@ public class WpsExportWord implements ExportWord {
      */
     public WpsExportWord(){
         this.coverBuilder = new CoverBuilder();
-        this.entrustBuilder = new EntrustBuilder();
+        this.entrustBuilder = new ReportDetailBuilder();
         this.companyBuilder = new CompanyBuilder();
         this.safeBuilder = new SafeBuilder();
         this.attachImgBuilder= new AttachImageBuilder();

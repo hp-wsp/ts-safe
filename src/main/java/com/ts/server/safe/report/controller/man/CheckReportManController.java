@@ -9,6 +9,7 @@ import com.ts.server.safe.common.utils.HttpUtils;
 import com.ts.server.safe.company.domain.CompInfo;
 import com.ts.server.safe.company.service.CompInfoService;
 import com.ts.server.safe.company.service.CompProductService;
+import com.ts.server.safe.company.service.OccDiseaseJobService;
 import com.ts.server.safe.company.service.RiskChemicalService;
 import com.ts.server.safe.contract.domain.ConService;
 import com.ts.server.safe.contract.domain.Contract;
@@ -64,13 +65,15 @@ public class CheckReportManController {
     private final CompProductService productService;
     private final RiskChemicalService riskChemicalService;
     private final TaskContentService taskContentService;
+    private final OccDiseaseJobService occDiseaseJobService;
 
     @Autowired
     public CheckReportManController(CheckReportService service, ChannelService channelService,
                                     CheckTaskService taskService, ConServiceService conService,
                                     ContractService contractService, CompInfoService compInfoService,
                                     MemberService memberService, CompProductService productService,
-                                    RiskChemicalService riskChemicalService, TaskContentService taskContentService) {
+                                    RiskChemicalService riskChemicalService, TaskContentService taskContentService,
+                                    OccDiseaseJobService occDiseaseJobService) {
 
         this.service = service;
         this.channelService = channelService;
@@ -82,6 +85,7 @@ public class CheckReportManController {
         this.productService = productService;
         this.riskChemicalService = riskChemicalService;
         this.taskContentService = taskContentService;
+        this.occDiseaseJobService = occDiseaseJobService;
     }
 
     @GetMapping(value = "init/{taskId}", produces = APPLICATION_JSON_VALUE)
@@ -104,8 +108,8 @@ public class CheckReportManController {
         report.setTaskId(taskId);
         DateFormat dateForm = new SimpleDateFormat("yyyy年MM月dd日");
         report.setTaskDetail(task.getNum() + " 检查日期 " + dateForm.format(task.getCheckTimeFrom()));
-        //TODO 日期
-//        report.setCheckDate(dateForm.format(task.getCheckTimeFrom()) + "至" + dateForm.format(task.getCheckTimeTo()));
+        report.setCheckTimeFrom(dateForm.format(task.getCheckTimeFrom()));
+        report.setCheckTimeTo(dateForm.format(task.getCheckTimeTo()));
         CompInfo compInfo = compInfoService.get(task.getCompId());
         report.setEntScale(compInfo.getEntScale());
         if(!compInfo.getIndCtgs().isEmpty()){
@@ -146,6 +150,7 @@ public class CheckReportManController {
         List<TaskContent> taskContents = taskContentService.query(taskId);
         safeProduct.setBaseContents(filterTaskContents(taskContents, "001"));
         safeProduct.setSceneContents(filterTaskContents(taskContents, "002"));
+        safeProduct.setOccDiseaseJobs(occDiseaseJobService.queryCompany(task.getCompId()));
         report.setSafeProduct(safeProduct);
 
         return ResultVo.success(report);

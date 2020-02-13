@@ -1,16 +1,14 @@
 package com.ts.server.safe.report.domain;
 
 import com.ts.server.safe.company.domain.CompProduct;
+import com.ts.server.safe.company.domain.OccDiseaseJob;
 import com.ts.server.safe.company.domain.RiskChemical;
 import com.ts.server.safe.company.domain.SpePerson;
 import com.ts.server.safe.task.domain.TaskContent;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 检查报告
@@ -47,15 +45,17 @@ public class CheckReport {
     @ApiModelProperty("所属区域")
     private String area;
     @ApiModelProperty("检查开始时间")
-    private Date checkTimeFrom;
+    private String checkTimeFrom;
     @ApiModelProperty("检查结束时间")
-    private Date checkTimeTo;
+    private String checkTimeTo;
     @ApiModelProperty("编制说明")
     private ReportDetail reportDetail;
     @ApiModelProperty("受检企业基本情况")
     private CompBaseInfo compBaseInfo;
     @ApiModelProperty("安全生产社会化检查服务")
     private SafeProduct safeProduct;
+    @ApiModelProperty("报告份数说明")
+    private String printDetail;
     @ApiModelProperty("修改时间")
     private Date updateTime;
     @ApiModelProperty("创建时间")
@@ -173,19 +173,19 @@ public class CheckReport {
         this.area = area;
     }
 
-    public Date getCheckTimeFrom() {
+    public String getCheckTimeFrom() {
         return checkTimeFrom;
     }
 
-    public void setCheckTimeFrom(Date checkTimeFrom) {
+    public void setCheckTimeFrom(String checkTimeFrom) {
         this.checkTimeFrom = checkTimeFrom;
     }
 
-    public Date getCheckTimeTo() {
+    public String getCheckTimeTo() {
         return checkTimeTo;
     }
 
-    public void setCheckTimeTo(Date checkTimeTo) {
+    public void setCheckTimeTo(String checkTimeTo) {
         this.checkTimeTo = checkTimeTo;
     }
 
@@ -211,6 +211,14 @@ public class CheckReport {
 
     public void setSafeProduct(SafeProduct safeProduct) {
         this.safeProduct = safeProduct;
+    }
+
+    public String getPrintDetail() {
+        return printDetail;
+    }
+
+    public void setPrintDetail(String printDetail) {
+        this.printDetail = printDetail;
     }
 
     public Date getUpdateTime() {
@@ -253,13 +261,14 @@ public class CheckReport {
                 Objects.equals(reportDetail, report.reportDetail) &&
                 Objects.equals(compBaseInfo, report.compBaseInfo) &&
                 Objects.equals(safeProduct, report.safeProduct) &&
+                Objects.equals(printDetail, report.printDetail) &&
                 Objects.equals(updateTime, report.updateTime) &&
                 Objects.equals(createTime, report.createTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, channelId, channelName, compId, compName, taskId, taskDetail, serviceId, serviceName, cycleName, entCompType, industry, entScale, area, checkTimeFrom, checkTimeTo, reportDetail, compBaseInfo, safeProduct, updateTime, createTime);
+        return Objects.hash(id, channelId, channelName, compId, compName, taskId, taskDetail, serviceId, serviceName, cycleName, entCompType, industry, entScale, area, checkTimeFrom, checkTimeTo, reportDetail, compBaseInfo, safeProduct, printDetail, updateTime, createTime);
     }
 
     @Override
@@ -284,6 +293,7 @@ public class CheckReport {
                 .append("reportDetail", reportDetail)
                 .append("compBaseInfo", compBaseInfo)
                 .append("safeProduct", safeProduct)
+                .append("printDetail", printDetail)
                 .append("updateTime", updateTime)
                 .append("createTime", createTime)
                 .toString();
@@ -726,18 +736,26 @@ public class CheckReport {
         private List<TaskContent> baseContents = new ArrayList<>();
         @ApiModelProperty("现场管理隐患描述及治理措施")
         private List<TaskContent> sceneContents = new ArrayList<>();
+        @ApiModelProperty("职业健康危害因素")
+        private List<OccDiseaseJob> occDiseaseJobs = new ArrayList<>();
+        @ApiModelProperty("职业病危害风险分类辨识")
+        private int occDiseaseLevel = 0;
         @ApiModelProperty("涉及特种人员和证书")
         private boolean spePerson = false;
         @ApiModelProperty("涉及特种人员和证书")
         private List<SpePerson> spePersons = new ArrayList<>();
-        @ApiModelProperty("检查判定企业综合安全风险状况")
+        @ApiModelProperty("检查情况结论意见")
+        private String checkResult;
+        @ApiModelProperty("检查判定企业的综合安全风险状况")
         private int safeRiskLevel = 0;
-        @ApiModelProperty("风险判定说明")
-        private String riskExplain;
-        @ApiModelProperty("安全生产事故类型风险辨识")
+        @ApiModelProperty("风险等级判定说明")
+        private String riskLevelExplain;
+        @ApiModelProperty("生产安全事故类型风险辨识")
         private String safeProductRisk;
         @ApiModelProperty("受检查企业意见")
         private String checkCompanyIdea;
+        @ApiModelProperty("本报告相关附图")
+        private String[] images;
 
         public List<TaskContent> getBaseContents() {
             return baseContents;
@@ -753,6 +771,22 @@ public class CheckReport {
 
         public void setSceneContents(List<TaskContent> sceneContents) {
             this.sceneContents = sceneContents;
+        }
+
+        public List<OccDiseaseJob> getOccDiseaseJobs() {
+            return occDiseaseJobs;
+        }
+
+        public void setOccDiseaseJobs(List<OccDiseaseJob> occDiseaseJobs) {
+            this.occDiseaseJobs = occDiseaseJobs;
+        }
+
+        public int getOccDiseaseLevel() {
+            return occDiseaseLevel;
+        }
+
+        public void setOccDiseaseLevel(int occDiseaseLevel) {
+            this.occDiseaseLevel = occDiseaseLevel;
         }
 
         public boolean isSpePerson() {
@@ -771,6 +805,14 @@ public class CheckReport {
             this.spePersons = spePersons;
         }
 
+        public String getCheckResult() {
+            return checkResult;
+        }
+
+        public void setCheckResult(String checkResult) {
+            this.checkResult = checkResult;
+        }
+
         public int getSafeRiskLevel() {
             return safeRiskLevel;
         }
@@ -779,12 +821,12 @@ public class CheckReport {
             this.safeRiskLevel = safeRiskLevel;
         }
 
-        public String getRiskExplain() {
-            return riskExplain;
+        public String getRiskLevelExplain() {
+            return riskLevelExplain;
         }
 
-        public void setRiskExplain(String riskExplain) {
-            this.riskExplain = riskExplain;
+        public void setRiskLevelExplain(String riskLevelExplain) {
+            this.riskLevelExplain = riskLevelExplain;
         }
 
         public String getSafeProductRisk() {
@@ -803,24 +845,38 @@ public class CheckReport {
             this.checkCompanyIdea = checkCompanyIdea;
         }
 
+        public String[] getImages() {
+            return images;
+        }
+
+        public void setImages(String[] images) {
+            this.images = images;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             SafeProduct that = (SafeProduct) o;
-            return spePerson == that.spePerson &&
+            return occDiseaseLevel == that.occDiseaseLevel &&
+                    spePerson == that.spePerson &&
                     safeRiskLevel == that.safeRiskLevel &&
                     Objects.equals(baseContents, that.baseContents) &&
                     Objects.equals(sceneContents, that.sceneContents) &&
+                    Objects.equals(occDiseaseJobs, that.occDiseaseJobs) &&
                     Objects.equals(spePersons, that.spePersons) &&
-                    Objects.equals(riskExplain, that.riskExplain) &&
+                    Objects.equals(checkResult, that.checkResult) &&
+                    Objects.equals(riskLevelExplain, that.riskLevelExplain) &&
                     Objects.equals(safeProductRisk, that.safeProductRisk) &&
-                    Objects.equals(checkCompanyIdea, that.checkCompanyIdea);
+                    Objects.equals(checkCompanyIdea, that.checkCompanyIdea) &&
+                    Arrays.equals(images, that.images);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(baseContents, sceneContents, spePerson, spePersons, safeRiskLevel, riskExplain, safeProductRisk, checkCompanyIdea);
+            int result = Objects.hash(baseContents, sceneContents, occDiseaseJobs, occDiseaseLevel, spePerson, spePersons, checkResult, safeRiskLevel, riskLevelExplain, safeProductRisk, checkCompanyIdea);
+            result = 31 * result + Arrays.hashCode(images);
+            return result;
         }
 
         @Override
@@ -828,12 +884,16 @@ public class CheckReport {
             return new ToStringBuilder(this)
                     .append("baseContents", baseContents)
                     .append("sceneContents", sceneContents)
+                    .append("occDiseaseJobs", occDiseaseJobs)
+                    .append("occDiseaseLevel", occDiseaseLevel)
                     .append("spePerson", spePerson)
                     .append("spePersons", spePersons)
+                    .append("checkResult", checkResult)
                     .append("safeRiskLevel", safeRiskLevel)
-                    .append("riskExplain", riskExplain)
+                    .append("riskLevelExplain", riskLevelExplain)
                     .append("safeProductRisk", safeProductRisk)
                     .append("checkCompanyIdea", checkCompanyIdea)
+                    .append("images", images)
                     .toString();
         }
     }

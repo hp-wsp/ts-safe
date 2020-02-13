@@ -1,9 +1,12 @@
 package com.ts.server.safe.report.controller.man.form;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ts.server.safe.report.domain.CheckReport;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  * 新增检查报表提交数据
@@ -28,15 +31,21 @@ public class CheckReportSaveForm {
     private int entScale;
     @ApiModelProperty(value = "所属区域")
     private String area;
-    @ApiModelProperty(value = "检查日期", required = true)
+    @ApiModelProperty("检查开始时间")
     @NotBlank
-    private String checkDate;
+    private String checkTimeFrom;
+    @ApiModelProperty("检查结束时间")
+    @NotBlank
+    private String checkTimeTo;
     @ApiModelProperty(value = "编制说明", required = true)
-    private CheckReport.ReportDetail bzDetail;
+    private CheckReport.ReportDetail reportDetail;
     @ApiModelProperty(value = "受检企业基本情况", required = true)
     private CheckReport.CompBaseInfo compBaseInfo;
     @ApiModelProperty(value = "安全生产社会化检查服务", required = true)
     private CheckReport.SafeProduct safeProduct;
+    @ApiModelProperty("报告份数说明")
+    @NotBlank
+    private String printDetail;
 
     public String getTaskId() {
         return taskId;
@@ -94,20 +103,28 @@ public class CheckReportSaveForm {
         this.area = area;
     }
 
-    public String getCheckDate() {
-        return checkDate;
+    public String getCheckTimeFrom() {
+        return checkTimeFrom;
     }
 
-    public void setCheckDate(String checkDate) {
-        this.checkDate = checkDate;
+    public void setCheckTimeFrom(String checkTimeFrom) {
+        this.checkTimeFrom = checkTimeFrom;
     }
 
-    public CheckReport.ReportDetail getBzDetail() {
-        return bzDetail;
+    public String getCheckTimeTo() {
+        return checkTimeTo;
     }
 
-    public void setBzDetail(CheckReport.ReportDetail bzDetail) {
-        this.bzDetail = bzDetail;
+    public void setCheckTimeTo(String checkTimeTo) {
+        this.checkTimeTo = checkTimeTo;
+    }
+
+    public CheckReport.ReportDetail getReportDetail() {
+        return reportDetail;
+    }
+
+    public void setReportDetail(CheckReport.ReportDetail reportDetail) {
+        this.reportDetail = reportDetail;
     }
 
     public CheckReport.CompBaseInfo getCompBaseInfo() {
@@ -126,6 +143,14 @@ public class CheckReportSaveForm {
         this.safeProduct = safeProduct;
     }
 
+    public String getPrintDetail() {
+        return printDetail;
+    }
+
+    public void setPrintDetail(String printDetail) {
+        this.printDetail = printDetail;
+    }
+
     public CheckReport toDomain(){
         CheckReport t = new CheckReport();
 
@@ -136,11 +161,12 @@ public class CheckReportSaveForm {
         t.setIndustry(industry);
         t.setEntScale(entScale);
         t.setArea(area);
-        //TODO 日期
-        //t.setCheckDate(checkDate);
-        t.setReportDetail(bzDetail);
+        t.setCheckTimeFrom(checkTimeFrom);
+        t.setCheckTimeTo(checkTimeTo);
+        t.setReportDetail(reportDetail);
         t.setCompBaseInfo(compBaseInfo);
         t.setSafeProduct(safeProduct);
+        t.setPrintDetail(printDetail);
 
         return t;
     }

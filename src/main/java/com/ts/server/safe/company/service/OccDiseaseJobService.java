@@ -3,6 +3,7 @@ package com.ts.server.safe.company.service;
 import com.ts.server.safe.BaseException;
 import com.ts.server.safe.company.dao.OccDiseaseJobDao;
 import com.ts.server.safe.company.domain.OccDiseaseJob;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ public class OccDiseaseJobService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public OccDiseaseJob save(OccDiseaseJob t){
+        if(dao.hasJob(t.getJob())){
+            throw new BaseException("作业岗位已经存在");
+        }
         String id = dao.insert(t);
         return dao.findOne(id);
     }
@@ -42,9 +46,15 @@ public class OccDiseaseJobService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public OccDiseaseJob update(OccDiseaseJob t){
+        OccDiseaseJob o = get(t.getId());
+        if(!StringUtils.equals(t.getJob(), o.getJob()) && dao.hasJob(t.getJob())){
+            throw new BaseException("作业岗位已经存在");
+        }
+
         if(!dao.update(t)){
             throw new BaseException("修改职业病岗位失败");
         }
+
         return get(t.getId());
     }
 
@@ -55,6 +65,10 @@ public class OccDiseaseJobService {
 
     public Long count(String compId, String job){
         return dao.count(compId, job);
+    }
+
+    public List<OccDiseaseJob> queryCompany(String compId){
+        return dao.find(compId, "", 0, 100);
     }
 
     public List<OccDiseaseJob> query(String compId, String job, int offset, int limit){

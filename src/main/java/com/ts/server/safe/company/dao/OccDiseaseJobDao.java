@@ -67,6 +67,12 @@ public class OccDiseaseJobDao {
         return jdbcTemplate.queryForObject(sql, mapper);
     }
 
+    public boolean hasJob(String job){
+        final String sql = "SELECT COUNT(id) FROM c_occ_disease_job WHERE job = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{job}, Integer.class);
+        return count != null && count > 0;
+    }
+
     public Long count(String compId, String job){
         final String sql = "SELECT COUNT(id) FROM c_occ_disease_job WHERE comp_id = ? AND job LIKE ?";
         String jobLike = DaoUtils.like(job);

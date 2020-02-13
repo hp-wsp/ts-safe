@@ -31,7 +31,7 @@ import java.util.List;
         renderResult(table, report);
         renderSafeRisk(table, report);
         renderRiskType(table, report);
-        renderFooter(doc);
+        renderFooter(doc, report);
     }
 
     private void renderTitle(XWPFDocument doc){
@@ -54,9 +54,9 @@ import java.util.List;
     private void renderProfile(XWPFTable table, CheckReport report){
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
-        //TODO 修改名称
-//        addProfileParagraph(cell, 0,
-//                String.format(PROFILE_PATTER, report.getCompBaseInfo().getCompName(), report.getChannelName(), report.getCheckDate()));
+        String content =  String.format(PROFILE_PATTER, report.getCompBaseInfo().getCompName(),
+                report.getChannelName(), report.getCheckTimeFrom());
+        addProfileParagraph(cell, 0, content);
 
         addProfileParagraph(cell,  1,"受限于时间、能力、专业水平等条件限制，本意见出现的误差或缺陷，请监管部门和受服务企业指正并谅解。");
     }
@@ -366,7 +366,7 @@ import java.util.List;
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraph.setIndentationFirstLine(MsUtils.CM_UNIT/2);
         run = paragraph.createRun();
-        run.setText(report.getSafeProduct().getRiskExplain());
+        run.setText(report.getSafeProduct().getRiskLevelExplain());
         run.setFontSize(9);
         run.setBold(false);
         run.setFontFamily("宋体");
@@ -421,12 +421,12 @@ import java.util.List;
         run.setFontFamily("宋体");
     }
 
-    private void renderFooter(XWPFDocument doc){
+    private void renderFooter(XWPFDocument doc, CheckReport report){
         XWPFParagraph paragraph = doc.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraph.setSpacingBetween(2, LineSpacingRule.AUTO);
         XWPFRun run = paragraph.createRun();
-        run.setText("本报告一式三份，委托单位、受检企业、报告出具单位各一份");
+        run.setText(report.getPrintDetail());
         run.setFontSize(10);
         run.setFontFamily("宋体");
     }

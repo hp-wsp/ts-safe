@@ -38,6 +38,11 @@ public class RiskChemicalService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public RiskChemical update(RiskChemical t){
+        RiskChemical o = get(t.getId());
+        if(!StringUtils.equals(t.getName(), o.getName()) && dao.has(t.getName())){
+            throw new BaseException("危化品已经存在");
+        }
+
         if(!dao.update(t)){
             throw new BaseException("修改危化品存储失败");
         }

@@ -43,6 +43,10 @@ import java.util.Objects;
     private List<String> getImages(CheckReport report){
         List<String> images = new ArrayList<>();
 
+        if(report.getSafeProduct().getImages().length > 0){
+            images.addAll(Arrays.asList(report.getSafeProduct().getImages()));
+        }
+
         for(TaskContent content: report.getSafeProduct().getBaseContents()){
             if(Objects.nonNull(content.getImages())){
                 images.addAll(Arrays.asList(content.getImages()));
