@@ -67,6 +67,12 @@ public class RiskChemicalDao {
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
     }
 
+    public boolean has(String name){
+        final String sql = "SELECT COUNT(id) FROM c_risk_chemistry WHERE name = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{name}, Integer.class);
+        return count != null && count > 0;
+    }
+
     public List<RiskChemical> findByCompId(String compId){
         final String sql = "SELECT * FROM c_risk_chemistry WHERE comp_id = ? ORDER BY create_time ASC";
         return jdbcTemplate.query(sql, new Object[]{compId}, mapper);

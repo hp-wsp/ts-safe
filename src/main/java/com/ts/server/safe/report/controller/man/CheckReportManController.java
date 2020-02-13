@@ -4,14 +4,12 @@ import com.ts.server.safe.BaseException;
 import com.ts.server.safe.channel.domain.Channel;
 import com.ts.server.safe.channel.domain.Member;
 import com.ts.server.safe.channel.service.ChannelService;
-import com.ts.server.safe.channel.service.CheckContentService;
 import com.ts.server.safe.channel.service.MemberService;
 import com.ts.server.safe.common.utils.HttpUtils;
 import com.ts.server.safe.company.domain.CompInfo;
 import com.ts.server.safe.company.service.CompInfoService;
 import com.ts.server.safe.company.service.CompProductService;
 import com.ts.server.safe.company.service.RiskChemicalService;
-import com.ts.server.safe.company.service.SpePersonService;
 import com.ts.server.safe.contract.domain.ConService;
 import com.ts.server.safe.contract.domain.Contract;
 import com.ts.server.safe.contract.service.ConServiceService;
@@ -37,7 +35,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -105,9 +102,10 @@ public class CheckReportManController {
         report.setServiceId(task.getServiceId());
         report.setServiceName(task.getServiceName());
         report.setTaskId(taskId);
-        DateFormat dateForm = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dateForm = new SimpleDateFormat("yyyy年MM月dd日");
         report.setTaskDetail(task.getNum() + " 检查日期 " + dateForm.format(task.getCheckTimeFrom()));
-        report.setCheckDate(dateForm.format(task.getCheckTimeFrom()) + "至" + dateForm.format(task.getCheckTimeTo()));
+        //TODO 日期
+//        report.setCheckDate(dateForm.format(task.getCheckTimeFrom()) + "至" + dateForm.format(task.getCheckTimeTo()));
         CompInfo compInfo = compInfoService.get(task.getCompId());
         report.setEntScale(compInfo.getEntScale());
         if(!compInfo.getIndCtgs().isEmpty()){
@@ -116,8 +114,8 @@ public class CheckReportManController {
         ConService conSer = conService.get(task.getServiceId());
         Contract contract = contractService.get(conSer.getConId());
         report.setEntCompType(contract.getEntCompType());
-        CheckReport.BzDetail detail = new CheckReport.BzDetail();
-        detail.setCompany(task.getCompName());
+        CheckReport.ReportDetail detail = new CheckReport.ReportDetail();
+        detail.setEntCompName(task.getCompName());
         detail.setConNum(contract.getNum());
         detail.setCycleContent(buildCycleContent(contract, dateForm));
         detail.setChanName(channel.getName());
@@ -130,7 +128,7 @@ public class CheckReportManController {
         detail.setLeader(buildPerson(conSer.getLeaId()));
         detail.setAuditPerson(conPerson);
         detail.setReportPerson(buildPerson(getCredential().getId()));
-        report.setBzDetail(detail);
+        report.setReportDetail(detail);
 
         CheckReport.CompBaseInfo compBaseInfo = new CheckReport.CompBaseInfo();
         compBaseInfo.setCompName(compInfo.getName());
@@ -139,7 +137,7 @@ public class CheckReportManController {
         compBaseInfo.setConPerson(conPerson);
         compBaseInfo.setSafePerson(buildSafePerson(compInfo));
         compBaseInfo.setContractPerson(buildContactPerson(compInfo));
-        compBaseInfo.setProfile(compInfo.getProfile());
+        compBaseInfo.setCompProfile(compInfo.getProfile());
         compBaseInfo.setProducts(productService.query(compInfo.getId()));
         compBaseInfo.setRiskChemicals(riskChemicalService.queryByCompId(compInfo.getId()));
         report.setCompBaseInfo(compBaseInfo);

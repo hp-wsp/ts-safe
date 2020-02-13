@@ -41,10 +41,11 @@ public class CheckReportDao {
                 "comp_base_info, safe_product, update_time, create_time) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
-        jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getChannelName(), t.getCompId(), t.getCompName(), t.getTaskId(),
-                t.getTaskDetail(), t.getServiceId(), t.getServiceName(), t.getCycleName(), t.getEntCompType(),
-                t.getIndustry(), t.getEntScale(), t.getArea(), t.getCheckDate(), toJson(t.getBzDetail()),
-                toJson(t.getCompBaseInfo()), toJson(t.getSafeProduct()));
+        //TODO 日期
+//        jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getChannelName(), t.getCompId(), t.getCompName(), t.getTaskId(),
+//                t.getTaskDetail(), t.getServiceId(), t.getServiceName(), t.getCycleName(), t.getEntCompType(),
+//                t.getIndustry(), t.getEntScale(), t.getArea(), t.getCheckDate(), toJson(t.getReportDetail()),
+//                toJson(t.getCompBaseInfo()), toJson(t.getSafeProduct()));
     }
 
     private String toJson(Object object){
@@ -60,10 +61,12 @@ public class CheckReportDao {
                 "service_name = ?, cycle_name = ?, ent_comp_type = ?, industry = ?, ent_scale = ?,area = ?, " +
                 "check_date = ?, bz_detail = ?, comp_base_info = ?, safe_product = ?, update_time = now() WHERE id = ?";
 
-        return jdbcTemplate.update(sql, t.getCompId(), t.getCompName(), t.getTaskId(), t.getTaskDetail(), t.getServiceId(),
-                t.getServiceName(), t.getCycleName(), t.getEntCompType(), t.getIndustry(), t.getEntScale(),
-                t.getArea(), t.getCheckDate(), toJson(t.getBzDetail()), toJson(t.getCompBaseInfo()), toJson(t.getSafeProduct()),
-                t.getId()) > 0;
+        //日期
+//        return jdbcTemplate.update(sql, t.getCompId(), t.getCompName(), t.getTaskId(), t.getTaskDetail(), t.getServiceId(),
+//                t.getServiceName(), t.getCycleName(), t.getEntCompType(), t.getIndustry(), t.getEntScale(),
+//                t.getArea(), t.getCheckDate(), toJson(t.getReportDetail()), toJson(t.getCompBaseInfo()), toJson(t.getSafeProduct()),
+//                t.getId()) > 0;
+        return false;
     }
 
     public CheckReport findOne(String id){
@@ -123,7 +126,8 @@ public class CheckReportDao {
             t.setIndustry(r.getString("industry"));
             t.setEntScale(r.getInt("ent_scale"));
             t.setArea(r.getString("area"));
-            t.setCheckDate(r.getString("check_date"));
+            //TODO 日期
+            //t.setCheckDate(r.getString("check_date"));
             t.setUpdateTime(r.getTimestamp("update_time"));
             t.setCreateTime(r.getTimestamp("create_time"));
 
@@ -142,7 +146,7 @@ public class CheckReportDao {
         public CheckReport mapRow(ResultSet r, int i) throws SQLException {
             CheckReport t = super.mapRow(r, i);
 
-            t.setBzDetail(toObject(r.getString("bz_detail"), CheckReport.BzDetail.class));
+            t.setReportDetail(toObject(r.getString("bz_detail"), CheckReport.ReportDetail.class));
             t.setCompBaseInfo(toObject(r.getString("comp_base_info"), CheckReport.CompBaseInfo.class));
             t.setSafeProduct(toObject(r.getString("safe_product"), CheckReport.SafeProduct.class));
 

@@ -32,7 +32,7 @@ public class CheckReportSaveForm {
     @NotBlank
     private String checkDate;
     @ApiModelProperty(value = "编制说明", required = true)
-    private CheckReport.BzDetail bzDetail;
+    private CheckReport.ReportDetail bzDetail;
     @ApiModelProperty(value = "受检企业基本情况", required = true)
     private CheckReport.CompBaseInfo compBaseInfo;
     @ApiModelProperty(value = "安全生产社会化检查服务", required = true)
@@ -102,11 +102,11 @@ public class CheckReportSaveForm {
         this.checkDate = checkDate;
     }
 
-    public CheckReport.BzDetail getBzDetail() {
+    public CheckReport.ReportDetail getBzDetail() {
         return bzDetail;
     }
 
-    public void setBzDetail(CheckReport.BzDetail bzDetail) {
+    public void setBzDetail(CheckReport.ReportDetail bzDetail) {
         this.bzDetail = bzDetail;
     }
 
@@ -136,8 +136,9 @@ public class CheckReportSaveForm {
         t.setIndustry(industry);
         t.setEntScale(entScale);
         t.setArea(area);
-        t.setCheckDate(checkDate);
-        t.setBzDetail(bzDetail);
+        //TODO 日期
+        //t.setCheckDate(checkDate);
+        t.setReportDetail(bzDetail);
         t.setCompBaseInfo(compBaseInfo);
         t.setSafeProduct(safeProduct);
 

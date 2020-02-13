@@ -4,8 +4,6 @@ import com.ts.server.safe.report.domain.CheckReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import org.apache.poi.xwpf.usermodel.*;
 
-import java.util.Objects;
-
 /**
  * 构建编制说明页
  *
@@ -44,7 +42,7 @@ class EntrustBuilder implements PageBuilder {
         cell = row.getCell(2);
         setCellLabel(cell, "17%", "(合同)编号");
         cell = row.getCell(3);
-        setCellValueLeft(cell, "26%", report.getBzDetail().getConNum());
+        setCellValueLeft(cell, "26%", report.getReportDetail().getConNum());
     }
 
     private XWPFTable createTable(XWPFDocument doc, int row, int col){
@@ -83,22 +81,23 @@ class EntrustBuilder implements PageBuilder {
         cell = row.getCell(0);
         setCellLabel(cell, "25%", "周期和内容");
         cell = row.getCell(1);
-        setCellValueLeft(cell, "75%", report.getCheckDate());
+        //TODO 日期
+        //setCellValueLeft(cell, "75%", report.getCheckDate());
         row = table.getRow(1);
         cell = row.getCell(0);
         setCellLabel(cell, "25%", "服务主要依据");
         cell = row.getCell(1);
-        setCellValueLeft(cell, "75%", report.getBzDetail().getServiceBase());
+        setCellValueLeft(cell, "75%", report.getReportDetail().getServiceBase());
         row = table.getRow(2);
         cell = row.getCell(0);
         setCellLabel(cell, "25%", "服务方法");
         cell = row.getCell(1);
-        setCellValueLeft(cell, "75%", report.getBzDetail().getServiceMethod());
+        setCellValueLeft(cell, "75%", report.getReportDetail().getServiceMethod());
         row = table.getRow(3);
         cell = row.getCell(0);
         setCellLabel(cell, "25%", "服务范围");
         cell = row.getCell(1);
-        setCellValueLeft(cell, "75%", report.getBzDetail().getServiceRange());
+        setCellValueLeft(cell, "75%", report.getReportDetail().getServiceRange());
     }
 
 
@@ -113,17 +112,17 @@ class EntrustBuilder implements PageBuilder {
         cell = row.getCell(0);
         setCellLabel(cell, "25%", "单位名称");
         cell = row.getCell(1);
-        setCellValueLeft(cell, "75%", report.getBzDetail().getChanName());
+        setCellValueLeft(cell, "75%", report.getReportDetail().getChanName());
         row = table.getRow(1);
         cell = row.getCell(0);
         setCellLabel(cell, "25%", "单位地址");
         cell = row.getCell(1);
-        setCellValueLeft(cell, "75%", report.getBzDetail().getChanAddress());
+        setCellValueLeft(cell, "75%", report.getReportDetail().getChanAddress());
         row = table.getRow(2);
         cell = row.getCell(0);
         setCellLabel(cell, "25%", "经营范围");
         cell = row.getCell(1);
-        setCellValueLeft(cell, "75%",  report.getBzDetail().getChanBusScope());
+        setCellValueLeft(cell, "75%",  report.getReportDetail().getChanBusScope());
     }
 
     private void renderContactPerson(XWPFDocument doc, CheckReport report){
@@ -132,19 +131,19 @@ class EntrustBuilder implements PageBuilder {
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, "15%", "法定代表人");
         cell = row.getCell(1);
-        setCellValueCenter(cell, "20%", report.getBzDetail().getChanContact().getName());
+        setCellValueCenter(cell, "20%", report.getReportDetail().getChanContact().getName());
         cell = row.getCell(2);
         setCellLabel(cell, "10%", "电话");
         cell = row.getCell(3);
-        setCellValueCenter(cell, "25%", report.getBzDetail().getChanContact().getPhone());
+        setCellValueCenter(cell, "25%", report.getReportDetail().getChanContact().getPhone());
         cell = row.getCell(4);
         setCellLabel(cell, "10%", "手机");
         cell = row.getCell(5);
-        setCellValueCenter(cell, "20", report.getBzDetail().getChanContact().getMobile());
+        setCellValueCenter(cell, "20", report.getReportDetail().getChanContact().getMobile());
     }
 
     private void renderWorkPerson(XWPFDocument doc, CheckReport report){
-        int rowCount = report.getBzDetail().getWorkers().size() + 2;
+        int rowCount = report.getReportDetail().getWorkers().size() + 2;
         XWPFTable table = createTable(doc, rowCount, 5);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -161,15 +160,15 @@ class EntrustBuilder implements PageBuilder {
         cell = row.getCell(0);
         setCellLabel(cell, "15%", "组长");
         cell = row.getCell(1);
-        setCellValueCenter(cell, "20%", report.getBzDetail().getLeader().getName());
+        setCellValueCenter(cell, "20%", report.getReportDetail().getLeader().getName());
         cell = row.getCell(2);
         setCellValueCenter(cell, "35%", "");
         cell = row.getCell(3);
         setCellValueCenter(cell, "10%", "");
         cell = row.getCell(4);
-        setCellValueCenter(cell, "20%", report.getBzDetail().getLeader().getPhone());
+        setCellValueCenter(cell, "20%", report.getReportDetail().getLeader().getPhone());
         for(int i = 2; i < rowCount; i++){
-            CheckReport.PersonInfo worker = report.getBzDetail().getWorkers().get(i - 2);
+            CheckReport.PersonInfo worker = report.getReportDetail().getWorkers().get(i - 2);
             row = table.getRow(i);
             cell = row.getCell(0);
             setCellLabel(cell, "15%", "成员");
@@ -187,8 +186,8 @@ class EntrustBuilder implements PageBuilder {
     private void renderSignature(XWPFDocument doc, CheckReport report){
         XWPFTable table = createTable(doc, 3, 6);
 
-        CheckReport.PersonInfo personInfo = report.getBzDetail().getPrincipalPerson() == null?
-                new CheckReport.PersonInfo(): report.getBzDetail().getPrincipalPerson();
+        CheckReport.PersonInfo personInfo = report.getReportDetail().getPrincipalPerson() == null?
+                new CheckReport.PersonInfo(): report.getReportDetail().getPrincipalPerson();
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, "15%", "主要负责人");
@@ -203,8 +202,8 @@ class EntrustBuilder implements PageBuilder {
         cell = row.getCell(5);
         setCellValueCenter(cell, "20%", "");
 
-        personInfo = report.getBzDetail().getAuditPerson() == null?
-                new CheckReport.PersonInfo(): report.getBzDetail().getAuditPerson();
+        personInfo = report.getReportDetail().getAuditPerson() == null?
+                new CheckReport.PersonInfo(): report.getReportDetail().getAuditPerson();
         row = table.getRow(1);
         cell = row.getCell(0);
         setCellLabel(cell, "15%", "报告审核人");
@@ -219,8 +218,8 @@ class EntrustBuilder implements PageBuilder {
         cell = row.getCell(5);
         setCellValueCenter(cell, "20%", "");
 
-        personInfo = report.getBzDetail().getReportPerson() == null?
-                new CheckReport.PersonInfo(): report.getBzDetail().getReportPerson();
+        personInfo = report.getReportDetail().getReportPerson() == null?
+                new CheckReport.PersonInfo(): report.getReportDetail().getReportPerson();
         row = table.getRow(2);
         cell = row.getCell(0);
         setCellLabel(cell, "15%", "报告审核人");

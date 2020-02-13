@@ -51,7 +51,7 @@ import org.apache.poi.xwpf.usermodel.*;
         cell = row.getCell(0);
         setCellLabel(cell, "15%", "企业简介");
         cell = row.getCell(1);
-        setCellValueLeft(cell, "85%", report.getCompBaseInfo().getProfile());
+        setCellValueLeft(cell, "85%", report.getCompBaseInfo().getCompProfile());
 
     }
 

@@ -105,7 +105,8 @@ class CoverBuilder implements PageBuilder {
         cell = row.getCell(0);
         setContentTableLabel(cell, "检查日期", 360 * 4);
         cell = row.getCell(1);
-        setContentTableValue(cell, report.getCheckDate());
+        //TODO 日期
+//        setContentTableValue(cell, report.getCheckDate());
         cellBottomLine(row, 1, 4);
         MsUtils.mergeCellsH(row, 1, 4);
     }

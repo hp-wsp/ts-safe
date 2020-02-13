@@ -3,6 +3,7 @@ package com.ts.server.safe.company.service;
 import com.ts.server.safe.BaseException;
 import com.ts.server.safe.company.dao.RiskChemicalDao;
 import com.ts.server.safe.company.domain.RiskChemical;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ public class RiskChemicalService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public RiskChemical save(RiskChemical t){
+        if(dao.has(StringUtils.trim(t.getName()))){
+            throw new BaseException("危化品已经存在");
+        }
         String id = dao.insert(t);
         return dao.findOne(id);
     }

@@ -54,8 +54,9 @@ import java.util.List;
     private void renderProfile(XWPFTable table, CheckReport report){
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
-        addProfileParagraph(cell, 0,
-                String.format(PROFILE_PATTER, report.getCompBaseInfo().getCompName(), report.getChannelName(), report.getCheckDate()));
+        //TODO 修改名称
+//        addProfileParagraph(cell, 0,
+//                String.format(PROFILE_PATTER, report.getCompBaseInfo().getCompName(), report.getChannelName(), report.getCheckDate()));
 
         addProfileParagraph(cell,  1,"受限于时间、能力、专业水平等条件限制，本意见出现的误差或缺陷，请监管部门和受服务企业指正并谅解。");
     }

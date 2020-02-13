@@ -5,9 +5,7 @@ import com.ts.server.safe.report.domain.CheckReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.*;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
-import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 
@@ -86,7 +84,7 @@ import java.util.List;
         cell = row.getCell(0);
         setCellLabel(cell, "企业简介");
         cell = row.getCell(1);
-        setCellValueLeft(cell, report.getCompBaseInfo().getProfile());
+        setCellValueLeft(cell, report.getCompBaseInfo().getCompProfile());
         MsUtils.mergeCellsH(row, 1, 6);
 
     }

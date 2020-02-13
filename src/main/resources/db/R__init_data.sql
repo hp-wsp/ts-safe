@@ -23,6 +23,8 @@ INSERT INTO s_sequence (seq_key, cur_value, remark)
 SELECT 'seq_check_task_num', 1, '检查任务编号序号' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_check_task_num');
 INSERT INTO s_sequence (seq_key, cur_value, remark)
 SELECT 'seq_u_risk', 100, '危险识别序号' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_u_risk');
+INSERT INTO s_sequence (seq_key, cur_value, remark)
+SELECT 'seq_occ_disease_job', 1, '职业病岗位序号' FROM DUAL WHERE NOT EXISTS(SELECT seq_key FROM s_sequence WHERE seq_key = 'seq_occ_disease_job');
 
 #-----------------------------------------------------------------
 #初始检查类别数据

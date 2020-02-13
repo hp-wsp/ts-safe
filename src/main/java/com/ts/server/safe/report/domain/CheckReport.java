@@ -46,10 +46,12 @@ public class CheckReport {
     private int entScale;
     @ApiModelProperty("所属区域")
     private String area;
-    @ApiModelProperty("检查日期")
-    private String checkDate;
+    @ApiModelProperty("检查开始时间")
+    private Date checkTimeFrom;
+    @ApiModelProperty("检查结束时间")
+    private Date checkTimeTo;
     @ApiModelProperty("编制说明")
-    private BzDetail bzDetail;
+    private ReportDetail reportDetail;
     @ApiModelProperty("受检企业基本情况")
     private CompBaseInfo compBaseInfo;
     @ApiModelProperty("安全生产社会化检查服务")
@@ -171,20 +173,28 @@ public class CheckReport {
         this.area = area;
     }
 
-    public String getCheckDate() {
-        return checkDate;
+    public Date getCheckTimeFrom() {
+        return checkTimeFrom;
     }
 
-    public void setCheckDate(String checkDate) {
-        this.checkDate = checkDate;
+    public void setCheckTimeFrom(Date checkTimeFrom) {
+        this.checkTimeFrom = checkTimeFrom;
     }
 
-    public BzDetail getBzDetail() {
-        return bzDetail;
+    public Date getCheckTimeTo() {
+        return checkTimeTo;
     }
 
-    public void setBzDetail(BzDetail bzDetail) {
-        this.bzDetail = bzDetail;
+    public void setCheckTimeTo(Date checkTimeTo) {
+        this.checkTimeTo = checkTimeTo;
+    }
+
+    public ReportDetail getReportDetail() {
+        return reportDetail;
+    }
+
+    public void setReportDetail(ReportDetail reportDetail) {
+        this.reportDetail = reportDetail;
     }
 
     public CompBaseInfo getCompBaseInfo() {
@@ -223,32 +233,33 @@ public class CheckReport {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CheckReport that = (CheckReport) o;
-        return entCompType == that.entCompType &&
-                entScale == that.entScale &&
-                Objects.equals(id, that.id) &&
-                Objects.equals(channelId, that.channelId) &&
-                Objects.equals(channelName, that.channelName) &&
-                Objects.equals(compId, that.compId) &&
-                Objects.equals(compName, that.compName) &&
-                Objects.equals(taskId, that.taskId) &&
-                Objects.equals(taskDetail, that.taskDetail) &&
-                Objects.equals(serviceId, that.serviceId) &&
-                Objects.equals(serviceName, that.serviceName) &&
-                Objects.equals(cycleName, that.cycleName) &&
-                Objects.equals(industry, that.industry) &&
-                Objects.equals(area, that.area) &&
-                Objects.equals(checkDate, that.checkDate) &&
-                Objects.equals(bzDetail, that.bzDetail) &&
-                Objects.equals(compBaseInfo, that.compBaseInfo) &&
-                Objects.equals(safeProduct, that.safeProduct) &&
-                Objects.equals(updateTime, that.updateTime) &&
-                Objects.equals(createTime, that.createTime);
+        CheckReport report = (CheckReport) o;
+        return entCompType == report.entCompType &&
+                entScale == report.entScale &&
+                Objects.equals(id, report.id) &&
+                Objects.equals(channelId, report.channelId) &&
+                Objects.equals(channelName, report.channelName) &&
+                Objects.equals(compId, report.compId) &&
+                Objects.equals(compName, report.compName) &&
+                Objects.equals(taskId, report.taskId) &&
+                Objects.equals(taskDetail, report.taskDetail) &&
+                Objects.equals(serviceId, report.serviceId) &&
+                Objects.equals(serviceName, report.serviceName) &&
+                Objects.equals(cycleName, report.cycleName) &&
+                Objects.equals(industry, report.industry) &&
+                Objects.equals(area, report.area) &&
+                Objects.equals(checkTimeFrom, report.checkTimeFrom) &&
+                Objects.equals(checkTimeTo, report.checkTimeTo) &&
+                Objects.equals(reportDetail, report.reportDetail) &&
+                Objects.equals(compBaseInfo, report.compBaseInfo) &&
+                Objects.equals(safeProduct, report.safeProduct) &&
+                Objects.equals(updateTime, report.updateTime) &&
+                Objects.equals(createTime, report.createTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, channelId, channelName, compId, compName, taskId, taskDetail, serviceId, serviceName, cycleName, entCompType, industry, entScale, area, checkDate, bzDetail, compBaseInfo, safeProduct, updateTime, createTime);
+        return Objects.hash(id, channelId, channelName, compId, compName, taskId, taskDetail, serviceId, serviceName, cycleName, entCompType, industry, entScale, area, checkTimeFrom, checkTimeTo, reportDetail, compBaseInfo, safeProduct, updateTime, createTime);
     }
 
     @Override
@@ -268,8 +279,9 @@ public class CheckReport {
                 .append("industry", industry)
                 .append("entScale", entScale)
                 .append("area", area)
-                .append("checkDate", checkDate)
-                .append("bzDetail", bzDetail)
+                .append("checkTimeFrom", checkTimeFrom)
+                .append("checkTimeTo", checkTimeTo)
+                .append("reportDetail", reportDetail)
                 .append("compBaseInfo", compBaseInfo)
                 .append("safeProduct", safeProduct)
                 .append("updateTime", updateTime)
@@ -280,9 +292,9 @@ public class CheckReport {
     /**
      * 编制说明
      */
-    public static class BzDetail {
+    public static class ReportDetail {
         @ApiModelProperty("委托单位")
-        private String company;
+        private String entCompName;
         @ApiModelProperty("合同编号")
         private String conNum;
         @ApiModelProperty("周期和内容")
@@ -307,7 +319,7 @@ public class CheckReport {
         private PersonInfo chanContact;
         @ApiModelProperty("组长")
         private PersonInfo leader;
-        @ApiModelProperty("分工")
+        @ApiModelProperty("成员")
         private List<PersonInfo> workers = new ArrayList<>();
         @ApiModelProperty("主要负责人")
         private PersonInfo principalPerson;
@@ -315,13 +327,15 @@ public class CheckReport {
         private PersonInfo auditPerson;
         @ApiModelProperty("报告编制人")
         private PersonInfo reportPerson;
+        @ApiModelProperty("本次检查结果总结并致辞")
+        private String checkResult;
 
-        public String getCompany() {
-            return company;
+        public String getEntCompName() {
+            return entCompName;
         }
 
-        public void setCompany(String company) {
-            this.company = company;
+        public void setEntCompName(String entCompName) {
+            this.entCompName = entCompName;
         }
 
         public String getConNum() {
@@ -452,39 +466,48 @@ public class CheckReport {
             this.reportPerson = reportPerson;
         }
 
+        public String getCheckResult() {
+            return checkResult;
+        }
+
+        public void setCheckResult(String checkResult) {
+            this.checkResult = checkResult;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            BzDetail bzDetail = (BzDetail) o;
-            return Objects.equals(company, bzDetail.company) &&
-                    Objects.equals(conNum, bzDetail.conNum) &&
-                    Objects.equals(cycleContent, bzDetail.cycleContent) &&
-                    Objects.equals(serviceBase, bzDetail.serviceBase) &&
-                    Objects.equals(serviceMethod, bzDetail.serviceMethod) &&
-                    Objects.equals(serviceRange, bzDetail.serviceRange) &&
-                    Objects.equals(chanName, bzDetail.chanName) &&
-                    Objects.equals(chanAddress, bzDetail.chanAddress) &&
-                    Objects.equals(chanBusScope, bzDetail.chanBusScope) &&
-                    Objects.equals(chanPhone, bzDetail.chanPhone) &&
-                    Objects.equals(chanMobile, bzDetail.chanMobile) &&
-                    Objects.equals(chanContact, bzDetail.chanContact) &&
-                    Objects.equals(leader, bzDetail.leader) &&
-                    Objects.equals(workers, bzDetail.workers) &&
-                    Objects.equals(principalPerson, bzDetail.principalPerson) &&
-                    Objects.equals(auditPerson, bzDetail.auditPerson) &&
-                    Objects.equals(reportPerson, bzDetail.reportPerson);
+            ReportDetail that = (ReportDetail) o;
+            return Objects.equals(entCompName, that.entCompName) &&
+                    Objects.equals(conNum, that.conNum) &&
+                    Objects.equals(cycleContent, that.cycleContent) &&
+                    Objects.equals(serviceBase, that.serviceBase) &&
+                    Objects.equals(serviceMethod, that.serviceMethod) &&
+                    Objects.equals(serviceRange, that.serviceRange) &&
+                    Objects.equals(chanName, that.chanName) &&
+                    Objects.equals(chanAddress, that.chanAddress) &&
+                    Objects.equals(chanBusScope, that.chanBusScope) &&
+                    Objects.equals(chanPhone, that.chanPhone) &&
+                    Objects.equals(chanMobile, that.chanMobile) &&
+                    Objects.equals(chanContact, that.chanContact) &&
+                    Objects.equals(leader, that.leader) &&
+                    Objects.equals(workers, that.workers) &&
+                    Objects.equals(principalPerson, that.principalPerson) &&
+                    Objects.equals(auditPerson, that.auditPerson) &&
+                    Objects.equals(reportPerson, that.reportPerson) &&
+                    Objects.equals(checkResult, that.checkResult);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(company, conNum, cycleContent, serviceBase, serviceMethod, serviceRange, chanName, chanAddress, chanBusScope, chanPhone, chanMobile, chanContact, leader, workers, principalPerson, auditPerson, reportPerson);
+            return Objects.hash(entCompName, conNum, cycleContent, serviceBase, serviceMethod, serviceRange, chanName, chanAddress, chanBusScope, chanPhone, chanMobile, chanContact, leader, workers, principalPerson, auditPerson, reportPerson, checkResult);
         }
 
         @Override
         public String toString() {
             return new ToStringBuilder(this)
-                    .append("company", company)
+                    .append("entCompName", entCompName)
                     .append("conNum", conNum)
                     .append("cycleContent", cycleContent)
                     .append("serviceBase", serviceBase)
@@ -501,6 +524,7 @@ public class CheckReport {
                     .append("principalPerson", principalPerson)
                     .append("auditPerson", auditPerson)
                     .append("reportPerson", reportPerson)
+                    .append("checkResult", checkResult)
                     .toString();
         }
     }
@@ -509,7 +533,7 @@ public class CheckReport {
      * 人员信息
      */
     public static class PersonInfo {
-        @ApiModelProperty("名称")
+        @ApiModelProperty("姓名")
         private String name = "";
         @ApiModelProperty("联系电话")
         private String phone = "";
@@ -567,9 +591,11 @@ public class CheckReport {
         @ApiModelProperty("联系人")
         private PersonInfo contractPerson;
         @ApiModelProperty("企业简介")
-        private String profile;
+        private String compProfile;
         @ApiModelProperty("生产信息")
         private List<CompProduct> products = new ArrayList<>();
+        @ApiModelProperty("涉及重点关注的工艺、场所、物料等情况描述")
+        private String productDetail;
         @ApiModelProperty("危险化学品")
         private List<RiskChemical> riskChemicals = new ArrayList<>();
 
@@ -621,12 +647,12 @@ public class CheckReport {
             this.contractPerson = contractPerson;
         }
 
-        public String getProfile() {
-            return profile;
+        public String getCompProfile() {
+            return compProfile;
         }
 
-        public void setProfile(String profile) {
-            this.profile = profile;
+        public void setCompProfile(String compProfile) {
+            this.compProfile = compProfile;
         }
 
         public List<CompProduct> getProducts() {
@@ -635,6 +661,14 @@ public class CheckReport {
 
         public void setProducts(List<CompProduct> products) {
             this.products = products;
+        }
+
+        public String getProductDetail() {
+            return productDetail;
+        }
+
+        public void setProductDetail(String productDetail) {
+            this.productDetail = productDetail;
         }
 
         public List<RiskChemical> getRiskChemicals() {
@@ -656,14 +690,15 @@ public class CheckReport {
                     Objects.equals(conPerson, that.conPerson) &&
                     Objects.equals(safePerson, that.safePerson) &&
                     Objects.equals(contractPerson, that.contractPerson) &&
-                    Objects.equals(profile, that.profile) &&
+                    Objects.equals(compProfile, that.compProfile) &&
                     Objects.equals(products, that.products) &&
+                    Objects.equals(productDetail, that.productDetail) &&
                     Objects.equals(riskChemicals, that.riskChemicals);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(compName, regAddress, creditCode, conPerson, safePerson, contractPerson, profile, products, riskChemicals);
+            return Objects.hash(compName, regAddress, creditCode, conPerson, safePerson, contractPerson, compProfile, products, productDetail, riskChemicals);
         }
 
         @Override
@@ -675,8 +710,9 @@ public class CheckReport {
                     .append("conPerson", conPerson)
                     .append("safePerson", safePerson)
                     .append("contractPerson", contractPerson)
-                    .append("profile", profile)
+                    .append("compProfile", compProfile)
                     .append("products", products)
+                    .append("productDetail", productDetail)
                     .append("riskChemicals", riskChemicals)
                     .toString();
         }

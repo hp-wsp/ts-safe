@@ -43,8 +43,9 @@ import java.util.List;
         XWPFParagraph paragraph = cell.getParagraphArray(0);
         paragraph.setIndentationFirstLine(WpsUtils.CM_UNIT/2);
         XWPFRun run = paragraph.createRun();
-        run.setText(String.format(PROFILE_PATTER,
-                report.getCompBaseInfo().getCompName(), report.getChannelName(), report.getCheckDate()));
+        //TODO 日期
+//        run.setText(String.format(PROFILE_PATTER,
+//                report.getCompBaseInfo().getCompName(), report.getChannelName(), report.getCheckDate()));
         run.setFontSize(9);
         run.setBold(false);
         paragraph = cell.addParagraph();

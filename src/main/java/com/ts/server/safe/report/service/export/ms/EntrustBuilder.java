@@ -39,7 +39,7 @@ class EntrustBuilder implements PageBuilder {
     }
 
     private int mathRowCount(CheckReport report){
-        return 17 + Math.max(report.getBzDetail().getWorkers().size(), 1);
+        return 17 + Math.max(report.getReportDetail().getWorkers().size(), 1);
     }
 
     private void fixColumnWidth(XWPFTable table){
@@ -73,7 +73,7 @@ class EntrustBuilder implements PageBuilder {
         cell = row.getCell(4);
         setCellLabel(cell, "(合同)编号");
         cell = row.getCell(5);
-        setCellValueCenter(cell, report.getBzDetail().getConNum());
+        setCellValueCenter(cell, report.getReportDetail().getConNum());
     }
 
     private void setCellLabel(XWPFTableCell cell, String label){
@@ -106,29 +106,30 @@ class EntrustBuilder implements PageBuilder {
         cell = row.getCell(0);
         setCellLabel(cell, "周期和内容");
         cell = row.getCell(1);
-        setCellValueLeft(cell, report.getCheckDate()+
-                "，代表委托方检查辖区企业（单位）与安全生产相关国家法律、法规、标准、政策等要求的符合性。");
+        //TODO 日期
+//        setCellValueLeft(cell, report.getCheckDate()+
+//                "，代表委托方检查辖区企业（单位）与安全生产相关国家法律、法规、标准、政策等要求的符合性。");
         MsUtils.mergeCellsH(row, 1, 6);
 
         row = table.getRow(4);
         cell = row.getCell(0);
         setCellLabel(cell, "服务主要依据");
         cell = row.getCell(1);
-        setCellValueCenter(cell, report.getBzDetail().getServiceBase());
+        setCellValueCenter(cell, report.getReportDetail().getServiceBase());
         MsUtils.mergeCellsH(row, 1, 6);
 
         row = table.getRow(5);
         cell = row.getCell(0);
         setCellLabel(cell, "服务方法");
         cell = row.getCell(1);
-        setCellValueCenter(cell, report.getBzDetail().getServiceMethod());
+        setCellValueCenter(cell, report.getReportDetail().getServiceMethod());
         MsUtils.mergeCellsH(row, 1, 6);
 
         row = table.getRow(6);
         cell = row.getCell(0);
         setCellLabel(cell, "服务范围");
         cell = row.getCell(1);
-        setCellValueCenter(cell, report.getBzDetail().getServiceRange());
+        setCellValueCenter(cell, report.getReportDetail().getServiceRange());
         MsUtils.mergeCellsH(row, 1, 6);
     }
 
@@ -143,21 +144,21 @@ class EntrustBuilder implements PageBuilder {
         cell = row.getCell(0);
         setCellLabel(cell, "单位名称");
         cell = row.getCell(1);
-        setCellValueCenter(cell, report.getBzDetail().getChanName());
+        setCellValueCenter(cell, report.getReportDetail().getChanName());
         MsUtils.mergeCellsH(row, 1, 6);
 
         row = table.getRow(9);
         cell = row.getCell(0);
         setCellLabel(cell, "单位地址");
         cell = row.getCell(1);
-        setCellValueCenter(cell, report.getBzDetail().getChanAddress());
+        setCellValueCenter(cell, report.getReportDetail().getChanAddress());
         MsUtils.mergeCellsH(row, 1, 6);
 
         row = table.getRow(10);
         cell = row.getCell(0);
         setCellLabel(cell, "经营范围");
         cell = row.getCell(1);
-        setCellValueLeft(cell, report.getBzDetail().getChanBusScope());
+        setCellValueLeft(cell, report.getReportDetail().getChanBusScope());
         MsUtils.mergeCellsH(row, 1, 6);
     }
 
@@ -166,15 +167,15 @@ class EntrustBuilder implements PageBuilder {
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, "法定代表人");
         cell = row.getCell(1);
-        setCellValueCenter(cell, report.getBzDetail().getChanContact().getName());
+        setCellValueCenter(cell, report.getReportDetail().getChanContact().getName());
         cell = row.getCell(2);
         setCellLabel(cell,  "电话");
         cell = row.getCell(3);
-        setCellValueCenter(cell, report.getBzDetail().getChanContact().getPhone());
+        setCellValueCenter(cell, report.getReportDetail().getChanContact().getPhone());
         cell = row.getCell(4);
         setCellLabel(cell, "手机");
         cell = row.getCell(5);
-        setCellValueCenter(cell, report.getBzDetail().getChanContact().getMobile());
+        setCellValueCenter(cell, report.getReportDetail().getChanContact().getMobile());
     }
 
     private int renderWorkPersons(XWPFTable table, CheckReport report){
@@ -191,16 +192,16 @@ class EntrustBuilder implements PageBuilder {
         cell = row.getCell(5);
         setCellLabel(cell, "联系电话");
 
-        renderWorkPerson(table, 13, "组长", report.getBzDetail().getLeader());
+        renderWorkPerson(table, 13, "组长", report.getReportDetail().getLeader());
 
-        if(report.getBzDetail().getWorkers().isEmpty()){
+        if(report.getReportDetail().getWorkers().isEmpty()){
             CheckReport.PersonInfo emptyPerson = new CheckReport.PersonInfo();
             emptyPerson.setName("");
             emptyPerson.setPhone("");
             renderWorkPerson(table, 14, "成员", emptyPerson);
             return 14;
         }
-        List<CheckReport.PersonInfo> workers = report.getBzDetail().getWorkers();
+        List<CheckReport.PersonInfo> workers = report.getReportDetail().getWorkers();
         for(int i = 0; i < workers.size(); i++){
             int rowIndex = 14 + i;
             renderWorkPerson(table, rowIndex, "成员", workers.get(i));
@@ -224,9 +225,9 @@ class EntrustBuilder implements PageBuilder {
     }
 
     private void renderSignature(XWPFTable table, int offsetRow, CheckReport report){
-        renderSignaturePerson(table, offsetRow + 1, "主要负责人", report.getBzDetail().getPrincipalPerson());
-        renderSignaturePerson(table, offsetRow + 2, "报告审核人", report.getBzDetail().getAuditPerson());
-        renderSignaturePerson(table, offsetRow + 3, "报告审核人", report.getBzDetail().getReportPerson());
+        renderSignaturePerson(table, offsetRow + 1, "主要负责人", report.getReportDetail().getPrincipalPerson());
+        renderSignaturePerson(table, offsetRow + 2, "报告审核人", report.getReportDetail().getAuditPerson());
+        renderSignaturePerson(table, offsetRow + 3, "报告审核人", report.getReportDetail().getReportPerson());
         MsUtils.mergeCellsV(table, 4, offsetRow + 1, offsetRow + 3);
     }
 
