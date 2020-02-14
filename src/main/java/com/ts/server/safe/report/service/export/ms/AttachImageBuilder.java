@@ -30,10 +30,7 @@ import java.util.Objects;
     public void build(XWPFDocument doc, CheckReport report) {
         XWPFParagraph paragraph = doc.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
-        XWPFRun run = paragraph.createRun();
-        run.setText("附件：");
-        run.setFontSize(10);
-        run.setBold(true);
+        MsUtils.setItemRun(paragraph.createRun(), 12, false, "附件：");
         List<String> images = getImages(report);
         for(int i = 0; i < images.size(); i++){
             renderAttachImage(doc, i, images.get(i));
@@ -69,12 +66,7 @@ import java.util.Objects;
             return ;
         }
         XWPFParagraph paragraph = doc.createParagraph();
-        paragraph.setIndentationFirstLine(MsUtils.CM_UNIT/2);
-        XWPFRun run = paragraph.createRun();
-        run.setText(String.format("附图%d", index + 1));
-        run.setFontSize(9);
-        run.setBold(false);
-        run.setFontFamily("宋体");
+        MsUtils.setInd2Paragraph(paragraph, 10, false, String.format("附图%d", index + 1));
         renderImage(doc, format, path);
     }
 

@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-class EntrustBuilder implements PageBuilder {
+class DetailBuilder implements PageBuilder {
 
     @Override
     public void build(XWPFDocument doc, CheckReport report) {
@@ -20,11 +20,13 @@ class EntrustBuilder implements PageBuilder {
         XWPFTable table = createTable(doc, report);
         renderProductInfo(table, report);
         renderServiceRequest(table, report);
-        renderCompInfo(table, report);
-        renderContactPerson(table, report);
-        int offsetRow = renderWorkPersons(table, report);
+        renderCompInfo(table, report.getReportDetail());
+        renderContactPerson(table, report.getReportDetail());
+        int offsetRow = renderWorkPersons(table, report.getReportDetail());
         renderSignature(table, offsetRow, report);
         renderFooter(doc);
+
+        MsUtils.addEmptyParagraph(doc, 2);
     }
 
     private void renderTitle(XWPFDocument doc){
@@ -61,7 +63,7 @@ class EntrustBuilder implements PageBuilder {
     private void renderProductInfo(XWPFTable table, CheckReport report){
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
-        setCellLabelBold(cell, "1.安全生产社会化信息");
+        setCellLabel(cell, "1.安全生产社会化信息");
         MsUtils.mergeCellsH(row, 0, 6);
 
         row = table.getRow(1);
@@ -80,10 +82,6 @@ class EntrustBuilder implements PageBuilder {
         setCell(cell, label, ParagraphAlignment.CENTER, false);
     }
 
-    private void setCellLabelBold(XWPFTableCell cell, String label){
-        setCell(cell, label, ParagraphAlignment.CENTER, true);
-    }
-
     private void setCellValueLeft(XWPFTableCell cell, String value){
         setCell(cell, value, ParagraphAlignment.LEFT, false);
     }
@@ -99,86 +97,86 @@ class EntrustBuilder implements PageBuilder {
     private void renderServiceRequest(XWPFTable table, CheckReport report){
         XWPFTableRow row = table.getRow(2);
         XWPFTableCell cell = row.getCell(0);
-        setCellLabelBold(cell,  "2.委托服务要求");
+        setCellLabel(cell,  "2.委托服务要求");
         MsUtils.mergeCellsH(row, 0, 6);
 
         row = table.getRow(3);
         cell = row.getCell(0);
         setCellLabel(cell, "周期和内容");
         cell = row.getCell(1);
-        //TODO 日期
-//        setCellValueLeft(cell, report.getCheckDate()+
-//                "，代表委托方检查辖区企业（单位）与安全生产相关国家法律、法规、标准、政策等要求的符合性。");
+        String checkContent = report.getCheckTimeFrom() + " 至 " + report.getCheckTimeTo() +
+                "代表委托方检查辖区企业（单位）与安全生产相关国家法律、法规、标准、政策等要求的符合性。";
+        setCellValueLeft(cell, checkContent);
         MsUtils.mergeCellsH(row, 1, 6);
 
         row = table.getRow(4);
         cell = row.getCell(0);
         setCellLabel(cell, "服务主要依据");
         cell = row.getCell(1);
-        setCellValueCenter(cell, report.getReportDetail().getServiceBase());
+        setCellValueLeft(cell, report.getReportDetail().getServiceBase());
         MsUtils.mergeCellsH(row, 1, 6);
 
         row = table.getRow(5);
         cell = row.getCell(0);
         setCellLabel(cell, "服务方法");
         cell = row.getCell(1);
-        setCellValueCenter(cell, report.getReportDetail().getServiceMethod());
+        setCellValueLeft(cell, report.getReportDetail().getServiceMethod());
         MsUtils.mergeCellsH(row, 1, 6);
 
         row = table.getRow(6);
         cell = row.getCell(0);
         setCellLabel(cell, "服务范围");
         cell = row.getCell(1);
-        setCellValueCenter(cell, report.getReportDetail().getServiceRange());
+        setCellValueLeft(cell, report.getReportDetail().getServiceRange());
         MsUtils.mergeCellsH(row, 1, 6);
     }
 
 
-    private void renderCompInfo(XWPFTable table, CheckReport report){
+    private void renderCompInfo(XWPFTable table, CheckReport.ReportDetail detail){
         XWPFTableRow row = table.getRow(7);
         XWPFTableCell cell = row.getCell(0);
-        setCellLabelBold(cell, "3.受委托单位信息");
+        setCellLabel(cell, "3.受委托单位信息");
         MsUtils.mergeCellsH(row, 0, 6);
 
         row = table.getRow(8);
         cell = row.getCell(0);
         setCellLabel(cell, "单位名称");
         cell = row.getCell(1);
-        setCellValueCenter(cell, report.getReportDetail().getChanName());
+        setCellValueLeft(cell, detail.getChanName());
         MsUtils.mergeCellsH(row, 1, 6);
 
         row = table.getRow(9);
         cell = row.getCell(0);
         setCellLabel(cell, "单位地址");
         cell = row.getCell(1);
-        setCellValueCenter(cell, report.getReportDetail().getChanAddress());
+        setCellValueLeft(cell, detail.getChanAddress());
         MsUtils.mergeCellsH(row, 1, 6);
 
         row = table.getRow(10);
         cell = row.getCell(0);
         setCellLabel(cell, "经营范围");
         cell = row.getCell(1);
-        setCellValueLeft(cell, report.getReportDetail().getChanBusScope());
+        setCellValueLeft(cell, detail.getChanBusScope());
         MsUtils.mergeCellsH(row, 1, 6);
     }
 
-    private void renderContactPerson(XWPFTable table, CheckReport report){
+    private void renderContactPerson(XWPFTable table, CheckReport.ReportDetail detail){
         XWPFTableRow row = table.getRow(11);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, "法定代表人");
         cell = row.getCell(1);
-        setCellValueCenter(cell, report.getReportDetail().getChanContact().getName());
+        setCellValueCenter(cell, detail.getChanContact().getName());
         cell = row.getCell(2);
         setCellLabel(cell,  "电话");
         cell = row.getCell(3);
-        setCellValueCenter(cell, report.getReportDetail().getChanContact().getPhone());
+        setCellValueCenter(cell, detail.getChanContact().getPhone());
         cell = row.getCell(4);
         setCellLabel(cell, "手机");
         cell = row.getCell(5);
-        setCellValueCenter(cell, report.getReportDetail().getChanContact().getMobile());
+        setCellValueCenter(cell, detail.getChanContact().getMobile());
     }
 
-    private int renderWorkPersons(XWPFTable table, CheckReport report){
+    private int renderWorkPersons(XWPFTable table, CheckReport.ReportDetail detail){
         XWPFTableRow row = table.getRow(12);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, "分工");
@@ -192,16 +190,16 @@ class EntrustBuilder implements PageBuilder {
         cell = row.getCell(5);
         setCellLabel(cell, "联系电话");
 
-        renderWorkPerson(table, 13, "组长", report.getReportDetail().getLeader());
+        renderWorkPerson(table, 13, "组长", detail.getLeader());
 
-        if(report.getReportDetail().getWorkers().isEmpty()){
+        if(detail.getWorkers().isEmpty()){
             CheckReport.PersonInfo emptyPerson = new CheckReport.PersonInfo();
             emptyPerson.setName("");
             emptyPerson.setPhone("");
             renderWorkPerson(table, 14, "成员", emptyPerson);
             return 14;
         }
-        List<CheckReport.PersonInfo> workers = report.getReportDetail().getWorkers();
+        List<CheckReport.PersonInfo> workers = detail.getWorkers();
         for(int i = 0; i < workers.size(); i++){
             int rowIndex = 14 + i;
             renderWorkPerson(table, rowIndex, "成员", workers.get(i));
@@ -250,29 +248,17 @@ class EntrustBuilder implements PageBuilder {
     }
 
     private void renderFooter(XWPFDocument doc) {
-        XWPFParagraph paragraph = doc.createParagraph();
-        XWPFRun run = paragraph.createRun();
-        run.setText(" ");
-        run.setFontSize(9);
+        MsUtils.addEmptyParagraph(doc, 1);
 
-        paragraph = doc.createParagraph();
+        XWPFParagraph paragraph = doc.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         paragraph.setIndentationFirstLine(MsUtils.CM_UNIT * 7);
         paragraph.setSpacingBetween(2, LineSpacingRule.AUTO);
-        run = paragraph.createRun();
-        run.setText("(检查单位技术意见章)");
-        run.setFontSize(14);
-        run.setBold(false);
-        run.setFontFamily("宋体");
+        MsUtils.setItemRun(paragraph.createRun(), 12, false, "(检查单位技术意见章)");
 
         paragraph = doc.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         paragraph.setIndentationFirstLine(MsUtils.CM_UNIT * 8);
-        run = paragraph.createRun();
-        run.setText("年   月   日");
-        run.setFontSize(10);
-        run.setBold(false);
-        run.setFontFamily("宋体");
-        run.addBreak(BreakType.PAGE);
+        MsUtils.setItemRun(paragraph.createRun(), 10, false, "年   月   日");
     }
 }

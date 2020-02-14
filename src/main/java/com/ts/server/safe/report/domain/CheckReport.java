@@ -755,7 +755,7 @@ public class CheckReport {
         @ApiModelProperty("受检查企业意见")
         private String checkCompanyIdea;
         @ApiModelProperty("本报告相关附图")
-        private String[] images;
+        private String[] images = new String[0];
 
         public List<TaskContent> getBaseContents() {
             return baseContents;

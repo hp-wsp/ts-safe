@@ -1,13 +1,12 @@
 package com.ts.server.safe.report.service.export.wps;
 
-import com.ts.server.safe.company.domain.OccDiseaseJob;
-import com.ts.server.safe.company.domain.SpePerson;
 import com.ts.server.safe.report.domain.CheckReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import com.ts.server.safe.task.domain.TaskContent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -64,39 +63,16 @@ import java.util.List;
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
         setCellWidth(cell, "100%", title);
-        int rowCount = contents.isEmpty()? 2: contents.size() + 1;
-        table = createTable(doc, rowCount, 4);
-        row = table.getRow(0);
-        cell = row.getCell(0);
-        setCellWidth(cell, "8%", "序号");
-        cell = row.getCell(1);
-        setCellWidth(cell, "35%", "隐患描述");
-        cell = row.getCell(2);
-        setCellWidth(cell, "35%", "法规依据或整改措施");
-        cell = row.getCell(3);
-        setCellWidth(cell, "22%", "备注");
 
-        int rowIndex = 1;
-        for(TaskContent t: contents){
-            row = table.getRow(rowIndex);
-            cell = row.getCell(0);
-            setCell(cell, String.valueOf(rowIndex));
-            cell = row.getCell(1);
-            setCell(cell, t.getDanDescribe());
-            cell = row.getCell(2);
-            setCell(cell, t.getDanSuggest());
-            cell = row.getCell(3);
-            setCell(cell, t.getRemark());
-            rowIndex++;
-        }
+        WpsUtils.renderTable(doc, contents, Arrays.asList(
+                new WpsUtils.ColSetting<>("8%", "序号", (e, i) -> String.valueOf(i)),
+                new WpsUtils.ColSetting<>("35%", "隐患描述", (e, i) -> e.getDanDescribe()),
+                new WpsUtils.ColSetting<>("35%", "法规依据或整改措施", (e, i) -> e.getDanSuggest()),
+                new WpsUtils.ColSetting<>("22%", "备注", (e, i) -> e.getRemark())));
     }
 
     private void setCellWidth(XWPFTableCell cell, String width, String content){
         WpsUtils.setCellWidth(cell, width, content, ParagraphAlignment.CENTER);
-    }
-
-    private void setCell(XWPFTableCell cell, String content){
-        WpsUtils.setCell(cell, content, ParagraphAlignment.CENTER);
     }
 
     private void renderSceneDetail(XWPFDocument doc, CheckReport report){
@@ -116,38 +92,13 @@ import java.util.List;
         WpsUtils.setInd2Paragraph(paragraph, 12, false,
                 "依据《职业病危害因素分类目录》辨识，该企业存在的主要职业病危害因素有; （具体分布岗位及目录名称见下表）。");
 
-        int rowCount = safeProduct.getOccDiseaseJobs().isEmpty()? 2: safeProduct.getOccDiseaseJobs().size() + 1;
-        table = WpsUtils.createTable(doc, rowCount, 6);
-        row = table.getRow(0);
-        cell = row.getCell(0);
-        setCellWidth(cell, "8%", "序号");
-        cell = row.getCell(1);
-        setCellWidth(cell, "15%", "作业岗位");
-        cell = row.getCell(2);
-        setCellWidth(cell, "18%", "作业方式");
-        cell = row.getCell(3);
-        setCellWidth(cell, "18%", "作业形式");
-        cell = row.getCell(4);
-        setCellWidth(cell, "26%", "存在职业病危害因素");
-        cell = row.getCell(5);
-        setCellWidth(cell, "15%", "备注");
-        int rowIndex = 1;
-        for(OccDiseaseJob job: safeProduct.getOccDiseaseJobs()){
-            row = table.getRow(rowIndex);
-            cell = row.getCell(0);
-            setCell(cell, String.valueOf(rowIndex));
-            cell = row.getCell(1);
-            setCell(cell, job.getJob());
-            cell = row.getCell(2);
-            setCell(cell, job.getJobWay());
-            cell = row.getCell(3);
-            setCell(cell, job.getJobFormal());
-            cell = row.getCell(4);
-            setCell(cell, StringUtils.join(job.getRisks(), ","));
-            cell = row.getCell(5);
-            setCell(cell, job.getRemark());
-            ++rowIndex;
-        }
+        WpsUtils.renderTable(doc, safeProduct.getOccDiseaseJobs(), Arrays.asList(
+                new WpsUtils.ColSetting<>("8%", "序号", (e, i) -> String.valueOf(1)),
+                new WpsUtils.ColSetting<>("15%", "作业岗位", (e, i) -> e.getJob()),
+                new WpsUtils.ColSetting<>("18%", "作业方式", (e, i) -> e.getJobWay()),
+                new WpsUtils.ColSetting<>("18%", "作业形式", (e, i) -> e.getJobFormal()),
+                new WpsUtils.ColSetting<>("26%", "存在职业病危害因素", (e, i) -> StringUtils.join(e.getRisks(), ",")),
+                new WpsUtils.ColSetting<>("15%", "备注", (e, i) -> e.getRemark())));
 
         table = WpsUtils.createTable(doc, 1, 2);
         row = table.getRow(0);
@@ -176,30 +127,11 @@ import java.util.List;
         WpsUtils.checkBox(paragraph, "涉及", safeProduct.isSpePerson());
         WpsUtils.checkBox(paragraph, "不涉及", !safeProduct.isSpePerson());
 
-        int rowCount = safeProduct.getSpePersons().isEmpty()? 2: safeProduct.getSpePersons().size() + 1;
-        table = createTable(doc, rowCount, 4);
-        row = table.getRow(0);
-        cell = row.getCell(0);
-        setCellWidth(cell, "21%", "姓名");
-        cell = row.getCell(1);
-        setCellWidth(cell, "20%", "类别");
-        cell = row.getCell(2);
-        setCellWidth(cell, "30%", "证号");
-        cell = row.getCell(3);
-        setCellWidth(cell, "29%", "有效期");
-
-        int rowIndex = 1;
-        for(SpePerson person: safeProduct.getSpePersons()){
-            row = table.getRow(rowIndex++);
-            cell = row.getCell(0);
-            setCell(cell, person.getName());
-            cell = row.getCell(1);
-            setCell(cell, person.getType());
-            cell = row.getCell(2);
-            setCell(cell, person.getNum());
-            cell = row.getCell(3);
-            setCell(cell, person.getToDate());
-        }
+        WpsUtils.renderTable(doc, safeProduct.getSpePersons(), Arrays.asList(
+                new WpsUtils.ColSetting<>("21%", "姓名", (e, i) -> e.getName()),
+                new WpsUtils.ColSetting<>("20%", "类别", (e, i) -> e.getType()),
+                new WpsUtils.ColSetting<>("30%", "证号", (e, i) -> e.getNum()),
+                new WpsUtils.ColSetting<>("29%", "有效期", (e, i) -> e.getToDate())));
 
         table = createTable(doc, 1, 2);
         row = table.getRow(0);
@@ -276,8 +208,6 @@ import java.util.List;
         XWPFParagraph paragraph = doc.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraph.setSpacingBetween(2, LineSpacingRule.AUTO);
-        XWPFRun run = paragraph.createRun();
-        run.setText(report.getPrintDetail());
-        run.setFontSize(10);
+        WpsUtils.setItemRun(paragraph.createRun(), 12, false, report.getPrintDetail());
     }
 }

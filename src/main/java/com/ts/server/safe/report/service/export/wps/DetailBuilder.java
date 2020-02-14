@@ -4,6 +4,7 @@ import com.ts.server.safe.report.domain.CheckReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import org.apache.poi.xwpf.usermodel.*;
 
+import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Objects;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-class ReportDetailBuilder implements PageBuilder {
+class DetailBuilder implements PageBuilder {
 
     @Override
     public void build(XWPFDocument doc, CheckReport report) {
@@ -25,8 +26,7 @@ class ReportDetailBuilder implements PageBuilder {
         renderSignature(doc, report.getReportDetail());
         renderFooter(doc);
 
-        XWPFParagraph paragraph = doc.createParagraph();
-        paragraph.createRun().addBreak(BreakType.PAGE);
+        WpsUtils.addEmptyParagraph(doc, 2);
     }
 
     private void renderTitle(XWPFDocument doc){
@@ -78,27 +78,23 @@ class ReportDetailBuilder implements PageBuilder {
         setCellWidthLeft(cell, "75%", checkContent);
         row = table.getRow(1);
         cell = row.getCell(0);
-        setCell(cell, "服务主要依据");
+        setCellWidth(cell, "25%","服务主要依据");
         cell = row.getCell(1);
-        setCellLeft(cell, report.getReportDetail().getServiceBase());
+        setCellWithLeft(cell, "75%", report.getReportDetail().getServiceBase());
         row = table.getRow(2);
         cell = row.getCell(0);
-        setCell(cell, "服务方法");
+        setCellWidth(cell, "25%","服务方法");
         cell = row.getCell(1);
-        setCellLeft(cell, report.getReportDetail().getServiceMethod());
+        setCellWithLeft(cell,"75%", report.getReportDetail().getServiceMethod());
         row = table.getRow(3);
         cell = row.getCell(0);
-        setCell(cell,"服务范围");
+        setCellWidth(cell,"25%","服务范围");
         cell = row.getCell(1);
-        setCellLeft(cell, report.getReportDetail().getServiceRange());
+        setCellWithLeft(cell,"75%", report.getReportDetail().getServiceRange());
     }
 
-    private void setCell(XWPFTableCell cell, String label){
-        WpsUtils.setCell(cell, label, ParagraphAlignment.CENTER);
-    }
-
-    private void setCellLeft(XWPFTableCell cell, String content){
-        WpsUtils.setCell(cell, content, ParagraphAlignment.LEFT);
+    private void setCellWithLeft(XWPFTableCell cell, String width, String content){
+        WpsUtils.setCellWidth(cell, width, content, ParagraphAlignment.LEFT);
     }
 
     private void renderCompInfo(XWPFDocument doc, CheckReport.ReportDetail detail){
@@ -115,14 +111,14 @@ class ReportDetailBuilder implements PageBuilder {
         setCellWidthLeft(cell, "75%", detail.getChanName());
         row = table.getRow(1);
         cell = row.getCell(0);
-        setCell(cell,"单位地址");
+        setCellWidth(cell,"25%","单位地址");
         cell = row.getCell(1);
-        setCellLeft(cell, detail.getChanAddress());
+        setCellWithLeft(cell, "75%", detail.getChanAddress());
         row = table.getRow(2);
         cell = row.getCell(0);
-        setCell(cell,"经营范围");
+        setCellWidth(cell,"25%","经营范围");
         cell = row.getCell(1);
-        setCellLeft(cell, detail.getChanBusScope());
+        setCellWithLeft(cell, "75%", detail.getChanBusScope());
     }
 
     private void renderContactPerson(XWPFDocument doc, CheckReport.ReportDetail detail){
@@ -143,7 +139,7 @@ class ReportDetailBuilder implements PageBuilder {
     }
 
     private void renderWorkPerson(XWPFDocument doc, CheckReport.ReportDetail detail){
-        int rowCount = detail.getWorkers().size() + 2;
+        int rowCount = detail.getWorkers().size() + (detail.getWorkers().isEmpty()? 3: 2);
         XWPFTable table = createTable(doc, rowCount, 5);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -158,6 +154,9 @@ class ReportDetailBuilder implements PageBuilder {
         setCellWidth(cell, "20%", "联系电话");
         renderWorkPersonRow(table, 1, "组长", detail.getLeader());
         int rowIndex = 2;
+        if(detail.getWorkers().isEmpty()){
+            detail.setWorkers(Collections.singletonList(new CheckReport.PersonInfo()));
+        }
         for(CheckReport.PersonInfo person: detail.getWorkers()){
             renderWorkPersonRow(table, rowIndex++, "成员", person);
         }
@@ -166,15 +165,15 @@ class ReportDetailBuilder implements PageBuilder {
     private void renderWorkPersonRow(XWPFTable table, int rowIndex, String title, CheckReport.PersonInfo person){
         XWPFTableRow row = table.getRow(rowIndex);
         XWPFTableCell cell = row.getCell(0);
-        setCell(cell,  title);
+        setCellWidth(cell, "15%", title);
         cell = row.getCell(1);
-        setCell(cell, person.getName());
+        setCellWidth(cell, "20%", person.getName());
         cell = row.getCell(2);
-        setCell(cell, "");
+        setCellWidth(cell, "35%","");
         cell = row.getCell(3);
-        setCell(cell, "");
+        setCellWidth(cell, "10%","");
         cell = row.getCell(4);
-        setCell(cell, person.getPhone());
+        setCellWidth(cell, "20%", person.getPhone());
     }
 
     private void renderSignature(XWPFDocument doc, CheckReport.ReportDetail detail){

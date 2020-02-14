@@ -1,12 +1,12 @@
 package com.ts.server.safe.report.service.export.ms;
 
-import com.ts.server.safe.company.domain.SpePerson;
 import com.ts.server.safe.report.domain.CheckReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import com.ts.server.safe.task.domain.TaskContent;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.*;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,13 +24,14 @@ import java.util.List;
 
         XWPFTable table =createTable(doc);
         renderProfile(table, report);
-        renderBaseDetail(table, report);
-        renderSceneDetail(table, report);
-        renderDisease(table, report);
-        renderSpePerson(table, report);
-        renderResult(table, report);
-        renderSafeRisk(table, report);
-        renderRiskType(table, report);
+        renderBaseDetail(table, report.getSafeProduct());
+        renderSceneDetail(table, report.getSafeProduct());
+        renderDisease(table, report.getSafeProduct());
+        renderSpePerson(table, report.getSafeProduct());
+        renderResult(table, report.getSafeProduct());
+        renderSafeRisk(table, report.getSafeProduct());
+        renderRiskType(table, report.getSafeProduct());
+
         renderFooter(doc, report);
     }
 
@@ -69,21 +70,17 @@ import java.util.List;
             paragraph = cell.addParagraph();
         }
         paragraph.setIndentationFirstLine(MsUtils.CM_UNIT/2);
-        XWPFRun run = paragraph.createRun();
-        run.setText(content);
-        run.setFontSize(9);
-        run.setFontFamily("宋体");
-        run.setBold(false);
+        MsUtils.setItemRun(paragraph.createRun(), 12, false, content);
     }
 
-    private void renderBaseDetail(XWPFTable table, CheckReport report){
-        renderDetail(table, 1,"1、基础管理隐患描述及治理措施", report.getSafeProduct().getBaseContents());
+    private void renderBaseDetail(XWPFTable table, CheckReport.SafeProduct product){
+        renderDetail(table, 1,"1、基础管理隐患描述及治理措施", product.getBaseContents());
     }
 
     private void renderDetail(XWPFTable table, int rowIndex, String title, List<TaskContent> contents){
         XWPFTableRow row = table.getRow(rowIndex);
         XWPFTableCell cell = row.getCell(0);
-        setCellLabelBold(cell, title);
+        setCellLabel(cell, title);
 
         row = table.getRow(rowIndex + 1);
         cell = row.getCell(0);
@@ -91,44 +88,12 @@ import java.util.List;
         XWPFTable contentTable= cell.insertNewTbl(paragraph.getCTP().newCursor());
         contentTable.getCTTbl().addNewTblPr().addNewTblW();
         contentTable.setWidth("100%");
-
-        row = contentTable.createRow();
-        cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "8%", new boolean[]{false, true, true, false});
-        setCellLabel(cell, "序号");
-        cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "35%", new boolean[]{false, true, true, true});
-        setCellLabel(cell, "隐患描述");
-        cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "35%", new boolean[]{false, true, true, true});
-        setCellLabel(cell, "法规依据或整改措施");
-        cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "22%", new boolean[]{false, false, true, true});
-        setCellLabel(cell, "备注");
-
-        boolean isEmpty = contents.isEmpty();
-        if(isEmpty){
-            contents = Collections.singletonList(new TaskContent());
-        }
-
-        int rowCount = contents.size();
-        for(int i = 0; i < rowCount; i++){
-            TaskContent t = contents.get(i);
-            row = contentTable.createRow();
-            cell = row.getCell(0);
-            boolean isLast = i == (rowCount - 1);
-            setCellWidthBorder(cell, "8%", new boolean[]{true, true, !isLast, false});
-            setCellValueCenter(cell, isEmpty? "": String.valueOf(i + 1));
-            cell = row.getCell(1);
-            setCellWidthBorder(cell, "35%", new boolean[]{true, true, !isLast, false});
-            setCellValueCenter(cell, isEmpty? "":t.getDanDescribe());
-            cell = row.getCell(2);
-            setCellWidthBorder(cell, "35%", new boolean[]{true, true, !isLast, false});
-            setCellValueCenter(cell, isEmpty? "":t.getDanSuggest());
-            cell = row.getCell(3);
-            setCellWidthBorder(cell, "22%", new boolean[]{true, false, !isLast, false});
-            setCellValueCenter(cell, isEmpty? "":t.getRemark());
-        }
+        MsUtils.renderTable(contentTable, contents, Arrays.asList(
+                new MsUtils.ColSetting<>("8%", "序号", (r, i) -> String.valueOf(i)),
+                new MsUtils.ColSetting<>("35%", "隐患描述", (r, i) -> r.getDanDescribe()),
+                new MsUtils.ColSetting<>("35%", "法规依据或整改措施", (r, i) -> r.getDanSuggest()),
+                new MsUtils.ColSetting<>("22%", "备注", (r, i) -> r.getRemark())
+        ));
     }
 
     private void setCellWidthBorder(XWPFTableCell cell, String width, boolean[] showBorders){
@@ -139,83 +104,40 @@ import java.util.List;
         setCell(cell, label, ParagraphAlignment.CENTER, false);
     }
 
-    private void setCellLabelBold(XWPFTableCell cell, String label){
-        setCell(cell, label, ParagraphAlignment.CENTER, true);
-    }
-
     private void setCellValueLeft(XWPFTableCell cell, String value){
         setCell(cell, value, ParagraphAlignment.LEFT, false);
-    }
-
-    private void setCellValueCenter(XWPFTableCell cell, String value){
-        setCell(cell, value, ParagraphAlignment.CENTER, false);
     }
 
     private void setCell(XWPFTableCell cell, String value, ParagraphAlignment alignment, boolean bold){
         MsUtils.setCell(cell, value, alignment, bold);
     }
 
-    private void renderSceneDetail(XWPFTable table, CheckReport report){
-        renderDetail(table, 3, "2、现场管理隐患描述及治理措施", report.getSafeProduct().getSceneContents());
+    private void renderSceneDetail(XWPFTable table, CheckReport.SafeProduct product){
+        renderDetail(table, 3, "2、现场管理隐患描述及治理措施", product.getSceneContents());
     }
 
-    private void renderDisease(XWPFTable table, CheckReport report){
+    private void renderDisease(XWPFTable table, CheckReport.SafeProduct product){
         XWPFTableRow row = table.getRow(5);
         XWPFTableCell cell = row.getCell(0);
-        setCellLabelBold(cell, "3、作业场所职业病危害因素的识别");
+        setCellLabel(cell, "3、作业场所职业病危害因素的识别");
 
-        XWPFParagraph paragraph = cell.addParagraph();
-        paragraph.setIndentationFirstLine(MsUtils.CM_UNIT/2);
-        XWPFRun run = paragraph.createRun();
-        run.setText("依据《职业病危害因素分类目录》辨识，该企业存在的主要职业病危害因素有; （具体分布岗位及目录名称见下表）。");
-        run.setFontSize(9);
-        run.setBold(false);
-        run.setFontFamily("宋体");
+        MsUtils.setInd2Paragraph(cell.addParagraph(), 12, false,
+                "依据《职业病危害因素分类目录》辨识，该企业存在的主要职业病危害因素有; （具体分布岗位及目录名称见下表）。");
 
         row = table.getRow(6);
         cell = row.getCell(0);
-        paragraph = cell.getParagraphArray(0);
+        XWPFParagraph paragraph = cell.getParagraphArray(0);
         XWPFTable subTable= cell.insertNewTbl(paragraph.getCTP().newCursor());
         subTable.getCTTbl().addNewTblPr().addNewTblW();
         subTable.setWidth("100%");
-        row = subTable.createRow();
-        cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "8%", new boolean[]{false, true, true, false});
-        setCellLabel(cell, "序号");
-        cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "15%", new boolean[]{false, true, true, true});
-        setCellLabel(cell, "作业岗位");
-        cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "18%", new boolean[]{false, true, true, true});
-        setCellLabel(cell, "作业方式");
-        cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "18%", new boolean[]{false, true, true, true});
-        setCellLabel(cell,  "作业形式");
-        cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "26%", new boolean[]{false, true, true, true});
-        setCellLabel(cell, "存在职业病危害因素");
-        cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "15%", new boolean[]{false, false, true, false});
-        setCellLabel(cell,  "备注");
-        row = subTable.createRow();
-        cell = row.getCell(0);
-        setCellWidthBorder(cell, "8%", new boolean[]{false, true, false, false});
-        setCellLabel(cell, "");
-        cell = row.getCell(1);
-        setCellWidthBorder(cell, "15%", new boolean[]{false, true, false, false});
-        setCellLabel(cell, "");
-        cell = row.getCell(2);
-        setCellWidthBorder(cell, "18%", new boolean[]{false, true, false, false});
-        setCellLabel(cell, "");
-        cell = row.getCell(3);
-        setCellWidthBorder(cell, "18%", new boolean[]{false, true, false, false});
-        setCellLabel(cell, "");
-        cell = row.getCell(4);
-        setCellWidthBorder(cell, "26%", new boolean[]{false, true, false, false});
-        setCellLabel(cell, "");
-        cell = row.getCell(5);
-        setCellWidthBorder(cell, "15%", new boolean[]{false, false, false, false});
-        setCellLabel(cell, "");
+        MsUtils.renderTable(subTable, product.getOccDiseaseJobs(), Arrays.asList(
+                new MsUtils.ColSetting<>("8%", "序号", (r, i) -> String.valueOf(i)),
+                new MsUtils.ColSetting<>("15%", "作业岗位", (r, i) -> r.getJob()),
+                new MsUtils.ColSetting<>("18%", "作业方式", (r, i) -> r.getJobWay()),
+                new MsUtils.ColSetting<>("18%", "作业形式", (r, i) -> r.getJobFormal()),
+                new MsUtils.ColSetting<>("26%", "存在职业病危害因素", (r, i) -> StringUtils.join(r.getRisks(), ",")),
+                new MsUtils.ColSetting<>("15%", "备注", (r, i) -> r.getRemark())
+        ));
 
         row = table.getRow(7);
         cell = row.getCell(0);
@@ -237,7 +159,7 @@ import java.util.List;
         MsUtils.checkBox(p, "局部严重", false);
     }
 
-    private void renderSpePerson(XWPFTable table, CheckReport report){
+    private void renderSpePerson(XWPFTable table, CheckReport.SafeProduct product){
         XWPFTableRow row = table.getRow(8);
         XWPFTableCell cell = row.getCell(0);
         XWPFParagraph paragraph = cell.getParagraphArray(0);
@@ -247,13 +169,13 @@ import java.util.List;
         row = subTable.createRow();
         cell = row.addNewTableCell();
         setCellWidthBorder(cell, "41%", new boolean[]{false, true, false, false});
-        setCellLabelBold(cell,  "4、涉及特种作业人员及证书");
+        setCellLabel(cell,  "4、涉及特种作业人员及证书");
         cell = row.addNewTableCell();
         setCellWidthBorder(cell, "59%", new boolean[]{false, false, false, false});
         paragraph = cell.getParagraphArray(0);
         paragraph.setAlignment(ParagraphAlignment.CENTER);
-        MsUtils.checkBox(paragraph, "涉及", report.getSafeProduct().isSpePerson());
-        MsUtils.checkBox(paragraph, "不涉及", !report.getSafeProduct().isSpePerson());
+        MsUtils.checkBox(paragraph, "涉及", product.isSpePerson());
+        MsUtils.checkBox(paragraph, "不涉及", !product.isSpePerson());
 
         row = table.getRow(9);
         cell = row.getCell(0);
@@ -261,44 +183,12 @@ import java.util.List;
         subTable= cell.insertNewTbl(paragraph.getCTP().newCursor());
         subTable.getCTTbl().addNewTblPr().addNewTblW();
         subTable.setWidth("100%");
-        List<SpePerson> persons = report.getSafeProduct().getSpePersons();
-        boolean isEmpty = persons.isEmpty();
-        if(isEmpty){
-            persons = Collections.singletonList(new SpePerson());
-        }
-
-        row = subTable.createRow();
-        cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "21%", new boolean[]{false, true, true, false});
-        setCellLabel(cell, "姓名");
-        cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "20%", new boolean[]{false, true, true, false});
-        setCellLabel(cell, "类别");
-        cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "30%", new boolean[]{false, true, true, false});
-        setCellLabel(cell, "证号");
-        cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "29%", new boolean[]{false, true, true, false});
-        setCellLabel(cell, "有效期");
-
-        int rowCount = persons.size();
-        for(int i = 0; i < rowCount; i++){
-            boolean isLast = i == (rowCount - 1);
-            SpePerson person = persons.get(i);
-            row = subTable.createRow();
-            cell = row.getCell(0);
-            setCellWidthBorder(cell, "21%", new boolean[]{false, true, !isLast, false});
-            setCellLabel(cell, isEmpty? "": person.getName());
-            cell = row.getCell(1);
-            setCellWidthBorder(cell, "20%", new boolean[]{false, true, !isLast, false});
-            setCellLabel(cell, isEmpty? "": person.getType());
-            cell = row.getCell(2);
-            setCellWidthBorder(cell, "30%", new boolean[]{false, true, !isLast, false});
-            setCellLabel(cell, isEmpty? "": person.getNum());
-            cell = row.getCell(3);
-            setCellWidthBorder(cell, "29%", new boolean[]{false, false, !isLast, false});
-            setCellLabel(cell, isEmpty? "": person.getToDate());
-        }
+        MsUtils.renderTable(subTable, product.getSpePersons(), Arrays.asList(
+                new MsUtils.ColSetting<>("21%", "姓名", (r, i) -> r.getName()),
+                new MsUtils.ColSetting<>("20%", "类别", (r, i) -> r.getType()),
+                new MsUtils.ColSetting<>("30%", "证号", (r, i) -> r.getNum()),
+                new MsUtils.ColSetting<>("29%", "有效期", (r, i) -> r.getToDate())
+        ));
 
         row = table.getRow(10);
         cell = row.getCell(0);
@@ -315,16 +205,14 @@ import java.util.List;
         setCellValueLeft(cell, "");
     }
 
-    private void renderResult(XWPFTable table, CheckReport report){
+    private void renderResult(XWPFTable table, CheckReport.SafeProduct product){
         XWPFTableRow row = table.getRow(11);
         XWPFTableCell cell = row.getCell(0);
-        setCellLabelBold(cell,"5.检查情况结论意见");
-        XWPFParagraph paragraph = cell.addParagraph();
-        paragraph.setIndentationFirstLine(MsUtils.CM_UNIT/2);
-        cell.addParagraph();
+        setCellLabel(cell,"5.检查情况结论意见");
+        MsUtils.setInd2Paragraph(cell.addParagraph(), 12, false, product.getCheckResult());
     }
 
-    private void renderSafeRisk(XWPFTable table, CheckReport report){
+    private void renderSafeRisk(XWPFTable table, CheckReport.SafeProduct product){
         XWPFTableRow row = table.getRow(12);
         XWPFTableCell cell = row.getCell(0);
         XWPFParagraph paragraph = cell.getParagraphArray(0);
@@ -334,20 +222,20 @@ import java.util.List;
 
         row = subTable.createRow();
         cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "38%", new boolean[]{false, false, false, false});
-        setCellLabelBold(cell, "6.检查判定企业综合安全风险状况");
+        setCellWidthBorder(cell, "45%", new boolean[]{false, false, false, false});
+        setCellLabel(cell, "6.检查判定企业综合安全风险状况");
         cell = row.addNewTableCell();
-        setCellWidthBorder(cell, "62%", new boolean[]{false, false, false, false});
+        setCellWidthBorder(cell, "55%", new boolean[]{false, false, false, false});
         MsUtils.mergeCellsH(row, 0, 2);
         row = subTable.createRow();
         cell = row.getCell(0);
-        setCellWidthBorder(cell, "38%", new boolean[]{false, false, false, false});
+        setCellWidthBorder(cell, "45%", new boolean[]{false, false, false, false});
         setCellLabel(cell, "检查判定企业综合安全风险状况");
         cell = row.getCell(1);
-        setCellWidthBorder(cell, "62%", new boolean[]{false, false, false, false});
+        setCellWidthBorder(cell, "55%", new boolean[]{false, false, false, false});
         paragraph = cell.getParagraphArray(0);
         paragraph.setAlignment(ParagraphAlignment.CENTER);
-        int level = report.getSafeProduct().getSafeRiskLevel();
+        int level = product.getSafeRiskLevel();
         MsUtils.checkBox(paragraph, "高", level == 4);
         MsUtils.checkBox(paragraph, "较高", level == 3);
         MsUtils.checkBox(paragraph, "一般", level == 2);
@@ -357,77 +245,47 @@ import java.util.List;
         cell = row.getCell(0);
         paragraph = cell.addParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
-        XWPFRun run = paragraph.createRun();
-        run.setText("风险判定说明：");
-        run.setFontSize(9);
-        run.setBold(true);
-        run.setFontFamily("宋体");
+        MsUtils.setItemRun(paragraph.createRun(), 12, false, "风险判定说明：");
+
         paragraph = cell.addParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraph.setIndentationFirstLine(MsUtils.CM_UNIT/2);
-        run = paragraph.createRun();
-        run.setText(report.getSafeProduct().getRiskLevelExplain());
-        run.setFontSize(9);
-        run.setBold(false);
-        run.setFontFamily("宋体");
+        MsUtils.setItemRun(paragraph.createRun(), 12, false, product.getRiskLevelExplain());
     }
 
-    private void renderRiskType(XWPFTable table, CheckReport report){
+    private void renderRiskType(XWPFTable table, CheckReport.SafeProduct product){
         XWPFTableRow row = table.getRow(13);
         XWPFTableCell cell = row.getCell(0);
-        setCellLabelBold(cell, "7、生产安全事故类型风险辨识");
+        setCellLabel(cell, "7、生产安全事故类型风险辨识");
 
         XWPFParagraph paragraph = cell.addParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraph.setIndentationFirstLine(MsUtils.CM_UNIT/2);
-        XWPFRun run = paragraph.createRun();
-        run.setText(report.getSafeProduct().getSafeProductRisk());
-        run.setBold(false);
-        run.setFontSize(9);
-        run.setFontFamily("宋体");
+        MsUtils.setItemRun(paragraph.createRun(), 12, false, product.getSafeProductRisk());
 
         row = table.getRow(14);
         cell = row.getCell(0);
         paragraph = cell.getParagraphArray(0);
-        run = paragraph.createRun();
-        run.setText("受检查企业意见:");
-        run.setFontSize(9);
-        run.setBold(true);
-        run.setFontFamily("宋体");
+        MsUtils.setItemRun(paragraph.createRun(), 12, false, "受检查企业意见：");
 
         paragraph = cell.addParagraph();
         paragraph.setIndentationFirstLine(MsUtils.CM_UNIT/2);
-        run = paragraph.createRun();
-        run.setText(report.getSafeProduct().getCheckCompanyIdea());
-        run.setFontSize(9);
-        run.setBold(false);
-        run.setFontFamily("宋体");
+        MsUtils.setItemRun(paragraph.createRun(), 12, false, product.getCheckCompanyIdea());
 
         paragraph = cell.addParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraph.setIndentationFirstLine(MsUtils.CM_UNIT * 10);
-        run = paragraph.createRun();
-        run.setText("（单位盖章）");
-        run.setFontSize(9);
-        run.setBold(false);
-        run.setFontFamily("宋体");
+        MsUtils.setItemRun(paragraph.createRun(), 12, false, "（单位盖章）");
 
         paragraph = cell.addParagraph();
         paragraph.setAlignment(ParagraphAlignment.RIGHT);
-        run = paragraph.createRun();
-        run.setText("    年  月  日");
-        run.setFontSize(9);
-        run.setBold(false);
-        run.setFontFamily("宋体");
+        MsUtils.setItemRun(paragraph.createRun(), 10, false, "    年  月  日");
     }
 
     private void renderFooter(XWPFDocument doc, CheckReport report){
         XWPFParagraph paragraph = doc.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
-        paragraph.setSpacingBetween(2, LineSpacingRule.AUTO);
-        XWPFRun run = paragraph.createRun();
-        run.setText(report.getPrintDetail());
-        run.setFontSize(10);
-        run.setFontFamily("宋体");
+        paragraph.setSpacingBetween(1.2, LineSpacingRule.AUTO);
+        MsUtils.setItemRun(paragraph.createRun(), 12, false, report.getPrintDetail());
     }
 }

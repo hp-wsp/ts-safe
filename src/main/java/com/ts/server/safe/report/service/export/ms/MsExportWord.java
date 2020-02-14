@@ -28,7 +28,7 @@ public class MsExportWord implements ExportWord {
      */
     public MsExportWord(){
         this.coverBuilder = new CoverBuilder();
-        this.entrustBuilder = new EntrustBuilder();
+        this.entrustBuilder = new DetailBuilder();
         this.companyBuilder = new CompanyBuilder();
         this.safeBuilder = new SafeBuilder();
         this.attachImgBuilder = new AttachImageBuilder();

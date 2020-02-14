@@ -1,14 +1,13 @@
 package com.ts.server.safe.report.service.export.wps;
 
 import com.ts.server.safe.company.domain.CompProduct;
-import com.ts.server.safe.company.domain.RiskChemical;
 import com.ts.server.safe.company.service.CompProductKey;
 import com.ts.server.safe.report.domain.CheckReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.*;
 
-import java.util.List;
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -30,9 +29,7 @@ import java.util.Optional;
         renderRisk(doc, report.getCompBaseInfo());
         renderSign(doc, report.getCompBaseInfo());
 
-        XWPFParagraph paragraph = doc.createParagraph();
-        XWPFRun run = paragraph.createRun();
-        run.addBreak(BreakType.PAGE);
+        WpsUtils.addEmptyParagraph(doc, 2);
     }
 
     private void renderTitle(XWPFDocument doc){
@@ -48,14 +45,14 @@ import java.util.Optional;
         setCellWidth(cell, "85%", info.getCompName());
         row = table.getRow(1);
         cell = row.getCell(0);
-        setCell(cell,"注册地址");
+        setCellWidth(cell,"15%","注册地址");
         cell = row.getCell(1);
-        setCell(cell, info.getRegAddress());
+        setCellWidth(cell, "85%", info.getRegAddress());
         row = table.getRow(2);
         cell = row.getCell(0);
-        setCell(cell,"社会信用代码");
+        setCellWidth(cell,"15%","社会信用代码");
         cell = row.getCell(1);
-        setCell(cell, info.getCreditCode());
+        setCellWidth(cell,"85%", info.getCreditCode());
         
         renderCompanyPerson(doc, info);
 
@@ -77,14 +74,6 @@ import java.util.Optional;
 
     private void setCellWidthLeft(XWPFTableCell cell, String width, String content){
         WpsUtils.setCellWidth(cell, width, content, ParagraphAlignment.LEFT);
-    }
-
-    private void setCell(XWPFTableCell cell, String content){
-        WpsUtils.setCell(cell, content, ParagraphAlignment.CENTER);
-    }
-
-    private void setCellLeft(XWPFTableCell cell, String content){
-        WpsUtils.setCell(cell, content, ParagraphAlignment.LEFT);
     }
 
     private void renderCompanyPerson(XWPFDocument doc, CheckReport.CompBaseInfo info) {
@@ -110,16 +99,6 @@ import java.util.Optional;
         cell = row.getCell(5);
         String mobile =  StringUtils.isBlank(person.getMobile())? "/" : person.getMobile();
         setCellWidth(cell, "25%", mobile);
-    }
-
-    private void setCell(XWPFTableCell cell, String width, String value, ParagraphAlignment alignment, boolean bold){
-        cell.setWidth(width);
-        XWPFParagraph paragraph = cell.getParagraphArray(0);
-        paragraph.setAlignment(alignment);
-        XWPFRun run = paragraph.createRun();
-        run.setText(value);
-        run.setFontSize(9);
-        run.setBold(bold);
     }
 
     private void renderDeclareCtg(XWPFDocument doc, CheckReport.CompBaseInfo info){
@@ -220,7 +199,7 @@ import java.util.Optional;
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         boolean enabled = getCheckBoxValue(info, CompProductKey.SJZDAQSCYH);
         renderCheckBox(paragraph, "是", enabled);
-        renderCheckBox(paragraph, "否", enabled);
+        renderCheckBox(paragraph, "否", !enabled);
     }
 
     private void renderDetail(XWPFDocument doc, CheckReport.CompBaseInfo info){
@@ -239,44 +218,13 @@ import java.util.Optional;
         XWPFTableCell cell = row.getCell(0);
         setCellWidth(cell, "100%", "生产、存储、使用涉及《危险化学品目录(2015版)》查询情况");
 
-        List<RiskChemical> riskChemicals = info.getRiskChemicals();
-        int rowCount = riskChemicals.isEmpty()? 2: riskChemicals.size() + 1;
-        table = createTable(doc, rowCount, 6);
-        renderRiskHead(table);
-
-        int rowIndex = 1;
-        for(RiskChemical r: riskChemicals){
-            row = table.getRow(rowIndex);
-            cell = row.getCell(0);
-            setCell(cell, String.valueOf(rowIndex));
-            cell = row.getCell(1);
-            setCell(cell, r.getName());
-            cell = row.getCell(2);
-            setCell(cell, r.getAlias());
-            cell = row.getCell(3);
-            setCell(cell, r.getCas());
-            cell = row.getCell(4);
-            setCell(cell, r.getMaxStore());
-            cell = row.getCell(5);
-            setCell(cell, r.getRemark());
-            ++rowIndex;
-        }
-    }
-
-    private void renderRiskHead(XWPFTable table){
-        XWPFTableRow row = table.getRow(0);
-        XWPFTableCell cell = row.getCell(0);
-        setCellWidth(cell, "8%", "序号");
-        cell = row.getCell(1);
-        setCellWidth(cell, "15%", "品名");
-        cell = row.getCell(2);
-        setCellWidth(cell, "15%", "别名");
-        cell = row.getCell(3);
-        setCellWidth(cell, "20%", "CAS号");
-        cell = row.getCell(4);
-        setCellWidth(cell, "16%", "最大存储量");
-        cell = row.getCell(5);
-        setCellWidth(cell, "26%", "备注");
+        WpsUtils.renderTable(doc, info.getRiskChemicals(), Arrays.asList(
+                new WpsUtils.ColSetting<>("8%", "序号", (e, i) -> String.valueOf(i)),
+                new WpsUtils.ColSetting<>("15%", "品名", (e, i) -> e.getName()),
+                new WpsUtils.ColSetting<>("15%", "别名", (e, i) -> e.getAlias()),
+                new WpsUtils.ColSetting<>("20%", "CAS号", (e, i) -> e.getCas()),
+                new WpsUtils.ColSetting<>("16%", "最大存储量", (e, i) -> e.getMaxStore()),
+                new WpsUtils.ColSetting<>("26%", "备注", (e, i) -> e.getRemark())));
     }
 
     private void renderSign(XWPFDocument doc, CheckReport.CompBaseInfo info){

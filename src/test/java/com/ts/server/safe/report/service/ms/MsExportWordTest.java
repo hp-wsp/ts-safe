@@ -33,9 +33,11 @@ public class MsExportWordTest {
         t.setChannelName("委托检查单位");
         t.setIndustry("酒店");
         t.setArea("上海");
+        t.setCheckTimeFrom("2020年01月01日");
+        t.setCheckTimeTo("2020年03月01日");
+        t.setPrintDetail("本报告一式三份，委托单位、受检企业、报告出具单位各一份");
         t.setEntScale(1);
-        //TODO 日期
-        //t.setCheckDate("2020-01-01至2020-01-20");
+        t.setArea("上海闵行银都新村 一区26栋601");
 
         CheckReport.ReportDetail bzDetail = new CheckReport.ReportDetail();
         bzDetail.setConNum("1111-222222-333");
@@ -142,6 +144,9 @@ public class MsExportWordTest {
         spePersons.add(person);
         safeProduct.setSpePersons(spePersons);
         safeProduct.setSpePerson(true);
+        images = new ArrayList<>();
+        images.add("/Users/wangwei/work/workspace/ts-safe/src/test/resources/aaa.png");
+        safeProduct.setImages(images.toArray(String[]::new));
 
         return t;
     }
