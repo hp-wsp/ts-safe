@@ -38,13 +38,13 @@ public class CheckReportDao {
     public void insert(CheckReport t){
         final String sql = "INSERT INTO c_check_report (id, channel_id, channel_name, comp_id, comp_name, task_id, task_detail, " +
                 "service_id, service_name, cycle_name, ent_comp_type, industry, ent_scale, area, check_time_from, check_time_to, " +
-                "report_detail, comp_base_info, safe_product, update_time, create_time) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+                "report_detail, comp_base_info, safe_product, print_detail, update_time, create_time) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getChannelName(), t.getCompId(), t.getCompName(), t.getTaskId(),
                 t.getTaskDetail(), t.getServiceId(), t.getServiceName(), t.getCycleName(), t.getEntCompType(), t.getIndustry(),
                 t.getEntScale(), t.getArea(), t.getCheckTimeFrom(), t.getCheckTimeTo(), toJson(t.getReportDetail()),
-                toJson(t.getCompBaseInfo()), toJson(t.getSafeProduct()));
+                toJson(t.getCompBaseInfo()), toJson(t.getSafeProduct()), t.getPrintDetail());
     }
 
     private String toJson(Object object){
@@ -58,12 +58,12 @@ public class CheckReportDao {
     public boolean update(CheckReport t){
         final String sql = "UPDATE c_check_report SET comp_id = ?, comp_name = ?, task_id = ?, task_detail = ?, service_id = ?," +
                 "service_name = ?, cycle_name = ?, ent_comp_type = ?, industry = ?, ent_scale = ?,area = ?, check_time_from = ?, " +
-                "check_time_to = ?, report_detail = ?, comp_base_info = ?, safe_product = ?, update_time = now() WHERE id = ?";
+                "check_time_to = ?, report_detail = ?, comp_base_info = ?, safe_product = ?, print_detail=?, update_time = now() WHERE id = ?";
 
         return jdbcTemplate.update(sql, t.getCompId(), t.getCompName(), t.getTaskId(), t.getTaskDetail(), t.getServiceId(),
                 t.getServiceName(), t.getCycleName(), t.getEntCompType(), t.getIndustry(), t.getEntScale(),
                 t.getArea(), t.getCheckTimeFrom(), t.getCheckTimeFrom(), toJson(t.getReportDetail()), toJson(t.getCompBaseInfo()),
-                toJson(t.getSafeProduct()), t.getId()) > 0;
+                toJson(t.getSafeProduct()), t.getPrintDetail(), t.getId()) > 0;
     }
 
     public CheckReport findOne(String id){

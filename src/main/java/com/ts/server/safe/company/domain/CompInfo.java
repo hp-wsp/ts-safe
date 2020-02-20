@@ -51,7 +51,7 @@ public class CompInfo {
     private String safePhone;
     @ApiModelProperty("安全管理员手机")
     private String safeMobile;
-    @ApiModelProperty("联系")
+    @ApiModelProperty("联系人")
     private String contact;
     @ApiModelProperty("电话")
     private String phone;

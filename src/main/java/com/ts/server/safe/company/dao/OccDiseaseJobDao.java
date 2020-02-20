@@ -80,7 +80,7 @@ public class OccDiseaseJobDao {
     }
 
     public List<OccDiseaseJob> find(String compId, String job, int offset, int limit){
-        final String sql = "SELECT * FROM c_occ_disease_job WHERE comp_id = ? AND job LIKE ORDER BY id ASC LIMIT ? OFFSET ?";
+        final String sql = "SELECT * FROM c_occ_disease_job WHERE comp_id = ? AND job LIKE ? ORDER BY id ASC LIMIT ? OFFSET ?";
         String jobLike = DaoUtils.like(job);
         return jdbcTemplate.query(sql, new Object[]{compId, jobLike, limit, offset}, mapper);
     }
