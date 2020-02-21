@@ -64,7 +64,7 @@ public class OccDiseaseJobDao {
 
     public OccDiseaseJob findOne(String id){
         final String sql = "SELECT * FROM c_occ_disease_job WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, mapper);
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
     }
 
     public boolean hasJob(String job){

@@ -46,7 +46,7 @@ public class CompProductManController {
         if(!StringUtils.equals(info.getChannelId(), getCredential().getChannelId())){
             throw new BaseException("不能添加企业生产信息");
         }
-        List<CompProduct> products = form.getProducts().stream().map(e -> {
+        List<CompProduct> products = form.getProducts().stream().filter(e -> e.getValue() != null).map(e -> {
             CompProduct t = new CompProduct();
             t.setProKey(e.getKey());
             t.setProValue(e.getValue());
