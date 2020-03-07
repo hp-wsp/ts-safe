@@ -1,6 +1,6 @@
 package com.ts.server.safe.report.controller.man.form;
 
-import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.domain.IniReport;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class CheckReportUpdateForm extends CheckReportSaveForm {
+public class IniReportUpdateForm extends IniReportSaveForm {
     @ApiModelProperty("编号")
     private String id;
 
@@ -21,8 +21,8 @@ public class CheckReportUpdateForm extends CheckReportSaveForm {
     }
 
     @Override
-    public CheckReport toDomain() {
-        CheckReport t = super.toDomain();
+    public IniReport toDomain() {
+        IniReport t = super.toDomain();
 
         t.setId(id);
 

@@ -1,14 +1,11 @@
 package com.ts.server.safe.contract.service;
 
 import com.ts.server.safe.BaseException;
+import com.ts.server.safe.contract.dao.ConServiceDao;
 import com.ts.server.safe.contract.dao.ContractDao;
-import com.ts.server.safe.company.domain.CompInfo;
 import com.ts.server.safe.contract.domain.Contract;
 import com.ts.server.safe.common.id.IdGenerators;
-import com.ts.server.safe.company.service.CompInfoService;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -25,15 +22,13 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class ContractService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ContractService.class);
-
     private final ContractDao dao;
-    private final CompInfoService compInfoService;
+    private final ConServiceDao serviceDao;
 
     @Autowired
-    public ContractService(ContractDao dao, CompInfoService compInfoService) {
+    public ContractService(ContractDao dao, ConServiceDao serviceDao) {
         this.dao = dao;
-        this.compInfoService = compInfoService;
+        this.serviceDao = serviceDao;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -44,9 +39,6 @@ public class ContractService {
 
         t.setId(IdGenerators.uuid());
 
-        CompInfo info = compInfoService.get(t.getSerCompId());
-        t.setSerCompName(info.getName());
-
         dao.insert(t);
 
         return dao.findOne(t.getId());
@@ -55,13 +47,11 @@ public class ContractService {
     @Transactional(propagation = Propagation.REQUIRED)
     public Contract update(Contract t){
         Contract o = get(t.getId());
+
         if(!StringUtils.equals(o.getNum(), t.getNum()) &&
                 dao.hasNum(o.getChannelId(), t.getNum())){
             throw  new BaseException("合同编号已经存在");
         }
-
-        CompInfo info = compInfoService.get(t.getSerCompId());
-        t.setSerCompName(info.getName());
 
         if(!dao.update(t)){
             throw new BaseException("修改合同失败");
@@ -81,15 +71,15 @@ public class ContractService {
     @Transactional(propagation = Propagation.REQUIRED)
     public boolean delete(String id){
         Contract t = get(id);
-        if(StringUtils.isNotBlank(t.getServiceId())){
-            throw new BaseException("合同已经分配服务");
+        if(serviceDao.hasContract(id)){
+            throw new BaseException("已经分配服务，不能删除");
         }
         return dao.delete(id);
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public boolean updateService(String id, String serviceId){
-        return dao.updateService(id, serviceId);
+    public boolean updateComplete(String id, boolean isComplete){
+        return dao.updateComplete(id, isComplete);
     }
 
     public Long count(String channelId, String name, String num,
@@ -102,9 +92,5 @@ public class ContractService {
                                 String proAddress, Integer entCompType, int offset, int limit){
 
         return dao.find(channelId, name, num, entCompName, proAddress, entCompType, offset, limit);
-    }
-
-    public List<Contract> queryNoneAlloc(String channelId){
-        return dao.findNoneAlloc(channelId);
     }
 }

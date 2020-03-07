@@ -1,6 +1,6 @@
 package com.ts.server.safe.report.service.export.wps;
 
-import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.domain.IniReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
@@ -16,7 +16,7 @@ class CoverBuilder implements PageBuilder {
     private static final String[] ENT_SCALES = new String[]{"", "大型", "中型", "小型", "微型"};
 
     @Override
-    public void build(XWPFDocument doc, CheckReport report) {
+    public void build(XWPFDocument doc, IniReport report) {
 
         renderTitle(doc);
 
@@ -46,7 +46,7 @@ class CoverBuilder implements PageBuilder {
         WpsUtils.addEmptyParagraph(doc, 15);
     }
 
-    private void renderContent(XWPFDocument doc, CheckReport report){
+    private void renderContent(XWPFDocument doc, IniReport report){
 
         renderContentRow1(doc, report);
         renderContentRow2(doc, report);
@@ -55,7 +55,7 @@ class CoverBuilder implements PageBuilder {
         renderContentRow5(doc, report);
     }
 
-    private void renderContentRow1(XWPFDocument doc, CheckReport report){
+    private void renderContentRow1(XWPFDocument doc, IniReport report){
         XWPFTableRow row = createContentRow(doc,2);
         XWPFTableCell cell = row.getCell(0);
         setContentLabel(cell, "企业名称", 360 * 5);
@@ -91,7 +91,7 @@ class CoverBuilder implements PageBuilder {
         WpsUtils.setCellWidthBorder(cell, widthPix, new boolean[]{false, false, true, false});
     }
 
-    private void renderContentRow2(XWPFDocument doc, CheckReport report){
+    private void renderContentRow2(XWPFDocument doc, IniReport report){
         XWPFTableRow row = createContentRow(doc,4);
         XWPFTableCell cell = row.getCell(0);
         setContentLabel(cell, "委托检查单位", 360 * 5);
@@ -108,7 +108,7 @@ class CoverBuilder implements PageBuilder {
         setContentValue(cell, ENT_SCALES[report.getEntScale()], 360 * 3);
     }
 
-    private void renderContentRow3(XWPFDocument doc, CheckReport report){
+    private void renderContentRow3(XWPFDocument doc, IniReport report){
         XWPFTableRow row = createContentRow(doc,2);
         XWPFTableCell cell = row.getCell(0);
         setContentLabel(cell, "所属行业", 360 * 5);
@@ -116,7 +116,7 @@ class CoverBuilder implements PageBuilder {
         setContentValue(cell, report.getIndustry(), 360 * 16);
     }
 
-    private void renderContentRow4(XWPFDocument doc, CheckReport report){
+    private void renderContentRow4(XWPFDocument doc, IniReport report){
         XWPFTableRow row = createContentRow(doc,2);
         XWPFTableCell cell = row.getCell(0);
         setContentLabel(cell, "所属区域", 360 * 5);
@@ -124,7 +124,7 @@ class CoverBuilder implements PageBuilder {
         setContentValue(cell, report.getArea(), 360 * 16);
     }
 
-    private void renderContentRow5(XWPFDocument doc, CheckReport report){
+    private void renderContentRow5(XWPFDocument doc, IniReport report){
         XWPFTableRow row = createContentRow(doc,2);
         XWPFTableCell cell = row.getCell(0);
         setContentLabel(cell, "检查日期", 360 * 5);
@@ -138,7 +138,7 @@ class CoverBuilder implements PageBuilder {
      *
      * @param doc {@link XWPFDocument}
      */
-    private void renderFooter(XWPFDocument doc, CheckReport report){
+    private void renderFooter(XWPFDocument doc, IniReport report){
         WpsUtils.addEmptyParagraph(doc, 18);
 
         XWPFParagraph paragraph = doc.createParagraph();

@@ -3,8 +3,8 @@ package com.ts.server.safe.report.service;
 import com.ts.server.safe.BaseException;
 import com.ts.server.safe.channel.service.CheckContentService;
 import com.ts.server.safe.common.id.IdGenerators;
-import com.ts.server.safe.report.dao.CheckReportDao;
-import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.dao.IniReportDao;
+import com.ts.server.safe.report.domain.IniReport;
 import com.ts.server.safe.report.service.export.ExportWord;
 import com.ts.server.safe.report.service.export.ms.MsExportWord;
 import com.ts.server.safe.report.service.export.wps.WpsExportWord;
@@ -22,24 +22,24 @@ import java.io.OutputStream;
 import java.util.List;
 
 /**
- * 检查报表服务
+ * 初检报表服务
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 @Service
 @Transactional(readOnly = true)
-public class CheckReportService {
+public class IniReportService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckContentService.class);
 
-    private final CheckReportDao dao;
+    private final IniReportDao dao;
 
     @Autowired
-    public CheckReportService(CheckReportDao dao) {
+    public IniReportService(IniReportDao dao) {
         this.dao = dao;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public CheckReport save(CheckReport t){
+    public IniReport save(IniReport t){
 
         boolean has = dao.hasCycleName(t.getChannelId(), t.getCycleName());
         if(has){
@@ -53,8 +53,8 @@ public class CheckReportService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public CheckReport update(CheckReport t){
-        CheckReport o  = get(t.getId());
+    public IniReport update(IniReport t){
+        IniReport o  = get(t.getId());
         if(!StringUtils.equals(o.getCycleName(), t.getCycleName()) &&
                 dao.hasCycleName(o.getChannelId(), t.getCycleName())){
             throw new BaseException("检查周期名称已经存在");
@@ -67,7 +67,7 @@ public class CheckReportService {
         return get(t.getId());
     }
 
-    public CheckReport get(String id){
+    public IniReport get(String id){
         try{
             return dao.findOne(id);
         }catch (DataAccessException e){
@@ -88,7 +88,7 @@ public class CheckReportService {
         return dao.count(channelId, compName, cycleName);
     }
 
-    public List<CheckReport> query(String channelId, String compName, String cycleName, int offset, int limit){
+    public List<IniReport> query(String channelId, String compName, String cycleName, int offset, int limit){
         return dao.find(channelId, compName, cycleName, offset, limit);
     }
 

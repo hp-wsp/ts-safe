@@ -25,6 +25,7 @@ public class CompProductDao {
         t.setChannelId(r.getString("channel_id"));
         t.setCompId(r.getString("comp_id"));
         t.setProKey(r.getString("pro_key"));
+        t.setProName(r.getString("pro_name"));
         t.setProValue(r.getInt("pro_value"));
         t.setCreateTime(r.getTimestamp("create_time"));
 
@@ -37,9 +38,9 @@ public class CompProductDao {
     }
 
     public void insert(CompProduct t){
-        final String sql = "INSERT INTO c_comp_product (channel_id, comp_id, pro_key, pro_value, create_time) " +
-                "VALUES (?, ?, ?, ?, now())";
-        jdbcTemplate.update(sql, t.getChannelId(), t.getCompId(), t.getProKey(), t.getProValue());
+        final String sql = "INSERT INTO c_comp_product (channel_id, comp_id, pro_key, pro_name, pro_value, create_time) " +
+                "VALUES (?, ?, ?, ?, ?, now())";
+        jdbcTemplate.update(sql, t.getChannelId(), t.getCompId(), t.getProKey(), t.getProName(), t.getProValue());
     }
 
     public void deleteByCompId(String compId){

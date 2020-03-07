@@ -11,11 +11,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.*;
 
 /**
- * 检查报告
+ * 初检报告
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class CheckReport {
+public class IniReport {
     @ApiModelProperty(value = "编号")
     private String id;
     @ApiModelProperty(value = "服务商编号")
@@ -241,7 +241,7 @@ public class CheckReport {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CheckReport report = (CheckReport) o;
+        IniReport report = (IniReport) o;
         return entCompType == report.entCompType &&
                 entScale == report.entScale &&
                 Objects.equals(id, report.id) &&
@@ -733,9 +733,9 @@ public class CheckReport {
      */
     public static class SafeProduct {
         @ApiModelProperty("基础管理隐患描述及治理措施")
-        private List<TaskContent> baseContents = new ArrayList<>();
+        private List<ReportItem> baseContents = new ArrayList<>();
         @ApiModelProperty("现场管理隐患描述及治理措施")
-        private List<TaskContent> sceneContents = new ArrayList<>();
+        private List<ReportItem> sceneContents = new ArrayList<>();
         @ApiModelProperty("职业健康危害因素")
         private List<OccDiseaseJob> occDiseaseJobs = new ArrayList<>();
         @ApiModelProperty("职业病危害风险分类辨识")
@@ -757,19 +757,19 @@ public class CheckReport {
         @ApiModelProperty("本报告相关附图")
         private String[] images = new String[0];
 
-        public List<TaskContent> getBaseContents() {
+        public List<ReportItem> getBaseContents() {
             return baseContents;
         }
 
-        public void setBaseContents(List<TaskContent> baseContents) {
+        public void setBaseContents(List<ReportItem> baseContents) {
             this.baseContents = baseContents;
         }
 
-        public List<TaskContent> getSceneContents() {
+        public List<ReportItem> getSceneContents() {
             return sceneContents;
         }
 
-        public void setSceneContents(List<TaskContent> sceneContents) {
+        public void setSceneContents(List<ReportItem> sceneContents) {
             this.sceneContents = sceneContents;
         }
 

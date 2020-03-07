@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -16,8 +17,6 @@ public class Contract {
     private String id;
     @ApiModelProperty("服务商编号")
     private String channelId;
-    @ApiModelProperty("服务编号")
-    private String serviceId;
     @ApiModelProperty("合同编号")
     private String num;
     @ApiModelProperty("合同名称")
@@ -28,10 +27,8 @@ public class Contract {
     private int entCompType;
     @ApiModelProperty("委托单位")
     private String entCompName;
-    @ApiModelProperty("服务企业编号")
-    private String serCompId;
-    @ApiModelProperty("服务企业名称")
-    private String serCompName;
+    @ApiModelProperty("服务企业集合")
+    private List<SerCompany> serCompanies;
     @ApiModelProperty("委托服务地址")
     private String serAddress;
     @ApiModelProperty("签订合同时间")
@@ -52,6 +49,10 @@ public class Contract {
     private String sigPerson;
     @ApiModelProperty("我方签单单位")
     private String sigCompany;
+    @ApiModelProperty("附件集合")
+    private List<String> attaches;
+    @ApiModelProperty("合同是否完成")
+    private boolean complete;
     @ApiModelProperty("修改时间")
     private Date updateTime;
     @ApiModelProperty("创建时间")
@@ -63,14 +64,6 @@ public class Contract {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(String serviceId) {
-        this.serviceId = serviceId;
     }
 
     public String getChannelId() {
@@ -121,20 +114,12 @@ public class Contract {
         this.entCompName = entCompName;
     }
 
-    public String getSerCompId() {
-        return serCompId;
+    public List<SerCompany> getSerCompanies() {
+        return serCompanies;
     }
 
-    public void setSerCompId(String serCompId) {
-        this.serCompId = serCompId;
-    }
-
-    public String getSerCompName() {
-        return serCompName;
-    }
-
-    public void setSerCompName(String serCompName) {
-        this.serCompName = serCompName;
+    public void setSerCompanies(List<SerCompany> serCompanies) {
+        this.serCompanies = serCompanies;
     }
 
     public String getSerAddress() {
@@ -217,6 +202,22 @@ public class Contract {
         this.sigCompany = sigCompany;
     }
 
+    public List<String> getAttaches() {
+        return attaches;
+    }
+
+    public void setAttaches(List<String> attaches) {
+        this.attaches = attaches;
+    }
+
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public void setComplete(boolean complete) {
+        this.complete = complete;
+    }
+
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -240,15 +241,14 @@ public class Contract {
         Contract contract = (Contract) o;
         return entCompType == contract.entCompType &&
                 amount == contract.amount &&
+                complete == contract.complete &&
                 Objects.equals(id, contract.id) &&
                 Objects.equals(channelId, contract.channelId) &&
-                Objects.equals(serviceId, contract.serviceId) &&
                 Objects.equals(num, contract.num) &&
                 Objects.equals(name, contract.name) &&
                 Objects.equals(conProject, contract.conProject) &&
                 Objects.equals(entCompName, contract.entCompName) &&
-                Objects.equals(serCompId, contract.serCompId) &&
-                Objects.equals(serCompName, contract.serCompName) &&
+                Objects.equals(serCompanies, contract.serCompanies) &&
                 Objects.equals(serAddress, contract.serAddress) &&
                 Objects.equals(sigConDate, contract.sigConDate) &&
                 Objects.equals(proAddress, contract.proAddress) &&
@@ -258,13 +258,14 @@ public class Contract {
                 Objects.equals(ownPhone, contract.ownPhone) &&
                 Objects.equals(sigPerson, contract.sigPerson) &&
                 Objects.equals(sigCompany, contract.sigCompany) &&
+                Objects.equals(attaches, contract.attaches) &&
                 Objects.equals(updateTime, contract.updateTime) &&
                 Objects.equals(createTime, contract.createTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, channelId, serviceId, num, name, conProject, entCompType, entCompName, serCompId, serCompName, serAddress, sigConDate, proAddress, serConDateFrom, serConDateTo, amount, ownPerson, ownPhone, sigPerson, sigCompany, updateTime, createTime);
+        return Objects.hash(id, channelId, num, name, conProject, entCompType, entCompName, serCompanies, serAddress, sigConDate, proAddress, serConDateFrom, serConDateTo, amount, ownPerson, ownPhone, sigPerson, sigCompany, attaches, complete, updateTime, createTime);
     }
 
     @Override
@@ -272,14 +273,12 @@ public class Contract {
         return new ToStringBuilder(this)
                 .append("id", id)
                 .append("channelId", channelId)
-                .append("serviceId", serviceId)
                 .append("num", num)
                 .append("name", name)
                 .append("conProject", conProject)
                 .append("entCompType", entCompType)
                 .append("entCompName", entCompName)
-                .append("serCompId", serCompId)
-                .append("serCompName", serCompName)
+                .append("serCompanies", serCompanies)
                 .append("serAddress", serAddress)
                 .append("sigConDate", sigConDate)
                 .append("proAddress", proAddress)
@@ -290,8 +289,58 @@ public class Contract {
                 .append("ownPhone", ownPhone)
                 .append("sigPerson", sigPerson)
                 .append("sigCompany", sigCompany)
+                .append("attaches", attaches)
+                .append("complete", complete)
                 .append("updateTime", updateTime)
                 .append("createTime", createTime)
                 .toString();
+    }
+
+    /**
+     * 合同服务器企业
+     */
+    public static class SerCompany{
+        @ApiModelProperty("企业编号")
+        private String id;
+        @ApiModelProperty("企业名称")
+        private String name;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            SerCompany that = (SerCompany) o;
+            return Objects.equals(id, that.id) &&
+                    Objects.equals(name, that.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, name);
+        }
+
+        @Override
+        public String toString() {
+            return new ToStringBuilder(this)
+                    .append("id", id)
+                    .append("name", name)
+                    .toString();
+        }
     }
 }

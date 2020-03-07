@@ -2,7 +2,7 @@ package com.ts.server.safe.report.service.export.wps;
 
 import com.ts.server.safe.company.domain.CompProduct;
 import com.ts.server.safe.company.service.CompProductKey;
-import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.domain.IniReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.*;
@@ -18,7 +18,7 @@ import java.util.Optional;
  class CompanyBuilder implements PageBuilder {
 
     @Override
-    public void build(XWPFDocument doc, CheckReport report) {
+    public void build(XWPFDocument doc, IniReport report) {
 
         renderTitle(doc);
 
@@ -36,7 +36,7 @@ import java.util.Optional;
         WpsUtils.pageTitle(doc, "二、受检企业基本情况");
     }
 
-    private void renderInfo(XWPFDocument doc, CheckReport.CompBaseInfo info){
+    private void renderInfo(XWPFDocument doc, IniReport.CompBaseInfo info){
         XWPFTable table = createTable(doc, 3, 2);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -76,14 +76,14 @@ import java.util.Optional;
         WpsUtils.setCellWidth(cell, width, content, ParagraphAlignment.LEFT);
     }
 
-    private void renderCompanyPerson(XWPFDocument doc, CheckReport.CompBaseInfo info) {
+    private void renderCompanyPerson(XWPFDocument doc, IniReport.CompBaseInfo info) {
         XWPFTable table = createTable(doc, 3, 6);
         renderPerson(table, 0, "法定代表人", info.getConPerson());
         renderPerson(table, 1, "安全管理人", info.getConPerson());
         renderPerson(table, 2, "联 系 人", info.getConPerson());
     }
 
-    private void renderPerson(XWPFTable table, int rowIndex, String title, CheckReport.PersonInfo person){
+    private void renderPerson(XWPFTable table, int rowIndex, String title, IniReport.PersonInfo person){
         XWPFTableRow row = table.getRow(rowIndex);
         XWPFTableCell cell = row.getCell(0);
         setCellWidth(cell, "15%", title);
@@ -101,7 +101,7 @@ import java.util.Optional;
         setCellWidth(cell, "25%", mobile);
     }
 
-    private void renderDeclareCtg(XWPFDocument doc, CheckReport.CompBaseInfo info){
+    private void renderDeclareCtg(XWPFDocument doc, IniReport.CompBaseInfo info){
         XWPFTable table = createTable(doc, 6, 1);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -123,7 +123,7 @@ import java.util.Optional;
         renderRow5CheckBox(cell, info);
     }
 
-    private void renderRow1CheckBox(XWPFTableCell cell, CheckReport.CompBaseInfo info){
+    private void renderRow1CheckBox(XWPFTableCell cell, IniReport.CompBaseInfo info){
         XWPFParagraph paragraph = cell.getParagraphArray(0);
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         cell.setWidth("100%");
@@ -132,11 +132,11 @@ import java.util.Optional;
         renderCheckBox(paragraph, "有限作业场所", getCheckBoxValue(info, CompProductKey.YXCS));
     }
 
-    private boolean getCheckBoxValue(CheckReport.CompBaseInfo info, CompProductKey compProductKey){
+    private boolean getCheckBoxValue(IniReport.CompBaseInfo info, CompProductKey compProductKey){
         return getCompProductOpt(info, compProductKey).map(e -> e.getProValue() == 1).orElse(false);
     }
 
-    private Optional<CompProduct> getCompProductOpt(CheckReport.CompBaseInfo info, CompProductKey compProductKey){
+    private Optional<CompProduct> getCompProductOpt(IniReport.CompBaseInfo info, CompProductKey compProductKey){
         return info.getProducts().stream()
                 .filter(e -> StringUtils.equals(e.getProKey(), compProductKey.getKey()))
                 .findFirst();
@@ -146,7 +146,7 @@ import java.util.Optional;
         WpsUtils.checkBox(paragraph, label, enable);
     }
 
-    private void renderRow2CheckBox(XWPFTableCell cell, CheckReport.CompBaseInfo info){
+    private void renderRow2CheckBox(XWPFTableCell cell, IniReport.CompBaseInfo info){
         XWPFParagraph paragraph = cell.getParagraphArray(0);
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         cell.setWidth("100%");
@@ -159,7 +159,7 @@ import java.util.Optional;
         run.setText(")");
     }
 
-    private void renderRow3CheckBox(XWPFTableCell cell, CheckReport.CompBaseInfo info){
+    private void renderRow3CheckBox(XWPFTableCell cell, IniReport.CompBaseInfo info){
         XWPFParagraph paragraph = cell.getParagraphArray(0);
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         cell.setWidth("100%");
@@ -169,7 +169,7 @@ import java.util.Optional;
         renderCheckBox(paragraph, "使用单位", value == 2);
     }
 
-    private void renderRow4CheckBox(XWPFTableCell cell, CheckReport.CompBaseInfo info){
+    private void renderRow4CheckBox(XWPFTableCell cell, IniReport.CompBaseInfo info){
         XWPFParagraph paragraph = cell.getParagraphArray(0);
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         cell.setWidth("100%");
@@ -178,7 +178,7 @@ import java.util.Optional;
         renderCheckBox(paragraph, "经营单位", value == 1);
     }
 
-    private void renderRow5CheckBox(XWPFTableCell cell, CheckReport.CompBaseInfo info){
+    private void renderRow5CheckBox(XWPFTableCell cell, IniReport.CompBaseInfo info){
         XWPFParagraph paragraph = cell.getParagraphArray(0);
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         cell.setWidth("100%");
@@ -188,7 +188,7 @@ import java.util.Optional;
         renderCheckBox(paragraph, "小型露天采石场", value == 2);
     }
 
-    private void renderGreatTable(XWPFDocument doc, CheckReport.CompBaseInfo info){
+    private void renderGreatTable(XWPFDocument doc, IniReport.CompBaseInfo info){
         XWPFTable table = createTable(doc, 1, 2);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -202,7 +202,7 @@ import java.util.Optional;
         renderCheckBox(paragraph, "否", !enabled);
     }
 
-    private void renderDetail(XWPFDocument doc, CheckReport.CompBaseInfo info){
+    private void renderDetail(XWPFDocument doc, IniReport.CompBaseInfo info){
         XWPFTable table = createTable(doc, 2, 1);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -212,7 +212,7 @@ import java.util.Optional;
         setCellWidthLeft(cell, "100%", info.getProductDetail());
     }
 
-    private void renderRisk(XWPFDocument doc, CheckReport.CompBaseInfo info){
+    private void renderRisk(XWPFDocument doc, IniReport.CompBaseInfo info){
         XWPFTable table = createTable(doc, 1, 1);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -227,7 +227,7 @@ import java.util.Optional;
                 new WpsUtils.ColSetting<>("26%", "备注", (e, i) -> e.getRemark())));
     }
 
-    private void renderSign(XWPFDocument doc, CheckReport.CompBaseInfo info){
+    private void renderSign(XWPFDocument doc, IniReport.CompBaseInfo info){
         XWPFTable table = createTable(doc, 2, 1);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);

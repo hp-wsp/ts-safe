@@ -1,6 +1,6 @@
 package com.ts.server.safe.report.service.export.ms;
 
-import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.domain.IniReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import org.apache.poi.xwpf.usermodel.*;
 
@@ -14,7 +14,7 @@ import java.util.List;
 class DetailBuilder implements PageBuilder {
 
     @Override
-    public void build(XWPFDocument doc, CheckReport report) {
+    public void build(XWPFDocument doc, IniReport report) {
         renderTitle(doc);
 
         XWPFTable table = createTable(doc, report);
@@ -33,14 +33,14 @@ class DetailBuilder implements PageBuilder {
         MsUtils.pageTitle(doc, "一、编制说明");
     }
 
-    private XWPFTable createTable(XWPFDocument doc, CheckReport report){
+    private XWPFTable createTable(XWPFDocument doc, IniReport report){
         int rowCount = mathRowCount(report);
         XWPFTable table = MsUtils.createTable(doc, rowCount, 6);
         fixColumnWidth(table);
         return table;
     }
 
-    private int mathRowCount(CheckReport report){
+    private int mathRowCount(IniReport report){
         return 17 + Math.max(report.getReportDetail().getWorkers().size(), 1);
     }
 
@@ -60,7 +60,7 @@ class DetailBuilder implements PageBuilder {
         cell.setWidth("20%");
     }
 
-    private void renderProductInfo(XWPFTable table, CheckReport report){
+    private void renderProductInfo(XWPFTable table, IniReport report){
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, "1.安全生产社会化信息");
@@ -94,7 +94,7 @@ class DetailBuilder implements PageBuilder {
         MsUtils.setCell(cell, content, alignment, bold);
     }
 
-    private void renderServiceRequest(XWPFTable table, CheckReport report){
+    private void renderServiceRequest(XWPFTable table, IniReport report){
         XWPFTableRow row = table.getRow(2);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell,  "2.委托服务要求");
@@ -132,7 +132,7 @@ class DetailBuilder implements PageBuilder {
     }
 
 
-    private void renderCompInfo(XWPFTable table, CheckReport.ReportDetail detail){
+    private void renderCompInfo(XWPFTable table, IniReport.ReportDetail detail){
         XWPFTableRow row = table.getRow(7);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, "3.受委托单位信息");
@@ -160,7 +160,7 @@ class DetailBuilder implements PageBuilder {
         MsUtils.mergeCellsH(row, 1, 6);
     }
 
-    private void renderContactPerson(XWPFTable table, CheckReport.ReportDetail detail){
+    private void renderContactPerson(XWPFTable table, IniReport.ReportDetail detail){
         XWPFTableRow row = table.getRow(11);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, "法定代表人");
@@ -176,7 +176,7 @@ class DetailBuilder implements PageBuilder {
         setCellValueCenter(cell, detail.getChanContact().getMobile());
     }
 
-    private int renderWorkPersons(XWPFTable table, CheckReport.ReportDetail detail){
+    private int renderWorkPersons(XWPFTable table, IniReport.ReportDetail detail){
         XWPFTableRow row = table.getRow(12);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, "分工");
@@ -193,13 +193,13 @@ class DetailBuilder implements PageBuilder {
         renderWorkPerson(table, 13, "组长", detail.getLeader());
 
         if(detail.getWorkers().isEmpty()){
-            CheckReport.PersonInfo emptyPerson = new CheckReport.PersonInfo();
+            IniReport.PersonInfo emptyPerson = new IniReport.PersonInfo();
             emptyPerson.setName("");
             emptyPerson.setPhone("");
             renderWorkPerson(table, 14, "成员", emptyPerson);
             return 14;
         }
-        List<CheckReport.PersonInfo> workers = detail.getWorkers();
+        List<IniReport.PersonInfo> workers = detail.getWorkers();
         for(int i = 0; i < workers.size(); i++){
             int rowIndex = 14 + i;
             renderWorkPerson(table, rowIndex, "成员", workers.get(i));
@@ -207,7 +207,7 @@ class DetailBuilder implements PageBuilder {
         return 13 + workers.size();
     }
 
-    private void renderWorkPerson(XWPFTable table, int rowIndex, String label, CheckReport.PersonInfo person){
+    private void renderWorkPerson(XWPFTable table, int rowIndex, String label, IniReport.PersonInfo person){
         XWPFTableRow row = table.getRow(rowIndex);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, label);
@@ -222,15 +222,15 @@ class DetailBuilder implements PageBuilder {
         setCellValueCenter(cell, person.getPhone());
     }
 
-    private void renderSignature(XWPFTable table, int offsetRow, CheckReport report){
+    private void renderSignature(XWPFTable table, int offsetRow, IniReport report){
         renderSignaturePerson(table, offsetRow + 1, "主要负责人", report.getReportDetail().getPrincipalPerson());
         renderSignaturePerson(table, offsetRow + 2, "报告审核人", report.getReportDetail().getAuditPerson());
         renderSignaturePerson(table, offsetRow + 3, "报告审核人", report.getReportDetail().getReportPerson());
         MsUtils.mergeCellsV(table, 4, offsetRow + 1, offsetRow + 3);
     }
 
-    private void renderSignaturePerson(XWPFTable table, int rowIndex, String label, CheckReport.PersonInfo person){
-        person = person == null? new CheckReport.PersonInfo(): person;
+    private void renderSignaturePerson(XWPFTable table, int rowIndex, String label, IniReport.PersonInfo person){
+        person = person == null? new IniReport.PersonInfo(): person;
         XWPFTableRow row = table.getRow(rowIndex);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, label);

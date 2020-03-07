@@ -1,6 +1,6 @@
 package com.ts.server.safe.report.service.export.wps;
 
-import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.domain.IniReport;
 import com.ts.server.safe.report.service.export.ExportWord;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
@@ -38,11 +38,11 @@ public class WpsExportWord implements ExportWord {
      * 导出WORD
      *
      * @param outputStream {@link OutputStream}
-     * @param report {@link CheckReport}
+     * @param report {@link IniReport}
      * @throws IOException
      */
     @Override
-    public void export(OutputStream outputStream, CheckReport report)throws IOException {
+    public void export(OutputStream outputStream, IniReport report)throws IOException {
 
         try(XWPFDocument doc = new XWPFDocument()){
 

@@ -1,16 +1,13 @@
 package com.ts.server.safe.report.service.export.ms;
 
 import com.ts.server.safe.company.domain.CompProduct;
-import com.ts.server.safe.company.domain.RiskChemical;
 import com.ts.server.safe.company.service.CompProductKey;
-import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.domain.IniReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.*;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -21,7 +18,7 @@ import java.util.Optional;
  class CompanyBuilder implements PageBuilder {
 
     @Override
-    public void build(XWPFDocument doc, CheckReport report) {
+    public void build(XWPFDocument doc, IniReport report) {
         renderTitle(doc);
 
         XWPFTable table = createTable(doc);
@@ -61,7 +58,7 @@ import java.util.Optional;
         cell.setWidth("20%");
     }
 
-    private void renderInfo(XWPFTable table, CheckReport report){
+    private void renderInfo(XWPFTable table, IniReport report){
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, "企业名称");
@@ -108,13 +105,13 @@ import java.util.Optional;
         MsUtils.setCell(cell, value, alignment, bold);
     }
 
-    private void renderCompanyPerson(XWPFTable table, CheckReport report) {
+    private void renderCompanyPerson(XWPFTable table, IniReport report) {
         renderPerson(table, 3, "法定代表人", report.getCompBaseInfo().getConPerson());
         renderPerson(table, 4, "安全管理人", report.getCompBaseInfo().getConPerson());
         renderPerson(table, 5, "联 系 人", report.getCompBaseInfo().getConPerson());
     }
 
-    private void renderPerson(XWPFTable table, int rowIndex, String title, CheckReport.PersonInfo person){
+    private void renderPerson(XWPFTable table, int rowIndex, String title, IniReport.PersonInfo person){
         XWPFTableRow row = table.getRow(rowIndex);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, title);
@@ -134,7 +131,7 @@ import java.util.Optional;
         return StringUtils.isBlank(phone)? "/" : phone;
     }
 
-    private void renderDeclareCtg(XWPFTable table, CheckReport.CompBaseInfo info){
+    private void renderDeclareCtg(XWPFTable table, IniReport.CompBaseInfo info){
         XWPFTableRow row = table.getRow(7);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell, "安全生产社会化服务机构隐患排查申报平台类型");
@@ -171,7 +168,7 @@ import java.util.Optional;
         renderGreatTable(cell, info);
     }
 
-    private void renderRow1CheckBox(XWPFTableCell cell, CheckReport.CompBaseInfo info){
+    private void renderRow1CheckBox(XWPFTableCell cell, IniReport.CompBaseInfo info){
         XWPFParagraph paragraph = cell.getParagraphArray(0);
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         renderCheckBox(paragraph, "涉及可燃爆粉尘作业场所", getCheckBoxValue(info, CompProductKey.KRBFCCS));
@@ -183,17 +180,17 @@ import java.util.Optional;
         MsUtils.checkBox(paragraph, label, enable);
     }
 
-    private boolean getCheckBoxValue(CheckReport.CompBaseInfo info, CompProductKey compProductKey){
+    private boolean getCheckBoxValue(IniReport.CompBaseInfo info, CompProductKey compProductKey){
         return getCompProductOpt(info, compProductKey).map(e -> e.getProValue() == 1).orElse(false);
     }
 
-    private Optional<CompProduct> getCompProductOpt(CheckReport.CompBaseInfo info, CompProductKey compProductKey){
+    private Optional<CompProduct> getCompProductOpt(IniReport.CompBaseInfo info, CompProductKey compProductKey){
         return info.getProducts().stream()
                 .filter(e -> StringUtils.equals(e.getProKey(), compProductKey.getKey()))
                 .findFirst();
     }
 
-    private void renderRow2CheckBox(XWPFTableCell cell, CheckReport.CompBaseInfo info){
+    private void renderRow2CheckBox(XWPFTableCell cell, IniReport.CompBaseInfo info){
         XWPFParagraph paragraph = cell.getParagraphArray(0);
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         renderCheckBox(paragraph, "涉氨制冷企业", getCheckBoxValue(info, CompProductKey.SAZNQY));
@@ -205,7 +202,7 @@ import java.util.Optional;
         run.setText(")");
     }
 
-    private void renderRow3CheckBox(XWPFTableCell cell, CheckReport.CompBaseInfo info){
+    private void renderRow3CheckBox(XWPFTableCell cell, IniReport.CompBaseInfo info){
         XWPFParagraph paragraph = cell.getParagraphArray(0);
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         int value = getCompProductOpt(info, CompProductKey.WHXP).map(CompProduct::getProValue).orElse(-1);
@@ -214,7 +211,7 @@ import java.util.Optional;
         renderCheckBox(paragraph, "使用单位", value == 2);
     }
 
-    private void renderRow4CheckBox(XWPFTableCell cell, CheckReport.CompBaseInfo info){
+    private void renderRow4CheckBox(XWPFTableCell cell, IniReport.CompBaseInfo info){
         XWPFParagraph paragraph = cell.getParagraphArray(0);
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         int value = getCompProductOpt(info, CompProductKey.YHBZQY).map(CompProduct::getProValue).orElse(-1);
@@ -222,7 +219,7 @@ import java.util.Optional;
         renderCheckBox(paragraph, "经营单位", value == 1);
     }
 
-    private void renderRow5CheckBox(XWPFTableCell cell, CheckReport.CompBaseInfo info){
+    private void renderRow5CheckBox(XWPFTableCell cell, IniReport.CompBaseInfo info){
         XWPFParagraph paragraph = cell.getParagraphArray(0);
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         int value = getCompProductOpt(info, CompProductKey.KSQY).map(CompProduct::getProValue).orElse(-1);
@@ -231,7 +228,7 @@ import java.util.Optional;
         renderCheckBox(paragraph, "小型露天采石场", value == 2);
     }
 
-    private void renderGreatTable(XWPFTableCell cell, CheckReport.CompBaseInfo info){
+    private void renderGreatTable(XWPFTableCell cell, IniReport.CompBaseInfo info){
         XWPFParagraph paragraph = cell.getParagraphArray(0);
         XWPFTable safeTable= cell.insertNewTbl(paragraph.getCTP().newCursor());
         safeTable.getCTTbl().addNewTblPr().addNewTblW();
@@ -249,7 +246,7 @@ import java.util.Optional;
         renderCheckBox(paragraph, "否", !enabled);
     }
 
-    private void renderDetail(XWPFTable table, CheckReport.CompBaseInfo info){
+    private void renderDetail(XWPFTable table, IniReport.CompBaseInfo info){
         XWPFTableRow row = table.getRow(14);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell,  "涉及重点关注的工艺、场所、物料等情况描述");
@@ -262,7 +259,7 @@ import java.util.Optional;
         MsUtils.mergeCellsH(row, 0, 6);
     }
 
-    private void renderRisk(XWPFTable table, CheckReport.CompBaseInfo info){
+    private void renderRisk(XWPFTable table, IniReport.CompBaseInfo info){
         XWPFTableRow row = table.getRow(16);
         XWPFTableCell cell = row.getCell(0);
         setCellLabel(cell,  "生产、存储、使用涉及《危险化学品目录(2015版)》查询情况");

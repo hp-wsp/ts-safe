@@ -9,23 +9,23 @@ import java.util.Stack;
 
 public class UniRiskChemicalSql {
 
-    public static void main(String[] args)throws IOException {
-        InputStream stream = UniRiskChemicalSql.class.getResourceAsStream("whp.xlsx");
-        Workbook workbook = WorkbookFactory.create(stream);
-        Sheet sheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = sheet.rowIterator();
-        Stack<UniRiskChemical> all = new Stack<>();
-
-        int i = 0;
-        for(;iterator.hasNext();){
-            Row row = iterator.next();
-            if(i++ > 0){
-                all.push(build(i, all, row));
-            }
-        }
-
-        printSql(all);
-    }
+//    public static void main(String[] args)throws IOException {
+//        InputStream stream = UniRiskChemicalSql.class.getResourceAsStream("whp.xlsx");
+//        Workbook workbook = WorkbookFactory.create(stream);
+//        Sheet sheet = workbook.getSheetAt(0);
+//        Iterator<Row> iterator = sheet.rowIterator();
+//        Stack<UniRiskChemical> all = new Stack<>();
+//
+//        int i = 0;
+//        for(;iterator.hasNext();){
+//            Row row = iterator.next();
+//            if(i++ > 0){
+//                all.push(build(i, all, row));
+//            }
+//        }
+//
+//        printSql(all);
+//    }
 
     private static UniRiskChemical build(int index, Stack<UniRiskChemical> all, Row row){
         UniRiskChemical t = new UniRiskChemical();

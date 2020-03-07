@@ -1,6 +1,6 @@
 package com.ts.server.safe.report.service.export.wps;
 
-import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.domain.IniReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import com.ts.server.safe.task.domain.TaskContent;
 import org.apache.commons.lang3.StringUtils;
@@ -19,11 +19,11 @@ import java.util.List;
     private static final String PROFILE_PATTER = "受%s安全生产隐患排查专项治理的服务委托，%s组成项目组于%s对测试企业进行安全生产社会化隐患排查技术服务";
 
     @Override
-    public void build(XWPFDocument doc, CheckReport report) {
+    public void build(XWPFDocument doc, IniReport report) {
         renderTitle(doc);
         renderProfile(doc, report);
-        renderBaseDetail(doc, report);
-        renderSceneDetail(doc, report);
+//        renderBaseDetail(doc, report);
+//        renderSceneDetail(doc, report);
         renderDisease(doc, report.getSafeProduct());
         renderSpePerson(doc, report.getSafeProduct());
         renderResult(doc, report.getSafeProduct());
@@ -36,7 +36,7 @@ import java.util.List;
         WpsUtils.pageTitle(doc, "三、本周期安全生产社会化服务情况综述");
     }
 
-    private void renderProfile(XWPFDocument doc, CheckReport report){
+    private void renderProfile(XWPFDocument doc, IniReport report){
         XWPFTable table = createTable(doc, 1, 1);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -54,9 +54,9 @@ import java.util.List;
         return WpsUtils.createTable(doc, row, col);
     }
 
-    private void renderBaseDetail(XWPFDocument doc, CheckReport report){
-        renderDetail(doc, "1、基础管理隐患描述及治理措施", report.getSafeProduct().getBaseContents());
-    }
+//    private void renderBaseDetail(XWPFDocument doc, IniReport report){
+//        renderDetail(doc, "1、基础管理隐患描述及治理措施", report.getSafeProduct().getBaseContents());
+//    }
 
     private void renderDetail(XWPFDocument doc, String title, List<TaskContent> contents){
         XWPFTable table = createTable(doc, 1, 1);
@@ -75,11 +75,11 @@ import java.util.List;
         WpsUtils.setCellWidth(cell, width, content, ParagraphAlignment.CENTER);
     }
 
-    private void renderSceneDetail(XWPFDocument doc, CheckReport report){
-        renderDetail(doc, "2、现场管理隐患描述及治理措施", report.getSafeProduct().getSceneContents());
-    }
+//    private void renderSceneDetail(XWPFDocument doc, IniReport report){
+//        renderDetail(doc, "2、现场管理隐患描述及治理措施", report.getSafeProduct().getSceneContents());
+//    }
 
-    private void renderDisease(XWPFDocument doc, CheckReport.SafeProduct safeProduct){
+    private void renderDisease(XWPFDocument doc, IniReport.SafeProduct safeProduct){
         XWPFTable table = WpsUtils.createTable(doc, 1, 1);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -115,7 +115,7 @@ import java.util.List;
         WpsUtils.checkBox(p, "局部严重", level == 3);
     }
 
-    private void renderSpePerson(XWPFDocument doc, CheckReport.SafeProduct safeProduct){
+    private void renderSpePerson(XWPFDocument doc, IniReport.SafeProduct safeProduct){
         XWPFTable table = createTable(doc, 1, 2);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -141,7 +141,7 @@ import java.util.List;
         setCellWidth(cell, "79%", "");
     }
 
-    private void renderResult(XWPFDocument doc, CheckReport.SafeProduct safeProduct){
+    private void renderResult(XWPFDocument doc, IniReport.SafeProduct safeProduct){
         XWPFTable table = createTable(doc, 1, 1);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -153,7 +153,7 @@ import java.util.List;
         WpsUtils.setCellWidth(cell, width, content, ParagraphAlignment.LEFT);
     }
 
-    private void renderSafeRisk(XWPFDocument doc, CheckReport.SafeProduct safeProduct){
+    private void renderSafeRisk(XWPFDocument doc, IniReport.SafeProduct safeProduct){
         XWPFTable table = createTable(doc, 1, 1);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -181,7 +181,7 @@ import java.util.List;
         WpsUtils.setInd2Paragraph(paragraph, 12, false, safeProduct.getRiskLevelExplain());
     }
 
-    private void renderRiskType(XWPFDocument doc, CheckReport.SafeProduct safeProduct){
+    private void renderRiskType(XWPFDocument doc, IniReport.SafeProduct safeProduct){
         XWPFTable table = createTable(doc, 1, 1);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -204,7 +204,7 @@ import java.util.List;
         WpsUtils.setItemRun(paragraph.createRun(), 12, false, "    年  月  日");
     }
 
-    private void renderFooter(XWPFDocument doc, CheckReport report){
+    private void renderFooter(XWPFDocument doc, IniReport report){
         XWPFParagraph paragraph = doc.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraph.setSpacingBetween(2, LineSpacingRule.AUTO);

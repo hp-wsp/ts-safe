@@ -1,6 +1,9 @@
 package com.ts.server.safe.contract.controller.man;
 
 import com.ts.server.safe.BaseException;
+import com.ts.server.safe.company.domain.CompInfo;
+import com.ts.server.safe.company.service.CompInfoService;
+import com.ts.server.safe.contract.controller.man.form.ContractCompleteForm;
 import com.ts.server.safe.contract.controller.man.form.ContractSaveForm;
 import com.ts.server.safe.contract.controller.man.form.ContractUpdateForm;
 import com.ts.server.safe.contract.domain.Contract;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -35,10 +39,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Api(value = "/man/contract", tags = "M-管理合同API接口")
 public class ContractManController {
     private final ContractService service;
+    private final CompInfoService compService;
 
     @Autowired
-    public ContractManController(ContractService service) {
+    public ContractManController(ContractService service, CompInfoService compService) {
         this.service = service;
+        this.compService = compService;
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -46,9 +52,20 @@ public class ContractManController {
     public ResultVo<Contract> save(@Valid @RequestBody ContractSaveForm form){
         String channelId = getCredential().getChannelId();
         Contract t = form.toDomain();
+        t.setSerCompanies(buildSerCompanies(form.getSerCompIds()));
         t.setChannelId(channelId);
 
         return ResultVo.success(service.save(t));
+    }
+
+    private List<Contract.SerCompany> buildSerCompanies(List<String> ids){
+        return ids.stream().map(e -> {
+            CompInfo info = compService.get(e);
+            Contract.SerCompany s = new Contract.SerCompany();
+            s.setId(info.getId());
+            s.setName(info.getName());
+            return s;
+        }).collect(Collectors.toList());
     }
 
     @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
@@ -59,7 +76,7 @@ public class ContractManController {
         if(!StringUtils.equals(channelId, t.getChannelId())){
             throw new BaseException("无权修改合同");
         }
-
+        t.setSerCompanies(buildSerCompanies(form.getSerCompIds()));
         return ResultVo.success(service.update(form.toDomain()));
     }
 
@@ -72,6 +89,12 @@ public class ContractManController {
             throw new BaseException("无权修改合同");
         }
         return ResultVo.success(new OkVo(service.delete(id)));
+    }
+
+    @PutMapping(value = "complete", produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("合同是否完成")
+    public ResultVo<OkVo> complete(@Valid @RequestBody ContractCompleteForm form){
+        return ResultVo.success(new OkVo(service.updateComplete(form.getId(), form.getComplete())));
     }
 
     @GetMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
@@ -96,13 +119,6 @@ public class ContractManController {
         return new ResultPageVo.Builder<>(page, rows, service.query(channelId, name, num, entCompName, proAddress, entCompType, page * rows, rows))
                 .count(isCount, () -> service.count(channelId, name, num, entCompName, proAddress, entCompType))
                 .build();
-    }
-
-    @GetMapping(value = "noneAlloc", produces = APPLICATION_JSON_VALUE)
-    @ApiOperation("查询没有分配合同")
-    public ResultVo<List<Contract>> queryNoneAlloc(){
-        String channelId = getCredential().getChannelId();
-        return ResultVo.success(service.queryNoneAlloc(channelId));
     }
 
     private ManCredential getCredential(){

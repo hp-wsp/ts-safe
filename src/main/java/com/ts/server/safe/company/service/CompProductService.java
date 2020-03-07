@@ -44,6 +44,7 @@ public class CompProductService {
                 .peek(e -> {
                     e.setCompId(info.getId());
                     e.setChannelId(info.getChannelId());
+                    e.setProName(key.getRemark());
                 })
                 .findFirst()
                 .orElseGet(() -> {
@@ -51,6 +52,7 @@ public class CompProductService {
                     t.setCompId(info.getId());
                     t.setChannelId(info.getChannelId());
                     t.setProKey(key.getKey());
+                    t.setProName(key.getRemark());
                     t.setProValue(key.getDefValue());
                     return t;
                 });

@@ -1,6 +1,6 @@
 package com.ts.server.safe.report.service.export.wps;
 
-import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.domain.IniReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import org.apache.poi.xwpf.usermodel.*;
 
@@ -15,7 +15,7 @@ import java.util.Objects;
 class DetailBuilder implements PageBuilder {
 
     @Override
-    public void build(XWPFDocument doc, CheckReport report) {
+    public void build(XWPFDocument doc, IniReport report) {
         renderTitle(doc);
 
         renderProductInfo(doc, report);
@@ -33,7 +33,7 @@ class DetailBuilder implements PageBuilder {
         WpsUtils.pageTitle(doc, "一、编制说明");
     }
 
-    private void renderProductInfo(XWPFDocument doc, CheckReport report){
+    private void renderProductInfo(XWPFDocument doc, IniReport report){
         XWPFTable table = createTable(doc, 1, 1);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -62,7 +62,7 @@ class DetailBuilder implements PageBuilder {
         WpsUtils.setCellWidth(cell, width, content, ParagraphAlignment.LEFT);
     }
 
-    private void renderServiceRequest(XWPFDocument doc, CheckReport report){
+    private void renderServiceRequest(XWPFDocument doc, IniReport report){
         XWPFTable table = createTable(doc, 1, 1);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -97,7 +97,7 @@ class DetailBuilder implements PageBuilder {
         WpsUtils.setCellWidth(cell, width, content, ParagraphAlignment.LEFT);
     }
 
-    private void renderCompInfo(XWPFDocument doc, CheckReport.ReportDetail detail){
+    private void renderCompInfo(XWPFDocument doc, IniReport.ReportDetail detail){
         XWPFTable table = createTable(doc, 1, 1);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -121,7 +121,7 @@ class DetailBuilder implements PageBuilder {
         setCellWithLeft(cell, "75%", detail.getChanBusScope());
     }
 
-    private void renderContactPerson(XWPFDocument doc, CheckReport.ReportDetail detail){
+    private void renderContactPerson(XWPFDocument doc, IniReport.ReportDetail detail){
         XWPFTable table = createTable(doc, 1, 6);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);
@@ -138,7 +138,7 @@ class DetailBuilder implements PageBuilder {
         setCellWidth(cell, "20%", detail.getChanContact().getMobile());
     }
 
-    private void renderWorkPerson(XWPFDocument doc, CheckReport.ReportDetail detail){
+    private void renderWorkPerson(XWPFDocument doc, IniReport.ReportDetail detail){
         int rowCount = detail.getWorkers().size() + (detail.getWorkers().isEmpty()? 3: 2);
         XWPFTable table = createTable(doc, rowCount, 5);
         XWPFTableRow row = table.getRow(0);
@@ -155,14 +155,14 @@ class DetailBuilder implements PageBuilder {
         renderWorkPersonRow(table, 1, "组长", detail.getLeader());
         int rowIndex = 2;
         if(detail.getWorkers().isEmpty()){
-            detail.setWorkers(Collections.singletonList(new CheckReport.PersonInfo()));
+            detail.setWorkers(Collections.singletonList(new IniReport.PersonInfo()));
         }
-        for(CheckReport.PersonInfo person: detail.getWorkers()){
+        for(IniReport.PersonInfo person: detail.getWorkers()){
             renderWorkPersonRow(table, rowIndex++, "成员", person);
         }
     }
 
-    private void renderWorkPersonRow(XWPFTable table, int rowIndex, String title, CheckReport.PersonInfo person){
+    private void renderWorkPersonRow(XWPFTable table, int rowIndex, String title, IniReport.PersonInfo person){
         XWPFTableRow row = table.getRow(rowIndex);
         XWPFTableCell cell = row.getCell(0);
         setCellWidth(cell, "15%", title);
@@ -176,22 +176,22 @@ class DetailBuilder implements PageBuilder {
         setCellWidth(cell, "20%", person.getPhone());
     }
 
-    private void renderSignature(XWPFDocument doc, CheckReport.ReportDetail detail){
+    private void renderSignature(XWPFDocument doc, IniReport.ReportDetail detail){
         XWPFTable table = createTable(doc, 3, 6);
 
-        CheckReport.PersonInfo personInfo = Objects.isNull(detail.getPrincipalPerson())? new CheckReport.PersonInfo(): detail.getPrincipalPerson();
+        IniReport.PersonInfo personInfo = Objects.isNull(detail.getPrincipalPerson())? new IniReport.PersonInfo(): detail.getPrincipalPerson();
         renderSignatureRow(table, 0, "主要负责人", personInfo);
 
-        personInfo = Objects.isNull(detail.getAuditPerson())? new CheckReport.PersonInfo(): detail.getAuditPerson();
+        personInfo = Objects.isNull(detail.getAuditPerson())? new IniReport.PersonInfo(): detail.getAuditPerson();
         renderSignatureRow(table, 1, "报告审核人", personInfo);
 
-        personInfo = Objects.isNull(detail.getReportPerson())? new CheckReport.PersonInfo(): detail.getReportPerson();
+        personInfo = Objects.isNull(detail.getReportPerson())? new IniReport.PersonInfo(): detail.getReportPerson();
         renderSignatureRow(table, 2, "报告编制人", personInfo);
 
         WpsUtils.mergeCellsV(table, 4, 0, 2);
     }
 
-    private void renderSignatureRow(XWPFTable table, int rowIndex, String title, CheckReport.PersonInfo person){
+    private void renderSignatureRow(XWPFTable table, int rowIndex, String title, IniReport.PersonInfo person){
         XWPFTableRow row = table.getRow(rowIndex);
         XWPFTableCell cell = row.getCell(0);
         setCellWidth(cell, "15%", title);

@@ -1,6 +1,6 @@
 package com.ts.server.safe.report.service.export.ms;
 
-import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.domain.IniReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import com.ts.server.safe.task.domain.TaskContent;
 import org.apache.poi.util.Units;
@@ -27,7 +27,7 @@ import java.util.Objects;
     private static final Logger LOGGER = LoggerFactory.getLogger(AttachImageBuilder.class);
 
     @Override
-    public void build(XWPFDocument doc, CheckReport report) {
+    public void build(XWPFDocument doc, IniReport report) {
         XWPFParagraph paragraph = doc.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         MsUtils.setItemRun(paragraph.createRun(), 12, false, "附件：");
@@ -37,24 +37,24 @@ import java.util.Objects;
         }
     }
 
-    private List<String> getImages(CheckReport report){
+    private List<String> getImages(IniReport report){
         List<String> images = new ArrayList<>();
 
         if(report.getSafeProduct().getImages().length > 0){
             images.addAll(Arrays.asList(report.getSafeProduct().getImages()));
         }
 
-        for(TaskContent content: report.getSafeProduct().getBaseContents()){
-            if(Objects.nonNull(content.getImages())){
-                images.addAll(Arrays.asList(content.getImages()));
-            }
-        }
-
-        for(TaskContent content: report.getSafeProduct().getSceneContents()){
-            if(Objects.nonNull(content.getImages())){
-                images.addAll(Arrays.asList(content.getImages()));
-            }
-        }
+//        for(TaskContent content: report.getSafeProduct().getBaseContents()){
+//            if(Objects.nonNull(content.getImages())){
+//                images.addAll(Arrays.asList(content.getImages()));
+//            }
+//        }
+//
+//        for(TaskContent content: report.getSafeProduct().getSceneContents()){
+//            if(Objects.nonNull(content.getImages())){
+//                images.addAll(Arrays.asList(content.getImages()));
+//            }
+//        }
 
         return images;
     }

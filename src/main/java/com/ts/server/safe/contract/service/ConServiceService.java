@@ -44,14 +44,15 @@ public class ConServiceService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public ConService save(String channelId, String name, String conId, String leadId, List<ConServiceItem> items){
+    public ConService save(String channelId, String name, String conId,
+                           String leadId, String serCompId, List<ConServiceItem> items){
+
         Contract contract = contractService.get(conId);
-        if(!StringUtils.equals(contract.getChannelId(), channelId)){
+        if(!StringUtils.equals(contract.getChannelId(), channelId)) {
             throw new BaseException("不能新增服务");
         }
-        if(StringUtils.isNotBlank(contract.getServiceId())){
-            throw new BaseException("合同已经添加服务");
-        }
+
+        Contract.SerCompany serCompany= getSerCompany(contract.getSerCompanies(), serCompId);
 
         ConService t = new ConService();
         t.setId(IdGenerators.uuid());
@@ -59,8 +60,9 @@ public class ConServiceService {
         t.setName(name);
         t.setConId(contract.getId());
         t.setConName(contract.getName());
-        t.setCompId(contract.getSerCompId());
-        t.setCompName(contract.getSerCompName());
+        t.setCompId(serCompId);
+        t.setCompName(serCompany.getName());
+
         Member member = memberService.get(leadId);
         if(!StringUtils.equals(member.getChannelId(), channelId)){
             throw new BaseException("不能新增服务");
@@ -72,20 +74,22 @@ public class ConServiceService {
         dao.insert(t);
         items.forEach(e -> e.setServiceId(t.getId()));
         itemService.save(t.getId(), items);
-        contractService.updateService(t.getConId(), t.getId());
 
         return dao.findOne(t.getId());
     }
 
+    private Contract.SerCompany getSerCompany(List<Contract.SerCompany> serCompanies, String serCompId){
+        return serCompanies.stream().filter(e -> StringUtils.equals(e.getId(), serCompId))
+                .findFirst().orElseThrow(() -> new BaseException("添加的服务企业不在合同中"));
+    }
+
     @Transactional(propagation = Propagation.REQUIRED)
-    public ConService update(String id, String name, String conId, String leadId, List<ConServiceItem> items){
+    public ConService update(String id, String name, String conId,
+                             String leadId, String serCompId, List<ConServiceItem> items){
         ConService o = get(id);
         if(!StringUtils.equals(o.getConId(), conId)){
             Contract contract = contractService.get(conId);
-
-            if(StringUtils.isNotBlank(contract.getServiceId())){
-                throw new BaseException("合同已经添加服务");
-            }
+            Contract.SerCompany serCompany= getSerCompany(contract.getSerCompanies(), serCompId);
 
             if(!StringUtils.equals(o.getChannelId(), contract.getChannelId())){
                 LOGGER.warn("Update contract channel not same channelId={}, newChannel={}",
@@ -93,11 +97,10 @@ public class ConServiceService {
                 throw new BaseException("不能修改服务");
             }
 
-            contractService.updateService(o.getConId(), "");
-            contractService.updateService(conId, id);
-
             o.setConId(conId);
             o.setConName(contract.getName());
+            o.setCompId(serCompId);
+            o.setCompName(serCompany.getName());
         }
 
         if(!StringUtils.equals(o.getLeaId(), leadId)){
@@ -140,12 +143,16 @@ public class ConServiceService {
         return itemService.query(id);
     }
 
-    public Long count(String channelId, String name, String compName, ConService.Status status){
-        return dao.count(channelId, name, compName, status);
+    public Long count(String channelId, String name, String compName,
+                      ConService.Status status, String conId){
+
+        return dao.count(channelId, name, compName, status, conId);
     }
 
-    public List<ConService> query(String channelId, String name, String compName, ConService.Status status, int offset, int limit){
-        return dao.find(channelId, name, compName, status, offset, limit);
+    public List<ConService> query(String channelId, String name, String compName,
+                                  ConService.Status status, String conId,int offset, int limit){
+
+        return dao.find(channelId, name, compName, status, conId, offset, limit);
     }
 
     public List<ConService> queryByCompId(String compId){

@@ -1,6 +1,6 @@
 package com.ts.server.safe.report.service.export.ms;
 
-import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.domain.IniReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
@@ -16,7 +16,7 @@ class CoverBuilder implements PageBuilder {
     private static final String[] ENT_SCALES = new String[]{"", "大型", "中型", "小型", "微型"};
 
     @Override
-    public void build(XWPFDocument doc, CheckReport report) {
+    public void build(XWPFDocument doc, IniReport report) {
 
         renderTitle(doc);
 
@@ -43,7 +43,7 @@ class CoverBuilder implements PageBuilder {
         MsUtils.addEmptyParagraph(doc, 15);
     }
 
-    private void renderContentTable(XWPFDocument doc, CheckReport report){
+    private void renderContentTable(XWPFDocument doc, IniReport report){
         XWPFTable table = doc.createTable(5, 4);
         table.setTableAlignment(TableRowAlign.CENTER);
         setRowHeight(table);
@@ -149,7 +149,7 @@ class CoverBuilder implements PageBuilder {
      *
      * @param doc {@link XWPFDocument}
      */
-    private void renderFooter(XWPFDocument doc, CheckReport report){
+    private void renderFooter(XWPFDocument doc, IniReport report){
         MsUtils.addEmptyParagraph(doc, 15);
 
         XWPFParagraph paragraph = doc.createParagraph();

@@ -15,6 +15,9 @@ public class ConServiceSaveForm {
     @ApiModelProperty(value = "服务名称", required = true)
     @NotBlank
     private String name;
+    @ApiModelProperty(value = "服务企业编号", required =  true)
+    @NotBlank
+    private String compId;
     @ApiModelProperty(value = "合同编号", required = true)
     @NotBlank
     private String conId;
@@ -31,6 +34,14 @@ public class ConServiceSaveForm {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCompId() {
+        return compId;
+    }
+
+    public void setCompId(String compId) {
+        this.compId = compId;
     }
 
     public String getConId() {

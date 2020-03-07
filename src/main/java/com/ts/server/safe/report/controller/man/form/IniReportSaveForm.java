@@ -1,19 +1,16 @@
 package com.ts.server.safe.report.controller.man.form;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.domain.IniReport;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 /**
  * 新增检查报表提交数据
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class CheckReportSaveForm {
+public class IniReportSaveForm {
     @ApiModelProperty(value = "任务编号", required = true)
     @NotBlank
     private String taskId;
@@ -38,11 +35,11 @@ public class CheckReportSaveForm {
     @NotBlank
     private String checkTimeTo;
     @ApiModelProperty(value = "编制说明", required = true)
-    private CheckReport.ReportDetail reportDetail;
+    private IniReport.ReportDetail reportDetail;
     @ApiModelProperty(value = "受检企业基本情况", required = true)
-    private CheckReport.CompBaseInfo compBaseInfo;
+    private IniReport.CompBaseInfo compBaseInfo;
     @ApiModelProperty(value = "安全生产社会化检查服务", required = true)
-    private CheckReport.SafeProduct safeProduct;
+    private IniReport.SafeProduct safeProduct;
     @ApiModelProperty("报告份数说明")
     @NotBlank
     private String printDetail;
@@ -119,27 +116,27 @@ public class CheckReportSaveForm {
         this.checkTimeTo = checkTimeTo;
     }
 
-    public CheckReport.ReportDetail getReportDetail() {
+    public IniReport.ReportDetail getReportDetail() {
         return reportDetail;
     }
 
-    public void setReportDetail(CheckReport.ReportDetail reportDetail) {
+    public void setReportDetail(IniReport.ReportDetail reportDetail) {
         this.reportDetail = reportDetail;
     }
 
-    public CheckReport.CompBaseInfo getCompBaseInfo() {
+    public IniReport.CompBaseInfo getCompBaseInfo() {
         return compBaseInfo;
     }
 
-    public void setCompBaseInfo(CheckReport.CompBaseInfo compBaseInfo) {
+    public void setCompBaseInfo(IniReport.CompBaseInfo compBaseInfo) {
         this.compBaseInfo = compBaseInfo;
     }
 
-    public CheckReport.SafeProduct getSafeProduct() {
+    public IniReport.SafeProduct getSafeProduct() {
         return safeProduct;
     }
 
-    public void setSafeProduct(CheckReport.SafeProduct safeProduct) {
+    public void setSafeProduct(IniReport.SafeProduct safeProduct) {
         this.safeProduct = safeProduct;
     }
 
@@ -151,8 +148,8 @@ public class CheckReportSaveForm {
         this.printDetail = printDetail;
     }
 
-    public CheckReport toDomain(){
-        CheckReport t = new CheckReport();
+    public IniReport toDomain(){
+        IniReport t = new IniReport();
 
         t.setTaskId(taskId);
         t.setTaskDetail(taskDetail);

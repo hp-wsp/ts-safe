@@ -20,6 +20,8 @@ public class CompProduct {
     private String compId;
     @ApiModelProperty("生产信息key")
     private String proKey;
+    @ApiModelProperty("生产名称")
+    private String proName;
     @ApiModelProperty("生产信息值")
     private Integer proValue;
     @ApiModelProperty("创建时间")
@@ -61,6 +63,14 @@ public class CompProduct {
         return proValue;
     }
 
+    public String getProName() {
+        return proName;
+    }
+
+    public void setProName(String proName) {
+        this.proName = proName;
+    }
+
     public void setProValue(Integer proValue) {
         this.proValue = proValue;
     }
@@ -82,13 +92,14 @@ public class CompProduct {
                 Objects.equals(channelId, that.channelId) &&
                 Objects.equals(compId, that.compId) &&
                 Objects.equals(proKey, that.proKey) &&
+                Objects.equals(proName, that.proName) &&
                 Objects.equals(proValue, that.proValue) &&
                 Objects.equals(createTime, that.createTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, channelId, compId, proKey, proValue, createTime);
+        return Objects.hash(id, channelId, compId, proKey, proName, proValue, createTime);
     }
 
     @Override
@@ -98,6 +109,7 @@ public class CompProduct {
                 .append("channelId", channelId)
                 .append("compId", compId)
                 .append("proKey", proKey)
+                .append("proName", proName)
                 .append("proValue", proValue)
                 .append("createTime", createTime)
                 .toString();

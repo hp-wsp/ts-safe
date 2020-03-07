@@ -47,7 +47,7 @@ public class ConServiceManController {
     public ResultVo<ConServiceVo> save(@Valid @RequestBody ConServiceSaveForm form){
         List<ConServiceItem> items = form.getItems().stream().map(this::buildConService).collect(Collectors.toList());
         String channelId = getCredential().getChannelId();
-        ConService t = service.save(channelId, form.getName(), form.getConId(), form.getLeaId(), items);
+        ConService t = service.save(channelId, form.getName(), form.getConId(), form.getLeaId(), form.getCompId(), items);
         return ResultVo.success(new ConServiceVo(t, service.queryItems(t.getId())));
     }
 
@@ -70,7 +70,7 @@ public class ConServiceManController {
             throw new BaseException("不能修改合同服务");
         }
         List<ConServiceItem> items = form.getItems().stream().map(this::buildConService).collect(Collectors.toList());
-        ConService t = service.update(form.getId(), form.getName(), form.getConId(), form.getLeaId(), items);
+        ConService t = service.update(form.getId(), form.getName(), form.getConId(), form.getLeaId(), form.getCompId(), items);
         return ResultVo.success(new ConServiceVo(t, service.queryItems(t.getId())));
     }
 
@@ -97,14 +97,15 @@ public class ConServiceManController {
             @ApiParam(value = "服务名称") @RequestParam(required = false)String name,
             @ApiParam(value = "公司名称") @RequestParam(required = false)String compName,
             @ApiParam(value = "状态") @RequestParam(required = false)String status,
+            @ApiParam(value = "合同编号") @RequestParam(required = false) String conId,
             @RequestParam(defaultValue = "0") @ApiParam(value = "查询页数") int page,
             @RequestParam(defaultValue = "true") @ApiParam(value = "是否得到查询记录数") boolean isCount,
             @RequestParam(defaultValue = "15") @ApiParam(value = "查询每页记录数") int rows){
 
         String channelId = getCredential().getChannelId();
         ConService.Status statusObj = StringUtils.isBlank(status)? null: ConService.Status.valueOf(status);
-        return new ResultPageVo.Builder<>(page, rows, service.query(channelId, name, compName, statusObj, page * rows, rows))
-                .count(isCount, () -> service.count(channelId, name, compName, statusObj))
+        return new ResultPageVo.Builder<>(page, rows, service.query(channelId, name, compName, statusObj, conId, page * rows, rows))
+                .count(isCount, () -> service.count(channelId, name, compName, statusObj, conId))
                 .build();
     }
 

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.List;
 
+import static com.ts.server.safe.task.domain.TaskContent.*;
+
 /**
  * 检查内容数据操作
  *
@@ -32,8 +34,8 @@ public class TaskContentDao {
         t.setContent(r.getString("content"));
         t.setConDetail(r.getString("con_detail"));
         t.setLawItem(r.getString("law_item"));
-        t.setCheckResult(TaskContent.CheckResult.valueOf(r.getString("check_result")));
-        t.setDanLevel(TaskContent.DangerLevel.valueOf(r.getString("dan_level")));
+        t.setCheckResult(CheckResult.valueOf(r.getString("check_result")));
+        t.setDanLevel(DangerLevel.valueOf(r.getString("dan_level")));
         t.setDanDescribe(r.getString("dan_describe"));
         t.setDanSuggest(r.getString("dan_suggest"));
         t.setImages(DaoUtils.toArray(r.getString("images")));
@@ -50,7 +52,8 @@ public class TaskContentDao {
 
     public void insert(TaskContent t){
         final String sql = "INSERT INTO c_task_content (id, task_id, content_id, type_id, type_name, item_id, item_name," +
-                "content, con_detail, law_item, update_time, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+                "content, con_detail, law_item, update_time, create_time)" +
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getTaskId(), t.getContentId(), t.getTypeId(), t.getTypeName(), t.getItemId(),
                 t.getItemName(), t.getContent(), t.getConDetail(), t.getLawItem());
@@ -100,7 +103,7 @@ public class TaskContentDao {
     }
 
     public List<TaskContent> find(String taskId){
-        final String sql = "SELECT * FROM c_task_content WHERE task_id = ? ORDER BY content_id ASC";
+        final String sql = "SELECT * FROM c_task_content WHERE task_id = ? ORDER BY update_time ASC";
         return jdbcTemplate.query(sql, new Object[]{taskId}, mapper);
     }
 }

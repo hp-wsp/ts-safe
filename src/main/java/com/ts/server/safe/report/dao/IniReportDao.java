@@ -2,7 +2,7 @@ package com.ts.server.safe.report.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ts.server.safe.common.utils.DaoUtils;
-import com.ts.server.safe.report.domain.CheckReport;
+import com.ts.server.safe.report.domain.IniReport;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,22 +21,22 @@ import java.util.Objects;
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 @Repository
-public class CheckReportDao {
+public class IniReportDao {
     private final JdbcTemplate jdbcTemplate;
     private final ObjectMapper objectMapper;
-    private final RowMapper<CheckReport> mapper;
-    private final RowMapper<CheckReport> fullMapper;
+    private final RowMapper<IniReport> mapper;
+    private final RowMapper<IniReport> fullMapper;
 
     @Autowired
-    public CheckReportDao(DataSource dataSource, ObjectMapper objectMapper) {
+    public IniReportDao(DataSource dataSource, ObjectMapper objectMapper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.objectMapper = objectMapper;
         this.mapper = new CheckReportMapper();
         this.fullMapper = new CheckReportFullMapper(objectMapper);
     }
 
-    public void insert(CheckReport t){
-        final String sql = "INSERT INTO c_check_report (id, channel_id, channel_name, comp_id, comp_name, task_id, task_detail, " +
+    public void insert(IniReport t){
+        final String sql = "INSERT INTO r_initial (id, channel_id, channel_name, comp_id, comp_name, task_id, task_detail, " +
                 "service_id, service_name, cycle_name, ent_comp_type, industry, ent_scale, area, check_time_from, check_time_to, " +
                 "report_detail, comp_base_info, safe_product, print_detail, update_time, create_time) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
@@ -55,8 +55,8 @@ public class CheckReportDao {
         }
     }
 
-    public boolean update(CheckReport t){
-        final String sql = "UPDATE c_check_report SET comp_id = ?, comp_name = ?, task_id = ?, task_detail = ?, service_id = ?," +
+    public boolean update(IniReport t){
+        final String sql = "UPDATE r_initial SET comp_id = ?, comp_name = ?, task_id = ?, task_detail = ?, service_id = ?," +
                 "service_name = ?, cycle_name = ?, ent_comp_type = ?, industry = ?, ent_scale = ?,area = ?, check_time_from = ?, " +
                 "check_time_to = ?, report_detail = ?, comp_base_info = ?, safe_product = ?, print_detail=?, update_time = now() WHERE id = ?";
 
@@ -66,24 +66,24 @@ public class CheckReportDao {
                 toJson(t.getSafeProduct()), t.getPrintDetail(), t.getId()) > 0;
     }
 
-    public CheckReport findOne(String id){
-        final String sql = "SELECT *  FROM c_check_report WHERE id = ?";
+    public IniReport findOne(String id){
+        final String sql = "SELECT *  FROM r_initial WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, fullMapper);
     }
 
     public boolean hasCycleName(String channelId, String cycleName){
-        final String sql = "SELECT COUNT(id) FROM c_check_report WHERE channel_id = ? AND cycle_name = ?";
+        final String sql = "SELECT COUNT(id) FROM r_initial WHERE channel_id = ? AND cycle_name = ?";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{channelId, cycleName}, Integer.class);
         return count != null && count > 0;
     }
 
     public boolean delete(String id){
-        final String sql = "DELETE FROM c_check_report WHERE id = ?";
+        final String sql = "DELETE FROM r_initial WHERE id = ?";
         return jdbcTemplate.update(sql, id) > 0;
     }
 
     public Long count(String channelId, String compName, String cycleName){
-        final String sql = "SELECT COUNT(id) FROM c_check_report WHERE channel_id LIKE ? AND comp_name LIKE ? AND cycle_name LIKE ?";
+        final String sql = "SELECT COUNT(id) FROM r_initial WHERE channel_id LIKE ? AND comp_name LIKE ? AND cycle_name LIKE ?";
 
         final String channelIdLike = DaoUtils.blankLike(channelId);
         final String compNameLike = DaoUtils.like(compName);
@@ -92,8 +92,8 @@ public class CheckReportDao {
         return jdbcTemplate.queryForObject(sql, new Object[]{channelIdLike, compNameLike, cycleNameLike}, Long.class);
     }
 
-    public List<CheckReport> find(String channelId, String compName, String cycleName, int offset, int limit){
-        final String sql = "SELECT * FROM c_check_report WHERE channel_id LIKE ? AND comp_name LIKE ? AND cycle_name LIKE ? " +
+    public List<IniReport> find(String channelId, String compName, String cycleName, int offset, int limit){
+        final String sql = "SELECT * FROM r_initial WHERE channel_id LIKE ? AND comp_name LIKE ? AND cycle_name LIKE ? " +
                 "ORDER BY update_time DESC LIMIT ? OFFSET ?";
 
         final String channelIdLike = DaoUtils.blankLike(channelId);
@@ -103,11 +103,11 @@ public class CheckReportDao {
         return jdbcTemplate.query(sql, new Object[]{channelIdLike, compNameLike, cycleNameLike, limit, offset}, mapper);
     }
 
-    public static class CheckReportMapper implements RowMapper<CheckReport>{
+    public static class CheckReportMapper implements RowMapper<IniReport>{
 
         @Override
-        public CheckReport mapRow(ResultSet r, int i) throws SQLException {
-            CheckReport t = new CheckReport();
+        public IniReport mapRow(ResultSet r, int i) throws SQLException {
+            IniReport t = new IniReport();
 
             t.setId(r.getString("id"));
             t.setChannelId(r.getString("channel_id"));
@@ -141,12 +141,12 @@ public class CheckReportDao {
         }
 
         @Override
-        public CheckReport mapRow(ResultSet r, int i) throws SQLException {
-            CheckReport t = super.mapRow(r, i);
+        public IniReport mapRow(ResultSet r, int i) throws SQLException {
+            IniReport t = super.mapRow(r, i);
 
-            t.setReportDetail(toObject(r.getString("report_detail"), CheckReport.ReportDetail.class, new CheckReport.ReportDetail()));
-            t.setCompBaseInfo(toObject(r.getString("comp_base_info"), CheckReport.CompBaseInfo.class, new CheckReport.CompBaseInfo()));
-            t.setSafeProduct(toObject(r.getString("safe_product"), CheckReport.SafeProduct.class, new CheckReport.SafeProduct()));
+            t.setReportDetail(toObject(r.getString("report_detail"), IniReport.ReportDetail.class, new IniReport.ReportDetail()));
+            t.setCompBaseInfo(toObject(r.getString("comp_base_info"), IniReport.CompBaseInfo.class, new IniReport.CompBaseInfo()));
+            t.setSafeProduct(toObject(r.getString("safe_product"), IniReport.SafeProduct.class, new IniReport.SafeProduct()));
 
             return t;
         }

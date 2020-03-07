@@ -37,18 +37,18 @@ public class ConServiceItemDao {
     }
 
     public void insert(ConServiceItem t){
-        final String sql = "INSERT INTO c_service_item (id, service_id, item_id, item_name, item_value, create_time) " +
+        final String sql = "INSERT INTO oa_ser_item (id, service_id, item_id, item_name, item_value, create_time) " +
                 "VALUES (?, ?, ?, ?, ?, now())";
         jdbcTemplate.update(sql, t.getId(), t.getServiceId(), t.getItemId(), t.getItemName(), t.getItemValue());
     }
 
     public void deleteOfService(String serviceId){
-        final String sql = "DELETE FROM c_service_item WHERE service_id = ?";
+        final String sql = "DELETE FROM oa_ser_item WHERE service_id = ?";
         jdbcTemplate.update(sql, serviceId);
     }
 
     public List<ConServiceItem> find(String serviceId){
-        final String sql = "SELECT * FROM c_service_item WHERE service_id = ? ORDER BY id ASC";
+        final String sql = "SELECT * FROM oa_ser_item WHERE service_id = ? ORDER BY id ASC";
         return jdbcTemplate.query(sql, new Object[]{serviceId}, mapper);
     }
 }

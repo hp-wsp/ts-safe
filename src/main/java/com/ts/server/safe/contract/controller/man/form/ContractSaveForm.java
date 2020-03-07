@@ -6,8 +6,10 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 新增合同
@@ -28,9 +30,9 @@ public class ContractSaveForm {
     private int entCompType;
     @ApiModelProperty(value = "委托单位")
     private String entCompName;
-    @ApiModelProperty(value = "服务企业编号", required = true)
-    @NotBlank
-    private String serCompId;
+    @ApiModelProperty(value = "服务企业编号集合", required = true)
+    @NotEmpty
+    private List<String> serCompIds;
     @ApiModelProperty("委托服务地址")
     private String serAddress;
     @ApiModelProperty(value = "签订合同时间", required = true)
@@ -97,12 +99,12 @@ public class ContractSaveForm {
         this.entCompName = entCompName;
     }
 
-    public String getSerCompId() {
-        return serCompId;
+    public List<String> getSerCompIds() {
+        return serCompIds;
     }
 
-    public void setSerCompId(String serCompId) {
-        this.serCompId = serCompId;
+    public void setSerCompIds(List<String> serCompIds) {
+        this.serCompIds = serCompIds;
     }
 
     public String getSerAddress() {
@@ -193,7 +195,6 @@ public class ContractSaveForm {
         t.setConProject(conProject);
         t.setEntCompType(entCompType);
         t.setEntCompName(entCompName);
-        t.setSerCompId(serCompId);
         t.setSerAddress(serAddress);
         t.setSigConDate(sigConDate);
         t.setProAddress(proAddress);

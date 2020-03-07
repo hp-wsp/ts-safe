@@ -2,6 +2,7 @@ package com.ts.server.safe.base.controller.man;
 
 import com.ts.server.safe.base.domain.UniRisk;
 import com.ts.server.safe.base.service.UniRiskService;
+import com.ts.server.safe.controller.vo.ResultVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class UniRiskManController {
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ApiOperation("查询危险识别")
-    public List<UniRisk> query(String name){
-        return service.query(name, 0, 1000);
+    public ResultVo<List<UniRisk>> query(String name){
+        return ResultVo.success(service.query(name, 0, 1000));
     }
 }
