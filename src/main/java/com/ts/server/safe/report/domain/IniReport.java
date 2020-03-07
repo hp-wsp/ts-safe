@@ -4,7 +4,6 @@ import com.ts.server.safe.company.domain.CompProduct;
 import com.ts.server.safe.company.domain.OccDiseaseJob;
 import com.ts.server.safe.company.domain.RiskChemical;
 import com.ts.server.safe.company.domain.SpePerson;
-import com.ts.server.safe.task.domain.TaskContent;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

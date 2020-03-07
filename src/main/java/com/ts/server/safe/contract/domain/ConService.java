@@ -30,6 +30,8 @@ public class ConService {
     private String leaId;
     @ApiModelProperty("负责人名称")
     private String leaName;
+    @ApiModelProperty("是否是初检")
+    private boolean initial;
     @ApiModelProperty("状态")
     private Status status;
     @ApiModelProperty("修改时间")
@@ -116,6 +118,14 @@ public class ConService {
         this.leaName = leaName;
     }
 
+    public boolean isInitial() {
+        return initial;
+    }
+
+    public void setInitial(boolean initial) {
+        this.initial = initial;
+    }
+
     public Status getStatus() {
         return status;
     }
@@ -145,7 +155,8 @@ public class ConService {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ConService that = (ConService) o;
-        return Objects.equals(id, that.id) &&
+        return initial == that.initial &&
+                Objects.equals(id, that.id) &&
                 Objects.equals(channelId, that.channelId) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(conId, that.conId) &&
@@ -161,7 +172,7 @@ public class ConService {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, channelId, name, conId, conName, compId, compName, leaId, leaName, status, updateTime, createTime);
+        return Objects.hash(id, channelId, name, conId, conName, compId, compName, leaId, leaName, initial, status, updateTime, createTime);
     }
 
     @Override
@@ -176,6 +187,7 @@ public class ConService {
                 .append("compName", compName)
                 .append("leaId", leaId)
                 .append("leaName", leaName)
+                .append("initCheck", initial)
                 .append("status", status)
                 .append("updateTime", updateTime)
                 .append("createTime", createTime)

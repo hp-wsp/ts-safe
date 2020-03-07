@@ -4,7 +4,7 @@ import com.ts.server.safe.company.domain.RiskChemical;
 import com.ts.server.safe.company.domain.SpePerson;
 import com.ts.server.safe.report.domain.IniReport;
 import com.ts.server.safe.report.service.export.wps.WpsExportWord;
-import com.ts.server.safe.task.domain.TaskContent;
+import com.ts.server.safe.task.domain.TaskItem;
 import org.junit.Test;
 
 import java.io.File;
@@ -120,8 +120,8 @@ public class WpsExportWordTest {
         compBaseInfo.setRiskChemicals(riskChemicals);
 
         IniReport.SafeProduct safeProduct = new IniReport.SafeProduct();
-        List<TaskContent> baseContents = new ArrayList<>();
-        TaskContent taskContent = new TaskContent();
+        List<TaskItem> baseContents = new ArrayList<>();
+        TaskItem taskContent = new TaskItem();
         taskContent.setDanDescribe("《中华人民共和国公司法》第七条企业经营者应当依法向工商行政管理机关办理有关登记手续，取得工商营业执照");
         taskContent.setDanSuggest("《中华人民共和国公司法》第七条企业经营者应当依法向工商行政管理机关办理有关登记手续，取得工商营业执照");
         taskContent.setRemark("基础隐患图1");

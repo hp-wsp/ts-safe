@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ts.server.safe.common.id.IdGenerator;
 import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.common.utils.DaoUtils;
-import com.ts.server.safe.task.domain.CheckTask;
+import com.ts.server.safe.task.domain.TaskCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,18 +23,20 @@ import java.util.*;
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 @Repository
-public class CheckTaskDao {
+public class TaskCheckDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
     private final IdGenerator<String> numIdGenerator;
     private final ObjectMapper objectMapper;
-    private final RowMapper<CheckTask> mapper;
+    private final RowMapper<TaskCheck> mapper;
+    private final RowMapper<TaskCheck> queryMapper;
 
     @Autowired
-    public CheckTaskDao(DataSource dataSource, ObjectMapper objectMapper){
+    public TaskCheckDao(DataSource dataSource, ObjectMapper objectMapper){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.objectMapper = objectMapper;
-        this.mapper = new CheckTaskMapper(objectMapper);
+        this.mapper = new TaskCheckMapper(objectMapper, true);
+        this.queryMapper = new TaskCheckMapper(objectMapper, false);
         this.namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.numIdGenerator = IdGenerators.seqId(dataSource, "seq_check_task_num",
                 e -> String.format("%05d", (e % 100000)));
@@ -44,14 +46,14 @@ public class CheckTaskDao {
         return numIdGenerator.generate();
     }
 
-    public void insert(CheckTask t){
-        final String sql = "INSERT INTO c_check_task (id, num, channel_id, service_id, service_name, comp_id, comp_name, " +
-                "check_time_from, check_time_to, check_users, check_ind_ctgs, is_review, status, update_time, create_time) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+    public void insert(TaskCheck t){
+        final String sql = "INSERT INTO ck_task (id, num, channel_id, service_id, service_name, comp_id, comp_name, " +
+                "check_time_from, check_time_to, check_users, check_ind_ctgs, is_review, is_initial, status, update_time, create_time) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getNum(), t.getChannelId(), t.getServiceId(), t.getServiceName(),
-                t.getCompId(), t.getCompName(), t.getCheckTimeFrom(), t.getCheckTimeTo(),
-                toJson(t.getCheckUsers()), toJson(t.getCheckIndCtgs()), t.isReview(), t.getStatus().name());
+                t.getCompId(), t.getCompName(), t.getCheckTimeFrom(), t.getCheckTimeTo(), toJson(t.getCheckUsers()),
+                toJson(t.getCheckIndCtgs()), t.isReview(), t.isInitial(), t.getStatus().name());
     }
 
     private String toJson(List<?> values){
@@ -62,8 +64,8 @@ public class CheckTaskDao {
         }
     }
 
-    public boolean update(CheckTask t){
-        final String sql = "UPDATE c_check_task SET service_id = ?, service_name = ?, comp_id = ?, comp_name = ?," +
+    public boolean update(TaskCheck t){
+        final String sql = "UPDATE ck_task SET service_id = ?, service_name = ?, comp_id = ?, comp_name = ?," +
                 "check_time_from = ?, check_time_to = ?, check_users = ?, check_ind_ctgs = ?, is_review = ?, " +
                 "update_time = now() WHERE id = ?";
 
@@ -73,34 +75,34 @@ public class CheckTaskDao {
     }
 
     public boolean delete(String id){
-        final String sql = "DELETE FROM c_check_task WHERE id = ?";
+        final String sql = "DELETE FROM ck_task WHERE id = ?";
         return jdbcTemplate.update(sql, id) > 0;
     }
 
-    public CheckTask findOne(String id){
-        final String sql = "SELECT * FROM c_check_task WHERE id = ?";
+    public TaskCheck findOne(String id){
+        final String sql = "SELECT * FROM ck_task WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
     }
 
-    public Optional<CheckTask> findLast(String serviceId){
-        final String sql = "SELECT * FROM c_check_task WHERE service_id = ? ORDER BY create_time DESC";
-        List<CheckTask> tasks = jdbcTemplate.query(sql, new Object[]{serviceId}, mapper);
+    public Optional<TaskCheck> findLast(String serviceId){
+        final String sql = "SELECT * FROM ck_task WHERE service_id = ? ORDER BY create_time DESC";
+        List<TaskCheck> tasks = jdbcTemplate.query(sql, new Object[]{serviceId}, mapper);
         return tasks.isEmpty()? Optional.empty(): Optional.of(tasks.get(0));
     }
 
-    public boolean updateStatus(String id, CheckTask.Status status){
-        final String sql = "UPDATE c_check_task SET status = ? WHERE id = ?";
+    public boolean updateStatus(String id, TaskCheck.Status status){
+        final String sql = "UPDATE ck_task SET status = ? WHERE id = ?";
         return jdbcTemplate.update(sql, status.name(), id) > 0;
     }
 
-    public List<CheckTask> findByServiceId(String serviceId){
-        final String sql = "SELECT * FROM c_check_task WHERE service_id = ? ORDER BY create_time DESC";
+    public List<TaskCheck> findByServiceId(String serviceId){
+        final String sql = "SELECT * FROM ck_task WHERE service_id = ? ORDER BY create_time DESC";
         return jdbcTemplate.query(sql, new Object[]{serviceId}, mapper);
     }
 
-    public Long count(String channelId, String compName, CheckTask.Status status, Date checkTimeFrom, Date checkTimeTo){
+    public Long count(String channelId, String compName, TaskCheck.Status status, Date checkTimeFrom, Date checkTimeTo){
 
-        String sql = "SELECT COUNT(id) FROM c_check_task WHERE channel_id LIKE ? AND comp_name LIKE ? ";
+        String sql = "SELECT COUNT(id) FROM ck_task WHERE channel_id LIKE ? AND comp_name LIKE ? ";
         int len = 2;
         if(checkTimeFrom != null){
             sql = sql + " AND check_time_from < ?";
@@ -131,9 +133,9 @@ public class CheckTaskDao {
         return jdbcTemplate.queryForObject(sql, params, Long.class);
     }
 
-    public List<CheckTask> find(String channelId, String compName, CheckTask.Status status,
+    public List<TaskCheck> find(String channelId, String compName, TaskCheck.Status status,
                                 Date checkTimeFrom, Date checkTimeTo, int offset, int limit){
-        String sql = "SELECT * FROM c_check_task WHERE channel_id LIKE ? AND comp_name LIKE ? ";
+        String sql = "SELECT * FROM ck_task WHERE channel_id LIKE ? AND comp_name LIKE ? ";
         int len = 4;
         if(checkTimeFrom != null){
             sql = sql + " AND check_time_from < ?";
@@ -164,30 +166,32 @@ public class CheckTaskDao {
         params[index++] = limit;
         params[index] = offset;
 
-        return jdbcTemplate.query(sql, params, mapper);
+        return jdbcTemplate.query(sql, params, queryMapper);
     }
 
-    public List<CheckTask> findIn(List<String> ids){
-        final String sql = "SELECT * FROM c_check_task WHERE id IN (:ids)";
+    public List<TaskCheck> findIn(List<String> ids){
+        final String sql = "SELECT * FROM ck_task WHERE id IN (:ids)";
         Map<String, List<String>> params = new LinkedHashMap<>(1,1);
         params.put("ids", ids);
         return namedJdbcTemplate.query(sql, params, mapper);
     }
 
-    static class CheckTaskMapper implements RowMapper<CheckTask>{
+    private static class TaskCheckMapper implements RowMapper<TaskCheck>{
         private final ObjectMapper objectMapper;
         private final JavaType usersType;
         private final JavaType indCtgsType;
+        private final boolean isParseJson;
 
-        CheckTaskMapper(ObjectMapper objectMapper){
+        TaskCheckMapper(ObjectMapper objectMapper, boolean isParseJson){
             this.objectMapper = objectMapper;
-            this.usersType = objectMapper.getTypeFactory().constructParametricType(List.class, CheckTask.CheckUser.class);
-            this.indCtgsType = objectMapper.getTypeFactory().constructParametricType(List.class, CheckTask.CheckIndCtg.class);
+            this.isParseJson = isParseJson;
+            this.usersType = objectMapper.getTypeFactory().constructParametricType(List.class, TaskCheck.CheckUser.class);
+            this.indCtgsType = objectMapper.getTypeFactory().constructParametricType(List.class, TaskCheck.CheckIndCtg.class);
         }
 
         @Override
-        public CheckTask mapRow(ResultSet r, int i) throws SQLException {
-            CheckTask t = new CheckTask();
+        public TaskCheck mapRow(ResultSet r, int i) throws SQLException {
+            TaskCheck t = new TaskCheck();
 
             t.setId(r.getString("id"));
             t.setNum(r.getString("num"));
@@ -198,10 +202,16 @@ public class CheckTaskDao {
             t.setCompName(r.getString("comp_name"));
             t.setCheckTimeFrom(r.getDate("check_time_from"));
             t.setCheckTimeTo(r.getDate("check_time_to"));
-            t.setCheckUsers(toObject(r.getString("check_users"), usersType));
-            t.setCheckIndCtgs(toObject(r.getString("check_ind_ctgs"), indCtgsType));
+            if(isParseJson){
+                t.setCheckUsers(toObject(r.getString("check_users"), usersType));
+                t.setCheckIndCtgs(toObject(r.getString("check_ind_ctgs"), indCtgsType));
+            }else{
+                t.setCheckUsers(Collections.emptyList());
+                t.setCheckIndCtgs(Collections.emptyList());
+            }
             t.setReview(r.getBoolean("is_review"));
-            t.setStatus(CheckTask.Status.valueOf(r.getString("status")));
+            t.setInitial(r.getBoolean("is_initial"));
+            t.setStatus(TaskCheck.Status.valueOf(r.getString("status")));
             t.setUpdateTime(r.getTimestamp("update_time"));
             t.setCreateTime(r.getTimestamp("create_time"));
 

@@ -1,6 +1,6 @@
 package com.ts.server.safe.task.dao;
 
-import com.ts.server.safe.task.domain.CheckTask;
+import com.ts.server.safe.task.domain.TaskCheck;
 import com.ts.server.safe.task.domain.TaskOfMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,29 +30,29 @@ public class TaskOfMemberDao {
         t.setId(r.getInt("id"));
         t.setMemId(r.getString("mem_id"));
         t.setTaskId(r.getString("task_id"));
-        t.setStatus(CheckTask.Status.valueOf(r.getString("status")));
+        t.setStatus(TaskCheck.Status.valueOf(r.getString("status")));
         t.setCreateTime(r.getTimestamp("create_time"));
 
         return t;
     };
 
     public void insert(TaskOfMember t){
-        final String sql = "INSERT INTO c_task_of_member (mem_id, task_id, status, create_time) VALUES (?, ?, ?, now())";
+        final String sql = "INSERT INTO ck_of_member (mem_id, task_id, status, create_time) VALUES (?, ?, ?, now())";
         jdbcTemplate.update(sql, t.getMemId(), t.getTaskId(), t.getStatus().name());
     }
 
     public void deleteOfTask(String taskId){
-        final String sql = "DELETE FROM c_task_of_member WHERE task_id = ?";
+        final String sql = "DELETE FROM ck_of_member WHERE task_id = ?";
         jdbcTemplate.update(sql, taskId);
     }
 
-    public void updateStatus(String taskId, CheckTask.Status status){
-        final String sql = "UPDATE c_task_of_member SET status = ? WHERE task_id = ?";
+    public void updateStatus(String taskId, TaskCheck.Status status){
+        final String sql = "UPDATE ck_of_member SET status = ? WHERE task_id = ?";
         jdbcTemplate.update(sql, status.name(), taskId);
     }
 
-    public List<TaskOfMember> query(String memId, CheckTask.Status status, int offset, int limit){
-        String sql = "SELECT * FROM c_task_of_member WHERE mem_id = ? ";
+    public List<TaskOfMember> query(String memId, TaskCheck.Status status, int offset, int limit){
+        String sql = "SELECT * FROM ck_of_member WHERE mem_id = ? ";
         if(status != null){
             sql = sql + "AND status = ? ";
         }

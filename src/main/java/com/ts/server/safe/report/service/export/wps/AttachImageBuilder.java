@@ -2,7 +2,6 @@ package com.ts.server.safe.report.service.export.wps;
 
 import com.ts.server.safe.report.domain.IniReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
-import com.ts.server.safe.task.domain.TaskContent;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -16,7 +15,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 附件图片

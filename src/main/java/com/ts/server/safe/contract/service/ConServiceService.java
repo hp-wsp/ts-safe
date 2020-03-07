@@ -71,6 +71,9 @@ public class ConServiceService {
         t.setLeaName(member.getName());
         t.setStatus(ConService.Status.WAIT);
 
+        boolean isInitial = !dao.hasService(conId, serCompId);
+        t.setInitial(isInitial);
+
         dao.insert(t);
         items.forEach(e -> e.setServiceId(t.getId()));
         itemService.save(t.getId(), items);

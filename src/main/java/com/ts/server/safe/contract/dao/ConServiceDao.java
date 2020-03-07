@@ -31,6 +31,7 @@ public class ConServiceDao {
         t.setCompName(r.getString("comp_name"));
         t.setLeaId(r.getString("lea_id"));
         t.setLeaName(r.getString("lea_name"));
+        t.setInitial(r.getBoolean("is_initial"));
         t.setStatus(ConService.Status.valueOf(r.getString("status")));
         t.setUpdateTime(r.getTimestamp("update_time"));
         t.setCreateTime(r.getTimestamp("create_time"));
@@ -45,10 +46,11 @@ public class ConServiceDao {
 
     public void insert(ConService t){
         final String sql = "INSERT INTO oa_service (id, channel_id, name, con_id, con_name, comp_id, comp_name," +
-                "lea_id, lea_name, status, update_time, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+                "lea_id, lea_name, is_initial, status, update_time, create_time) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getName(), t.getConId(), t.getConName(),
-                t.getCompId(), t.getCompName(), t.getLeaId(), t.getLeaName(), t.getStatus().name());
+                t.getCompId(), t.getCompName(), t.getLeaId(), t.getLeaName(), t.isInitial(), t.getStatus().name());
     }
 
     public boolean update(ConService t){
@@ -71,6 +73,12 @@ public class ConServiceDao {
     public ConService findOne(String id){
         final String sql = "SELECT * FROM oa_service WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
+    }
+
+    public boolean hasService(String conId, String compId){
+        final String sql = "SELECT COUNT(id) FROM oa_service WHERE con_id = ? AND comp_id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{conId, compId}, Integer.class);
+        return count != null && count > 0;
     }
 
     public List<ConService> findByCompId(String compId){

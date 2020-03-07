@@ -7,13 +7,13 @@ import com.ts.server.safe.controller.vo.ResultPageVo;
 import com.ts.server.safe.controller.vo.ResultVo;
 import com.ts.server.safe.security.CredentialContextUtils;
 import com.ts.server.safe.security.annotation.ApiACL;
-import com.ts.server.safe.task.controller.man.form.CheckTaskSaveForm;
-import com.ts.server.safe.task.controller.man.form.CheckTaskUpdateForm;
+import com.ts.server.safe.task.controller.man.form.TaskCheckSaveForm;
+import com.ts.server.safe.task.controller.man.form.TaskCheckUpdateForm;
 import com.ts.server.safe.task.controller.man.vo.CheckTaskVo;
-import com.ts.server.safe.task.domain.TaskContent;
-import com.ts.server.safe.task.domain.CheckTask;
-import com.ts.server.safe.task.service.TaskContentService;
-import com.ts.server.safe.task.service.CheckTaskService;
+import com.ts.server.safe.task.domain.TaskItem;
+import com.ts.server.safe.task.domain.TaskCheck;
+import com.ts.server.safe.task.service.TaskCheckService;
+import com.ts.server.safe.task.service.TaskItemService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -37,23 +37,23 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/man/checkTask")
 @ApiACL
 @Api(value = "/man/checkTask", tags = "M-管理检查任务API接口")
-public class CheckTaskManController {
-    private final CheckTaskService service;
-    private final TaskContentService contentService;
+public class TaskCheckManController {
+    private final TaskCheckService service;
+    private final TaskItemService contentService;
 
     @Autowired
-    public CheckTaskManController(CheckTaskService service, TaskContentService contentService) {
+    public TaskCheckManController(TaskCheckService service, TaskItemService contentService) {
         this.service = service;
         this.contentService = contentService;
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("新增检查任务")
-    public ResultVo<CheckTaskVo> save(@Valid @RequestBody CheckTaskSaveForm form){
-        CheckTask t = form.toDomain();
+    public ResultVo<CheckTaskVo> save(@Valid @RequestBody TaskCheckSaveForm form){
+        TaskCheck t = form.toDomain();
         t.setChannelId(getCredential().getChannelId());
-        CheckTask n = service.save(t, form.getContentIds());
-        List<TaskContent> contents = contentService.query(n.getId());
+        TaskCheck n = service.save(t, form.getContentIds());
+        List<TaskItem> contents = contentService.query(n.getId());
         return ResultVo.success(new CheckTaskVo(n, contents));
     }
 
@@ -63,26 +63,26 @@ public class CheckTaskManController {
 
     @PutMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     @ApiOperation("修改检查任务")
-    public ResultVo<CheckTaskVo> update(@Valid @RequestBody CheckTaskUpdateForm form){
-        CheckTask t = form.toDomain();
+    public ResultVo<CheckTaskVo> update(@Valid @RequestBody TaskCheckUpdateForm form){
+        TaskCheck t = form.toDomain();
         t.setChannelId(getCredential().getChannelId());
-        CheckTask n = service.update(t, form.getContentIds());
-        List<TaskContent> contents = contentService.query(n.getId());
+        TaskCheck n = service.update(t, form.getContentIds());
+        List<TaskItem> contents = contentService.query(n.getId());
         return ResultVo.success(new CheckTaskVo(n, contents));
     }
 
     @GetMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
     @ApiOperation("得到检查任务")
     public ResultVo<CheckTaskVo> get(@PathVariable("id")String id){
-        CheckTask t = service.get(id);
-        List<TaskContent> contents = contentService.query(id);
+        TaskCheck t = service.get(id);
+        List<TaskItem> contents = contentService.query(id);
         return ResultVo.success(new CheckTaskVo(t, contents));
     }
 
     @DeleteMapping(value = "{id}", produces = APPLICATION_JSON_VALUE)
     @ApiOperation("删除检查任务")
     public ResultVo<OkVo> delete(@PathVariable("id")String id){
-        CheckTask t = service.get(id);
+        TaskCheck t = service.get(id);
         if(!StringUtils.equals(t.getChannelId(), getCredential().getChannelId())){
             throw new BaseException("不能删除检查任务");
         }
@@ -91,13 +91,13 @@ public class CheckTaskManController {
 
     @GetMapping(value = "ofService", produces = APPLICATION_JSON_VALUE)
     @ApiOperation("查询服务所属任务")
-    public ResultVo<List<CheckTask>> queryOfService(@RequestParam("serviceId") String serviceId){
+    public ResultVo<List<TaskCheck>> queryOfService(@RequestParam("serviceId") String serviceId){
         return ResultVo.success(service.queryByServiceId(serviceId));
     }
 
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @ApiOperation("查询检查任务")
-    public ResultPageVo<CheckTask> query(
+    public ResultPageVo<TaskCheck> query(
             @RequestParam(required = false) @ApiParam(value = "公司名称") String compName,
             @RequestParam(required = false) @ApiParam(value = "状态") String status,
             @RequestParam(required = false) @ApiParam(value = "检查开始时间") Date checkTimeFrom,
@@ -107,7 +107,7 @@ public class CheckTaskManController {
             @RequestParam(defaultValue = "15") @ApiParam(value = "查询每页记录数") int rows){
 
         String channelId = getCredential().getChannelId();
-        CheckTask.Status statusObj = status == null? null: CheckTask.Status.valueOf(status);
+        TaskCheck.Status statusObj = status == null? null: TaskCheck.Status.valueOf(status);
         return new ResultPageVo.Builder<>(page, rows, service.query(channelId, compName, statusObj, checkTimeFrom, checkTimeTo, page * rows, rows))
                 .count(isCount, () -> service.count(channelId, compName, statusObj, checkTimeFrom, checkTimeTo))
                 .build();

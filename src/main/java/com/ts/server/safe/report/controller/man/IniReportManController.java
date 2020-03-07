@@ -26,10 +26,10 @@ import com.ts.server.safe.report.domain.IniReport;
 import com.ts.server.safe.report.domain.ReportItem;
 import com.ts.server.safe.report.service.IniReportService;
 import com.ts.server.safe.security.CredentialContextUtils;
-import com.ts.server.safe.task.domain.CheckTask;
-import com.ts.server.safe.task.domain.TaskContent;
-import com.ts.server.safe.task.service.CheckTaskService;
-import com.ts.server.safe.task.service.TaskContentService;
+import com.ts.server.safe.task.domain.TaskCheck;
+import com.ts.server.safe.task.domain.TaskItem;
+import com.ts.server.safe.task.service.TaskCheckService;
+import com.ts.server.safe.task.service.TaskItemService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -59,22 +59,22 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class IniReportManController {
     private final IniReportService service;
     private final ChannelService channelService;
-    private final CheckTaskService taskService;
+    private final TaskCheckService taskService;
     private final ConServiceService conService;
     private final ContractService contractService;
     private final CompInfoService compInfoService;
     private final MemberService memberService;
     private final CompProductService productService;
     private final RiskChemicalService riskChemicalService;
-    private final TaskContentService taskContentService;
+    private final TaskItemService taskContentService;
     private final OccDiseaseJobService occDiseaseJobService;
 
     @Autowired
     public IniReportManController(IniReportService service, ChannelService channelService,
-                                  CheckTaskService taskService, ConServiceService conService,
+                                  TaskCheckService taskService, ConServiceService conService,
                                   ContractService contractService, CompInfoService compInfoService,
                                   MemberService memberService, CompProductService productService,
-                                  RiskChemicalService riskChemicalService, TaskContentService taskContentService,
+                                  RiskChemicalService riskChemicalService, TaskItemService taskContentService,
                                   OccDiseaseJobService occDiseaseJobService) {
 
         this.service = service;
@@ -93,7 +93,7 @@ public class IniReportManController {
     @GetMapping(value = "init/{taskId}", produces = APPLICATION_JSON_VALUE)
     @ApiOperation("初始化检查报表")
     public ResultVo<IniReport> init(@PathVariable("taskId")String taskId){
-        CheckTask task = taskService.get(taskId);
+        TaskCheck task = taskService.get(taskId);
         String channelId = getCredential().getChannelId();
         if(!StringUtils.equals(task.getChannelId(), channelId)){
             throw new BaseException("不能初始检查报表");
@@ -149,7 +149,7 @@ public class IniReportManController {
         report.setCompBaseInfo(compBaseInfo);
 
         IniReport.SafeProduct safeProduct = new IniReport.SafeProduct();
-        List<TaskContent> taskContents = taskContentService.query(taskId);
+        List<TaskItem> taskContents = taskContentService.query(taskId);
         safeProduct.setBaseContents(filterTaskContents(taskContents, "001"));
         safeProduct.setSceneContents(filterTaskContents(taskContents, "002"));
         safeProduct.setOccDiseaseJobs(occDiseaseJobService.queryCompany(task.getCompId()));
@@ -199,7 +199,7 @@ public class IniReportManController {
         return dataForm.format(t.getSerConDateFrom()) + " 至 " + dataForm.format(t.getSerConDateTo());
     }
 
-    private List<ReportItem> filterTaskContents(List<TaskContent> contents, String typeId){
+    private List<ReportItem> filterTaskContents(List<TaskItem> contents, String typeId){
         return contents.stream().filter(e -> StringUtils.equals(e.getTypeId(), typeId)).map(e -> {
             ReportItem t = new ReportItem();
 
@@ -218,7 +218,7 @@ public class IniReportManController {
         t.setChannelId(channel.getId());
         t.setChannelName(channel.getName());
         t.setCompName(channel.getName());
-        CheckTask task = taskService.get(form.getTaskId());
+        TaskCheck task = taskService.get(form.getTaskId());
         if(!StringUtils.equals(task.getChannelId(), channelId)){
             throw new BaseException("不能添加企业检查报表");
         }
@@ -239,7 +239,7 @@ public class IniReportManController {
         if(!StringUtils.equals(o.getChannelId(), channelId)){
             throw new BaseException("不能修改检查报表");
         }
-        CheckTask task = taskService.get(form.getTaskId());
+        TaskCheck task = taskService.get(form.getTaskId());
         if(!StringUtils.equals(task.getChannelId(), channelId)){
             throw new BaseException("不能修改企业检查报表");
         }

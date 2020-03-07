@@ -1,7 +1,7 @@
 package com.ts.server.safe.task.controller.man.form;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ts.server.safe.task.domain.CheckTask;
+import com.ts.server.safe.task.domain.TaskCheck;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotBlank;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class CheckTaskSaveForm {
+public class TaskCheckSaveForm {
     @NotBlank
     @ApiModelProperty(value = "服务编号", required = true)
     private String serviceId;
@@ -97,8 +97,8 @@ public class CheckTaskSaveForm {
         this.review = review;
     }
 
-    public CheckTask toDomain(){
-        CheckTask t = new CheckTask();
+    public TaskCheck toDomain(){
+        TaskCheck t = new TaskCheck();
 
         t.setServiceId(serviceId);
         t.setCheckTimeFrom(checkTimeFrom);
@@ -110,17 +110,17 @@ public class CheckTaskSaveForm {
         return t;
     }
 
-    private List<CheckTask.CheckIndCtg> buildIndCtgs(){
+    private List<TaskCheck.CheckIndCtg> buildIndCtgs(){
         return Arrays.stream(checkIndCtgIds).map(e -> {
-            CheckTask.CheckIndCtg t = new CheckTask.CheckIndCtg();
+            TaskCheck.CheckIndCtg t = new TaskCheck.CheckIndCtg();
             t.setId(e);
             return t;
         }).collect(Collectors.toList());
     }
 
-    private List<CheckTask.CheckUser> buildUsers(){
+    private List<TaskCheck.CheckUser> buildUsers(){
         return Arrays.stream(checkUserIds).map(e -> {
-            CheckTask.CheckUser t = new CheckTask.CheckUser();
+            TaskCheck.CheckUser t = new TaskCheck.CheckUser();
 
             t.setId(e);
             return t;

@@ -19,7 +19,7 @@ public class TaskOfMember {
     @ApiModelProperty("任务编号")
     private String taskId;
     @ApiModelProperty("编号")
-    private CheckTask.Status status;
+    private TaskCheck.Status status;
     @ApiModelProperty("创建时间")
     private Date createTime;
 
@@ -47,11 +47,11 @@ public class TaskOfMember {
         this.taskId = taskId;
     }
 
-    public CheckTask.Status getStatus() {
+    public TaskCheck.Status getStatus() {
         return status;
     }
 
-    public void setStatus(CheckTask.Status status) {
+    public void setStatus(TaskCheck.Status status) {
         this.status = status;
     }
 

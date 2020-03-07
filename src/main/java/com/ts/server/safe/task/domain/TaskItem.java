@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class TaskContent {
+public class TaskItem {
     @ApiModelProperty("编号")
     private String id;
     @ApiModelProperty("任务编号")
@@ -212,7 +212,7 @@ public class TaskContent {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TaskContent that = (TaskContent) o;
+        TaskItem that = (TaskItem) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(taskId, that.taskId) &&
                 Objects.equals(contentId, that.contentId) &&

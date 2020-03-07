@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author <a href="mailto:hhywangwei@gmail.om">WangWei</a>
  */
-public class CheckTask {
+public class TaskCheck {
     @ApiModelProperty("编号")
     private String id;
     @ApiModelProperty("服务商编号")
@@ -37,6 +37,8 @@ public class CheckTask {
     private List<CheckIndCtg> checkIndCtgs;
     @ApiModelProperty("复查以前查出的隐患")
     private boolean review;
+    @ApiModelProperty("是否是初检")
+    private boolean initial;
     @ApiModelProperty("检查任务状态")
     private Status status;
     @ApiModelProperty("修改时间")
@@ -144,6 +146,14 @@ public class CheckTask {
         this.review = review;
     }
 
+    public boolean isInitial() {
+        return initial;
+    }
+
+    public void setInitial(boolean initial) {
+        this.initial = initial;
+    }
+
     public Status getStatus() {
         return status;
     }
@@ -172,27 +182,28 @@ public class CheckTask {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CheckTask checkTask = (CheckTask) o;
-        return review == checkTask.review &&
-                Objects.equals(id, checkTask.id) &&
-                Objects.equals(channelId, checkTask.channelId) &&
-                Objects.equals(serviceId, checkTask.serviceId) &&
-                Objects.equals(serviceName, checkTask.serviceName) &&
-                Objects.equals(compId, checkTask.compId) &&
-                Objects.equals(compName, checkTask.compName) &&
-                Objects.equals(num, checkTask.num) &&
-                Objects.equals(checkTimeFrom, checkTask.checkTimeFrom) &&
-                Objects.equals(checkTimeTo, checkTask.checkTimeTo) &&
-                Objects.equals(checkUsers, checkTask.checkUsers) &&
-                Objects.equals(checkIndCtgs, checkTask.checkIndCtgs) &&
-                status == checkTask.status &&
-                Objects.equals(updateTime, checkTask.updateTime) &&
-                Objects.equals(createTime, checkTask.createTime);
+        TaskCheck task = (TaskCheck) o;
+        return review == task.review &&
+                initial == task.initial &&
+                Objects.equals(id, task.id) &&
+                Objects.equals(channelId, task.channelId) &&
+                Objects.equals(serviceId, task.serviceId) &&
+                Objects.equals(serviceName, task.serviceName) &&
+                Objects.equals(compId, task.compId) &&
+                Objects.equals(compName, task.compName) &&
+                Objects.equals(num, task.num) &&
+                Objects.equals(checkTimeFrom, task.checkTimeFrom) &&
+                Objects.equals(checkTimeTo, task.checkTimeTo) &&
+                Objects.equals(checkUsers, task.checkUsers) &&
+                Objects.equals(checkIndCtgs, task.checkIndCtgs) &&
+                status == task.status &&
+                Objects.equals(updateTime, task.updateTime) &&
+                Objects.equals(createTime, task.createTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, channelId, serviceId, serviceName, compId, compName, num, checkTimeFrom, checkTimeTo, checkUsers, checkIndCtgs, review, status, updateTime, createTime);
+        return Objects.hash(id, channelId, serviceId, serviceName, compId, compName, num, checkTimeFrom, checkTimeTo, checkUsers, checkIndCtgs, review, initial, status, updateTime, createTime);
     }
 
     @Override
@@ -210,6 +221,7 @@ public class CheckTask {
                 .append("checkUsers", checkUsers)
                 .append("checkIndCtgs", checkIndCtgs)
                 .append("review", review)
+                .append("initial", initial)
                 .append("status", status)
                 .append("updateTime", updateTime)
                 .append("createTime", createTime)

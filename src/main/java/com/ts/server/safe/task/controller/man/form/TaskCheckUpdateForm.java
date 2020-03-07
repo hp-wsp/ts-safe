@@ -1,6 +1,6 @@
 package com.ts.server.safe.task.controller.man.form;
 
-import com.ts.server.safe.task.domain.CheckTask;
+import com.ts.server.safe.task.domain.TaskCheck;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class CheckTaskUpdateForm extends CheckTaskSaveForm {
+public class TaskCheckUpdateForm extends TaskCheckSaveForm {
     @ApiModelProperty("编号")
     private String id;
 
@@ -21,8 +21,8 @@ public class CheckTaskUpdateForm extends CheckTaskSaveForm {
     }
 
     @Override
-    public CheckTask toDomain() {
-        CheckTask t = super.toDomain();
+    public TaskCheck toDomain() {
+        TaskCheck t = super.toDomain();
         t.setId(id);
 
         return t;

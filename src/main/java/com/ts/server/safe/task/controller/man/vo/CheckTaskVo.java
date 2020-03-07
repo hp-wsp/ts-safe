@@ -1,7 +1,7 @@
 package com.ts.server.safe.task.controller.man.vo;
 
-import com.ts.server.safe.task.domain.TaskContent;
-import com.ts.server.safe.task.domain.CheckTask;
+import com.ts.server.safe.task.domain.TaskItem;
+import com.ts.server.safe.task.domain.TaskCheck;
 
 import java.util.List;
 
@@ -11,25 +11,25 @@ import java.util.List;
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 public class CheckTaskVo {
-    private final CheckTask task;
-    private final List<TaskContent> contents;
+    private final TaskCheck task;
+    private final List<TaskItem> contents;
 
     /**
      * 构造{@link CheckTaskVo}
      *
-     * @param task {@link CheckTask}
-     * @param contents {@link TaskContent}集合
+     * @param task {@link TaskCheck}
+     * @param contents {@link TaskItem}集合
      */
-    public CheckTaskVo(CheckTask task, List<TaskContent> contents) {
+    public CheckTaskVo(TaskCheck task, List<TaskItem> contents) {
         this.task = task;
         this.contents = contents;
     }
 
-    public CheckTask getTask() {
+    public TaskCheck getTask() {
         return task;
     }
 
-    public List<TaskContent> getContents() {
+    public List<TaskItem> getContents() {
         return contents;
     }
 }

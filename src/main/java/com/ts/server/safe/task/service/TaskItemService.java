@@ -4,8 +4,8 @@ import com.ts.server.safe.BaseException;
 import com.ts.server.safe.base.domain.UniCheckContent;
 import com.ts.server.safe.base.service.UniCheckContentService;
 import com.ts.server.safe.common.id.IdGenerators;
-import com.ts.server.safe.task.dao.TaskContentDao;
-import com.ts.server.safe.task.domain.TaskContent;
+import com.ts.server.safe.task.dao.TaskItemDao;
+import com.ts.server.safe.task.domain.TaskItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -21,24 +21,24 @@ import java.util.List;
  */
 @Service
 @Transactional(readOnly = true)
-public class TaskContentService {
-    private final TaskContentDao dao;
+public class TaskItemService {
+    private final TaskItemDao dao;
     private final UniCheckContentService tableService;
 
     @Autowired
-    public TaskContentService(TaskContentDao dao, UniCheckContentService tableService) {
+    public TaskItemService(TaskItemDao dao, UniCheckContentService tableService) {
         this.dao = dao;
         this.tableService = tableService;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public TaskContent save(String taskId, String contentId){
+    public TaskItem save(String taskId, String contentId){
         return dao.has(taskId, contentId)?
                 update(taskId, contentId) : insert(taskId, contentId);
     }
 
-    private TaskContent insert(String taskId, String contentId){
-        TaskContent t = new TaskContent();
+    private TaskItem insert(String taskId, String contentId){
+        TaskItem t = new TaskItem();
 
         UniCheckContent table = tableService.get(contentId);
 
@@ -58,8 +58,8 @@ public class TaskContentService {
         return dao.findOne(t.getId());
     }
 
-    private TaskContent update(String taskId, String contentId){
-        TaskContent t = dao.findOne(taskId, contentId);
+    private TaskItem update(String taskId, String contentId){
+        TaskItem t = dao.findOne(taskId, contentId);
 
         UniCheckContent table = tableService.get(contentId);
         t.setContentId(table.getId());
@@ -77,9 +77,9 @@ public class TaskContentService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public TaskContent saveResult(String id, TaskContent.CheckResult result,
-                                  TaskContent.DangerLevel level, String danDesc,
-                                  String danSuggest, String[] images){
+    public TaskItem saveResult(String id, TaskItem.CheckResult result,
+                               TaskItem.DangerLevel level, String danDesc,
+                               String danSuggest, String[] images){
 
         if(!dao.updateResult(id, result, level, danDesc, danSuggest, images)){
             throw new BaseException("保存检查结果失败");
@@ -88,7 +88,7 @@ public class TaskContentService {
         return get(id);
     }
 
-    public TaskContent get(String id){
+    public TaskItem get(String id){
         try{
             return dao.findOne(id);
         }catch (DataAccessException e){
@@ -106,7 +106,7 @@ public class TaskContentService {
         dao.deleteTask(taskId);
     }
 
-    public List<TaskContent> query(String taskId){
+    public List<TaskItem> query(String taskId){
         return dao.find(taskId);
     }
 }

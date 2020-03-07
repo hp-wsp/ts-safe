@@ -8,10 +8,10 @@ import com.ts.server.safe.company.service.CompInfoService;
 import com.ts.server.safe.contract.service.ConServiceService;
 import com.ts.server.safe.channel.service.MemberService;
 import com.ts.server.safe.common.id.IdGenerators;
-import com.ts.server.safe.task.dao.CheckTaskDao;
+import com.ts.server.safe.task.dao.TaskCheckDao;
 import com.ts.server.safe.task.dao.TaskOfMemberDao;
-import com.ts.server.safe.task.domain.TaskContent;
-import com.ts.server.safe.task.domain.CheckTask;
+import com.ts.server.safe.task.domain.TaskItem;
+import com.ts.server.safe.task.domain.TaskCheck;
 import com.ts.server.safe.task.domain.TaskOfMember;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.LinkOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -34,18 +33,18 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional(readOnly = true)
-public class CheckTaskService {
-    private final CheckTaskDao dao;
+public class TaskCheckService {
+    private final TaskCheckDao dao;
     private final TaskOfMemberDao ofMemberDao;
     private final ConServiceService conService;
     private final CompInfoService infoService;
-    private final TaskContentService contentService;
+    private final TaskItemService contentService;
     private final MemberService memberService;
 
     @Autowired
-    public CheckTaskService(CheckTaskDao dao, TaskOfMemberDao ofMemberDao,
+    public TaskCheckService(TaskCheckDao dao, TaskOfMemberDao ofMemberDao,
                             ConServiceService conService, CompInfoService infoService,
-                            TaskContentService contentService, MemberService memberService) {
+                            TaskItemService contentService, MemberService memberService) {
         this.dao = dao;
         this.ofMemberDao = ofMemberDao;
         this.conService = conService;
@@ -55,18 +54,18 @@ public class CheckTaskService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public CheckTask save(CheckTask t, String[] contentIds){
+    public TaskCheck save(TaskCheck t, String[] contentIds){
 
         t.setId(IdGenerators.uuid());
         t.setNum(buildNum());
-        t.setStatus(CheckTask.Status.WAIT);
+        t.setStatus(TaskCheck.Status.WAIT);
         setService(t);
         setIndCtgs(t);
         setCheckUser(t);
         dao.insert(t);
 
         if(t.isReview()){
-            for(TaskContent content: getLastCheckContents(t.getServiceId())){
+            for(TaskItem content: getLastCheckContents(t.getServiceId())){
                 contentService.save(t.getId(), content.getContentId());
             }
         }
@@ -87,7 +86,7 @@ public class CheckTaskService {
         return "JCRW" + date + num + random;
     }
 
-    private void setService(CheckTask t){
+    private void setService(TaskCheck t){
         ConService conSer = conService.get(t.getServiceId());
         if(!StringUtils.equals(t.getChannelId(), conSer.getChannelId())){
             throw new BaseException("不能添加检查任务");
@@ -95,11 +94,12 @@ public class CheckTaskService {
         t.setServiceName(conSer.getName());
         t.setCompId(conSer.getCompId());
         t.setCompName(conSer.getCompName());
+        t.setInitial(conSer.isInitial());
     }
 
-    private void setIndCtgs(CheckTask t){
+    private void setIndCtgs(TaskCheck t){
         CompInfo info = infoService.get(t.getCompId());
-        for(CheckTask.CheckIndCtg checkIndCtg: t.getCheckIndCtgs()){
+        for(TaskCheck.CheckIndCtg checkIndCtg: t.getCheckIndCtgs()){
             CompInfo.IndCtg ctg = getIndCtgOpt(info.getIndCtgs(), checkIndCtg.getId())
                     .orElseThrow(() ->new BaseException("行业分类不存在"));
             checkIndCtg.setName(ctg.getName());
@@ -110,8 +110,8 @@ public class CheckTaskService {
         return indCtgs.stream().filter(e -> StringUtils.equals(e.getId(), ctgId)).findFirst();
     }
 
-    private void setCheckUser(CheckTask t){
-        for(CheckTask.CheckUser u: t.getCheckUsers()){
+    private void setCheckUser(TaskCheck t){
+        for(TaskCheck.CheckUser u: t.getCheckUsers()){
             Member m = memberService.get(u.getId());
             if(!StringUtils.equals(m.getChannelId(), t.getChannelId())){
                 throw new BaseException("不能添加检查员");
@@ -120,7 +120,7 @@ public class CheckTaskService {
         }
     }
 
-    private void saveMemberTask(CheckTask t){
+    private void saveMemberTask(TaskCheck t){
         ofMemberDao.deleteOfTask(t.getId());
 
         t.getCheckUsers().forEach(e -> {
@@ -132,14 +132,14 @@ public class CheckTaskService {
         });
     }
 
-    private List<TaskContent> getLastCheckContents(String serviceId){
-        Optional<CheckTask> last = dao.findLast(serviceId);
+    private List<TaskItem> getLastCheckContents(String serviceId){
+        Optional<TaskCheck> last = dao.findLast(serviceId);
         return last.map(e -> contentService.query(e.getId()).stream()
-                .filter(c -> c.getCheckResult() == TaskContent.CheckResult.NOT_PASS).collect(Collectors.toList()))
+                .filter(c -> c.getCheckResult() == TaskItem.CheckResult.NOT_PASS).collect(Collectors.toList()))
                 .orElseGet(Collections::emptyList);
     }
 
-    public CheckTask get(String id){
+    public TaskCheck get(String id){
         try{
             return dao.findOne(id);
         }catch (DataAccessException e){
@@ -148,8 +148,8 @@ public class CheckTaskService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public CheckTask update(CheckTask t, String[] contentIds){
-        CheckTask o = get(t.getId());
+    public TaskCheck update(TaskCheck t, String[] contentIds){
+        TaskCheck o = get(t.getId());
         t.setStatus(o.getStatus());
 
         if(!StringUtils.equals(t.getChannelId(), o.getChannelId())){
@@ -164,7 +164,7 @@ public class CheckTaskService {
             throw new BaseException("修改检查任务失败");
         }
 
-        List<TaskContent> contents = contentService.query(t.getId());
+        List<TaskItem> contents = contentService.query(t.getId());
         List<String> contentIdLst = Arrays.asList(contentIds);
         if(t.isReview()){
             getLastCheckContents(o.getServiceId()).forEach(e -> {
@@ -196,24 +196,24 @@ public class CheckTaskService {
         return success;
     }
 
-    public Long count(String channelId, String compName, CheckTask.Status status, Date checkTimeFrom, Date checkTimeTo){
+    public Long count(String channelId, String compName, TaskCheck.Status status, Date checkTimeFrom, Date checkTimeTo){
 
         return dao.count(channelId, compName, status, checkTimeFrom, checkTimeTo);
     }
 
-    public List<CheckTask> query(String channelId, String compName, CheckTask.Status status,
+    public List<TaskCheck> query(String channelId, String compName, TaskCheck.Status status,
                                  Date checkTimeFrom, Date checkTimeTo, int offset, int limit){
 
         return dao.find(channelId, compName, status, checkTimeFrom, checkTimeTo, offset, limit);
     }
 
-    public List<CheckTask> queryOfMember(String memId, CheckTask.Status status, int offset, int limit){
+    public List<TaskCheck> queryOfMember(String memId, TaskCheck.Status status, int offset, int limit){
         List<String> taskIds = ofMemberDao.query(memId, status, offset, limit).
                 stream().map(TaskOfMember::getTaskId).collect(Collectors.toList());
         return dao.findIn(taskIds);
     }
 
-    public List<CheckTask> queryByServiceId(String serviceId){
+    public List<TaskCheck> queryByServiceId(String serviceId){
         return dao.findByServiceId(serviceId);
     }
 }

@@ -23,6 +23,7 @@ public class ConServiceVo extends ConService {
         setLeaId(t.getLeaId());
         setLeaName(t.getLeaName());
         setStatus(t.getStatus());
+        setInitial(t.isInitial());
         setCreateTime(t.getCreateTime());
         this.items = items;
     }

@@ -2,7 +2,7 @@ package com.ts.server.safe.report.service.export.wps;
 
 import com.ts.server.safe.report.domain.IniReport;
 import com.ts.server.safe.report.service.export.PageBuilder;
-import com.ts.server.safe.task.domain.TaskContent;
+import com.ts.server.safe.task.domain.TaskItem;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.*;
 
@@ -58,7 +58,7 @@ import java.util.List;
 //        renderDetail(doc, "1、基础管理隐患描述及治理措施", report.getSafeProduct().getBaseContents());
 //    }
 
-    private void renderDetail(XWPFDocument doc, String title, List<TaskContent> contents){
+    private void renderDetail(XWPFDocument doc, String title, List<TaskItem> contents){
         XWPFTable table = createTable(doc, 1, 1);
         XWPFTableRow row = table.getRow(0);
         XWPFTableCell cell = row.getCell(0);

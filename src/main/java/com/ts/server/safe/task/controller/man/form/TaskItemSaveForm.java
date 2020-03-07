@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class TaskContentSaveForm {
+public class TaskItemSaveForm {
     @ApiModelProperty(value = "检查任务编号", required = true)
     @NotBlank
     private String taskId;
