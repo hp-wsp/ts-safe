@@ -15,18 +15,18 @@ import java.util.Objects;
 public class TaskItem {
     @ApiModelProperty("编号")
     private String id;
+    @ApiModelProperty("合同编号")
+    private String conId;
+    @ApiModelProperty("公司编号")
+    private String compId;
     @ApiModelProperty("任务编号")
     private String taskId;
-    @ApiModelProperty("检查内容编号")
-    private String contentId;
+    @ApiModelProperty("是否是初检")
+    private boolean initial;
     @ApiModelProperty("检查类别编号")
     private String typeId;
     @ApiModelProperty("检查类别名称")
     private String typeName;
-    @ApiModelProperty("检查项目编号")
-    private String itemId;
-    @ApiModelProperty("检查项目名称")
-    private String itemName;
     @ApiModelProperty("检查内容")
     private String content;
     @ApiModelProperty("检查内容明细")
@@ -45,8 +45,6 @@ public class TaskItem {
     private String[] images;
     @ApiModelProperty("备注")
     private String remark;
-    @ApiModelProperty("修改时间")
-    private Date updateTime;
     @ApiModelProperty("创建时间")
     private Date createTime;
 
@@ -72,20 +70,36 @@ public class TaskItem {
         this.id = id;
     }
 
+    public String getConId() {
+        return conId;
+    }
+
+    public void setConId(String conId) {
+        this.conId = conId;
+    }
+
+    public String getCompId() {
+        return compId;
+    }
+
+    public void setCompId(String compId) {
+        this.compId = compId;
+    }
+
+    public boolean isInitial() {
+        return initial;
+    }
+
+    public void setInitial(boolean initial) {
+        this.initial = initial;
+    }
+
     public String getTaskId() {
         return taskId;
     }
 
     public void setTaskId(String taskId) {
         this.taskId = taskId;
-    }
-
-    public String getContentId() {
-        return contentId;
-    }
-
-    public void setContentId(String contentId) {
-        this.contentId = contentId;
     }
 
     public String getTypeId() {
@@ -102,22 +116,6 @@ public class TaskItem {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName;
-    }
-
-    public String getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
     }
 
     public String getContent() {
@@ -192,14 +190,6 @@ public class TaskItem {
         this.remark = remark;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -212,30 +202,29 @@ public class TaskItem {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TaskItem that = (TaskItem) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(taskId, that.taskId) &&
-                Objects.equals(contentId, that.contentId) &&
-                Objects.equals(typeId, that.typeId) &&
-                Objects.equals(typeName, that.typeName) &&
-                Objects.equals(itemId, that.itemId) &&
-                Objects.equals(itemName, that.itemName) &&
-                Objects.equals(content, that.content) &&
-                Objects.equals(conDetail, that.conDetail) &&
-                Objects.equals(lawItem, that.lawItem) &&
-                checkResult == that.checkResult &&
-                danLevel == that.danLevel &&
-                Objects.equals(danDescribe, that.danDescribe) &&
-                Objects.equals(danSuggest, that.danSuggest) &&
-                Arrays.equals(images, that.images) &&
-                Objects.equals(remark, that.remark) &&
-                Objects.equals(updateTime, that.updateTime) &&
-                Objects.equals(createTime, that.createTime);
+        TaskItem taskItem = (TaskItem) o;
+        return id == taskItem.id &&
+                initial == taskItem.initial &&
+                Objects.equals(conId, taskItem.conId) &&
+                Objects.equals(compId, taskItem.compId) &&
+                Objects.equals(taskId, taskItem.taskId) &&
+                Objects.equals(typeId, taskItem.typeId) &&
+                Objects.equals(typeName, taskItem.typeName) &&
+                Objects.equals(content, taskItem.content) &&
+                Objects.equals(conDetail, taskItem.conDetail) &&
+                Objects.equals(lawItem, taskItem.lawItem) &&
+                checkResult == taskItem.checkResult &&
+                danLevel == taskItem.danLevel &&
+                Objects.equals(danDescribe, taskItem.danDescribe) &&
+                Objects.equals(danSuggest, taskItem.danSuggest) &&
+                Arrays.equals(images, taskItem.images) &&
+                Objects.equals(remark, taskItem.remark) &&
+                Objects.equals(createTime, taskItem.createTime);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, taskId, contentId, typeId, typeName, itemId, itemName, content, conDetail, lawItem, checkResult, danLevel, danDescribe, danSuggest, remark, updateTime, createTime);
+        int result = Objects.hash(id, conId, compId, taskId, initial, typeId, typeName, content, conDetail, lawItem, checkResult, danLevel, danDescribe, danSuggest, remark, createTime);
         result = 31 * result + Arrays.hashCode(images);
         return result;
     }
@@ -244,12 +233,12 @@ public class TaskItem {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("id", id)
+                .append("conId", conId)
+                .append("compId", compId)
                 .append("taskId", taskId)
-                .append("contentId", contentId)
+                .append("initial", initial)
                 .append("typeId", typeId)
                 .append("typeName", typeName)
-                .append("itemId", itemId)
-                .append("itemName", itemName)
                 .append("content", content)
                 .append("conDetail", conDetail)
                 .append("lawItem", lawItem)
@@ -259,7 +248,6 @@ public class TaskItem {
                 .append("danSuggest", danSuggest)
                 .append("images", images)
                 .append("remark", remark)
-                .append("updateTime", updateTime)
                 .append("createTime", createTime)
                 .toString();
     }

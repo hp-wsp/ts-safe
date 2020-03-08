@@ -1,18 +1,20 @@
 package com.ts.server.safe.task.service;
 
 import com.ts.server.safe.BaseException;
-import com.ts.server.safe.base.domain.UniCheckContent;
-import com.ts.server.safe.base.service.UniCheckContentService;
 import com.ts.server.safe.common.id.IdGenerators;
 import com.ts.server.safe.task.dao.TaskItemDao;
+import com.ts.server.safe.task.domain.TaskCheck;
 import com.ts.server.safe.task.domain.TaskItem;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 检查内容业务服务
@@ -23,53 +25,50 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class TaskItemService {
     private final TaskItemDao dao;
-    private final UniCheckContentService tableService;
 
     @Autowired
-    public TaskItemService(TaskItemDao dao, UniCheckContentService tableService) {
+    public TaskItemService(TaskItemDao dao) {
         this.dao = dao;
-        this.tableService = tableService;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public TaskItem save(String taskId, String contentId){
-        return dao.has(taskId, contentId)?
-                update(taskId, contentId) : insert(taskId, contentId);
+    public List<TaskItem> save(TaskCheck check, List<TaskItem> items){
+        Assert.isTrue(!items.isEmpty(), "item is empty");
+
+        removeItems(check.getId(), items);
+
+        return items.stream().
+                map(e -> StringUtils.isBlank(e.getId())? insert(check, e): update(e)).
+                collect(Collectors.toList());
     }
 
-    private TaskItem insert(String taskId, String contentId){
-        TaskItem t = new TaskItem();
+    private void removeItems(String taskId, List<TaskItem> items){
+        List<String> hasIds = dao.find(taskId).stream().map(TaskItem::getId).collect(Collectors.toList());
+        items.stream().filter(e -> !hasIds.contains(e.getId())).forEach(e -> dao.delete(e.getId()));
+    }
 
-        UniCheckContent table = tableService.get(contentId);
+    private TaskItem insert(TaskCheck check, TaskItem t){
 
         t.setId(IdGenerators.uuid());
-        t.setTaskId(taskId);
-        t.setContentId(table.getId());
-        t.setTypeId(table.getTypeId());
-        t.setTypeName(table.getTypeName());
-        t.setItemId(table.getItemId());
-        t.setItemName(table.getItemName());
-        t.setContent(table.getContent());
-        t.setConDetail(table.getConDetail());
-        t.setLawItem(table.getLawItem());
+        t.setTaskId(check.getId());
+        t.setId(IdGenerators.uuid());
+        t.setConId(check.getConId());
+        t.setCompId(check.getCompId());
+        t.setInitial(check.isInitial());
 
         dao.insert(t);
 
         return dao.findOne(t.getId());
     }
 
-    private TaskItem update(String taskId, String contentId){
-        TaskItem t = dao.findOne(taskId, contentId);
+    private TaskItem update(TaskItem item){
+        TaskItem t = dao.findOne(item.getTaskId());
 
-        UniCheckContent table = tableService.get(contentId);
-        t.setContentId(table.getId());
-        t.setTypeId(table.getTypeId());
-        t.setTypeName(table.getTypeName());
-        t.setItemId(table.getItemId());
-        t.setItemName(table.getItemName());
-        t.setContent(table.getContent());
-        t.setConDetail(table.getConDetail());
-        t.setLawItem(table.getLawItem());
+        t.setTypeId(item.getTypeId());
+        t.setTypeName(item.getTypeName());
+        t.setContent(item.getContent());
+        t.setConDetail(item.getConDetail());
+        t.setLawItem(item.getLawItem());
 
         dao.update(t);
 

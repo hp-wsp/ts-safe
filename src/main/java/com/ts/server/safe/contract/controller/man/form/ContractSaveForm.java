@@ -58,6 +58,8 @@ public class ContractSaveForm {
     private String sigPerson;
     @ApiModelProperty(value = "我方签单单位")
     private String sigCompany;
+    @ApiModelProperty("附件集合")
+    private List<String> attaches;
 
     public String getNum() {
         return num;
@@ -187,6 +189,14 @@ public class ContractSaveForm {
         this.sigCompany = sigCompany;
     }
 
+    public List<String> getAttaches() {
+        return attaches;
+    }
+
+    public void setAttaches(List<String> attaches) {
+        this.attaches = attaches;
+    }
+
     public Contract toDomain(){
         Contract t = new Contract();
 
@@ -205,6 +215,7 @@ public class ContractSaveForm {
         t.setOwnPhone(ownPhone);
         t.setSigPerson(sigPerson);
         t.setSigCompany(sigCompany);
+        t.setAttaches(attaches);
 
         return t;
     }

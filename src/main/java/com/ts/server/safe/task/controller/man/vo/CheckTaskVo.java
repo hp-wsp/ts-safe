@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class CheckTaskVo {
     private final TaskCheck task;
-    private final List<TaskItem> contents;
+    private final List<TaskItem> items;
 
     /**
      * 构造{@link CheckTaskVo}
@@ -22,14 +22,14 @@ public class CheckTaskVo {
      */
     public CheckTaskVo(TaskCheck task, List<TaskItem> contents) {
         this.task = task;
-        this.contents = contents;
+        this.items = contents;
     }
 
     public TaskCheck getTask() {
         return task;
     }
 
-    public List<TaskItem> getContents() {
-        return contents;
+    public List<TaskItem> getItems() {
+        return items;
     }
 }

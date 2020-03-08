@@ -142,6 +142,41 @@ public class ConServiceService {
         return dao.delete(id);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    public boolean accept(String id, String userId){
+        ConService o = get(id);
+        if(!StringUtils.equals(o.getLeaId(), userId)){
+            throw new BaseException("不能确认服务");
+        }
+
+        if(ConService.Status.WAIT != o.getStatus()){
+            throw new BaseException("服务依据处理");
+        }
+        return dao.updateStatus(id, ConService.Status.ACCEPT);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public boolean roller(String id, String userId){
+        ConService o = get(id);
+        if(!StringUtils.equals(o.getLeaId(), userId)){
+            throw new BaseException("不能确认服务");
+        }
+
+        if(ConService.Status.WAIT != o.getStatus()){
+            throw new BaseException("服务依据处理");
+        }
+        return dao.updateStatus(id, ConService.Status.ROLLER);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public boolean finish(String id, String channelId){
+        ConService o = get(id);
+        if(!StringUtils.equals(o.getChannelId(), channelId)){
+            throw new BaseException("不能完成服务");
+        }
+        return dao.updateStatus(id, ConService.Status.FINISH);
+    }
+
     public List<ConServiceItem> queryItems(String id){
         return itemService.query(id);
     }

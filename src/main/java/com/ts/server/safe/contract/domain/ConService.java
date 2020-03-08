@@ -43,7 +43,7 @@ public class ConService {
      * 合同服务状态
      */
     public enum Status {
-        WAIT;
+        WAIT, ACCEPT, ROLLER, FINISH;
     }
 
     public String getId() {

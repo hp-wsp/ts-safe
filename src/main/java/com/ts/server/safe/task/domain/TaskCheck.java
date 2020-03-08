@@ -17,6 +17,8 @@ public class TaskCheck {
     private String id;
     @ApiModelProperty("服务商编号")
     private String channelId;
+    @ApiModelProperty("合同编号")
+    private String conId;
     @ApiModelProperty("服务编号")
     private String serviceId;
     @ApiModelProperty("服务名称")
@@ -33,8 +35,6 @@ public class TaskCheck {
     private Date checkTimeTo;
     @ApiModelProperty("检查人员集合")
     private List<CheckUser> checkUsers;
-    @ApiModelProperty("行业分类集合")
-    private List<CheckIndCtg> checkIndCtgs;
     @ApiModelProperty("复查以前查出的隐患")
     private boolean review;
     @ApiModelProperty("是否是初检")
@@ -64,6 +64,14 @@ public class TaskCheck {
 
     public void setChannelId(String channelId) {
         this.channelId = channelId;
+    }
+
+    public String getConId() {
+        return conId;
+    }
+
+    public void setConId(String conId) {
+        this.conId = conId;
     }
 
     public String getServiceId() {
@@ -130,14 +138,6 @@ public class TaskCheck {
         this.checkUsers = checkUsers;
     }
 
-    public List<CheckIndCtg> getCheckIndCtgs() {
-        return checkIndCtgs;
-    }
-
-    public void setCheckIndCtgs(List<CheckIndCtg> checkIndCtgs) {
-        this.checkIndCtgs = checkIndCtgs;
-    }
-
     public boolean isReview() {
         return review;
     }
@@ -182,28 +182,28 @@ public class TaskCheck {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TaskCheck task = (TaskCheck) o;
-        return review == task.review &&
-                initial == task.initial &&
-                Objects.equals(id, task.id) &&
-                Objects.equals(channelId, task.channelId) &&
-                Objects.equals(serviceId, task.serviceId) &&
-                Objects.equals(serviceName, task.serviceName) &&
-                Objects.equals(compId, task.compId) &&
-                Objects.equals(compName, task.compName) &&
-                Objects.equals(num, task.num) &&
-                Objects.equals(checkTimeFrom, task.checkTimeFrom) &&
-                Objects.equals(checkTimeTo, task.checkTimeTo) &&
-                Objects.equals(checkUsers, task.checkUsers) &&
-                Objects.equals(checkIndCtgs, task.checkIndCtgs) &&
-                status == task.status &&
-                Objects.equals(updateTime, task.updateTime) &&
-                Objects.equals(createTime, task.createTime);
+        TaskCheck check = (TaskCheck) o;
+        return review == check.review &&
+                initial == check.initial &&
+                Objects.equals(id, check.id) &&
+                Objects.equals(channelId, check.channelId) &&
+                Objects.equals(conId, check.conId) &&
+                Objects.equals(serviceId, check.serviceId) &&
+                Objects.equals(serviceName, check.serviceName) &&
+                Objects.equals(compId, check.compId) &&
+                Objects.equals(compName, check.compName) &&
+                Objects.equals(num, check.num) &&
+                Objects.equals(checkTimeFrom, check.checkTimeFrom) &&
+                Objects.equals(checkTimeTo, check.checkTimeTo) &&
+                Objects.equals(checkUsers, check.checkUsers) &&
+                status == check.status &&
+                Objects.equals(updateTime, check.updateTime) &&
+                Objects.equals(createTime, check.createTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, channelId, serviceId, serviceName, compId, compName, num, checkTimeFrom, checkTimeTo, checkUsers, checkIndCtgs, review, initial, status, updateTime, createTime);
+        return Objects.hash(id, channelId, conId, serviceId, serviceName, compId, compName, num, checkTimeFrom, checkTimeTo, checkUsers, review, initial, status, updateTime, createTime);
     }
 
     @Override
@@ -211,6 +211,7 @@ public class TaskCheck {
         return new ToStringBuilder(this)
                 .append("id", id)
                 .append("channelId", channelId)
+                .append("conId", conId)
                 .append("serviceId", serviceId)
                 .append("serviceName", serviceName)
                 .append("compId", compId)
@@ -219,7 +220,6 @@ public class TaskCheck {
                 .append("checkTimeFrom", checkTimeFrom)
                 .append("checkTimeTo", checkTimeTo)
                 .append("checkUsers", checkUsers)
-                .append("checkIndCtgs", checkIndCtgs)
                 .append("review", review)
                 .append("initial", initial)
                 .append("status", status)
@@ -260,54 +260,6 @@ public class TaskCheck {
             CheckUser checkUser = (CheckUser) o;
             return Objects.equals(id, checkUser.id) &&
                     Objects.equals(name, checkUser.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(id, name);
-        }
-
-        @Override
-        public String toString() {
-            return new ToStringBuilder(this)
-                    .append("id", id)
-                    .append("name", name)
-                    .toString();
-        }
-    }
-
-    /**
-     * 检查行业
-     */
-    public static class CheckIndCtg {
-        @ApiModelProperty("行业分类")
-        private String id;
-        @ApiModelProperty("行业名称")
-        private String name;
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            CheckIndCtg indCtg = (CheckIndCtg) o;
-            return Objects.equals(id, indCtg.id) &&
-                    Objects.equals(name, indCtg.name);
         }
 
         @Override

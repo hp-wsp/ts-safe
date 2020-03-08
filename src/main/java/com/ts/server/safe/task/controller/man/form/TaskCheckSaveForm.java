@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ts.server.safe.task.domain.TaskCheck;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -33,11 +34,8 @@ public class TaskCheckSaveForm {
     @ApiModelProperty(value = "检查人员编号集合", required = true)
     private String[] checkUserIds;
     @NotEmpty
-    @ApiModelProperty(value = "行业编号集合", required = true)
-    private String[] checkIndCtgIds;
-    @NotEmpty
-    @ApiModelProperty(value = "检查内容编号")
-    private String[] contentIds;
+    @ApiModelProperty(value = "检查项目")
+    private List<ItemForm> items;
     @ApiModelProperty(value = "复查以前查出的隐患")
     private boolean review;
 
@@ -73,20 +71,12 @@ public class TaskCheckSaveForm {
         this.checkUserIds = checkUserIds;
     }
 
-    public String[] getCheckIndCtgIds() {
-        return checkIndCtgIds;
+    public List<ItemForm> getItems() {
+        return items;
     }
 
-    public void setCheckIndCtgIds(String[] checkIndCtgIds) {
-        this.checkIndCtgIds = checkIndCtgIds;
-    }
-
-    public String[] getContentIds() {
-        return contentIds;
-    }
-
-    public void setContentIds(String[] contentIds) {
-        this.contentIds = contentIds;
+    public void setItems(List<ItemForm> items) {
+        this.items = items;
     }
 
     public boolean isReview() {
@@ -103,27 +93,73 @@ public class TaskCheckSaveForm {
         t.setServiceId(serviceId);
         t.setCheckTimeFrom(checkTimeFrom);
         t.setCheckTimeTo(checkTimeTo);
-        t.setCheckIndCtgs(buildIndCtgs());
         t.setCheckUsers(buildUsers());
         t.setReview(review);
 
         return t;
     }
 
-    private List<TaskCheck.CheckIndCtg> buildIndCtgs(){
-        return Arrays.stream(checkIndCtgIds).map(e -> {
-            TaskCheck.CheckIndCtg t = new TaskCheck.CheckIndCtg();
+    private List<TaskCheck.CheckUser> buildUsers(){
+        return Arrays.stream(checkUserIds).map(e -> {
+            TaskCheck.CheckUser t = new TaskCheck.CheckUser();
             t.setId(e);
             return t;
         }).collect(Collectors.toList());
     }
 
-    private List<TaskCheck.CheckUser> buildUsers(){
-        return Arrays.stream(checkUserIds).map(e -> {
-            TaskCheck.CheckUser t = new TaskCheck.CheckUser();
+    @Valid
+    public static class ItemForm {
+        @ApiModelProperty("检查类别编号")
+        @NotBlank
+        private String typeId;
+        @ApiModelProperty("检查类别名称")
+        @NotBlank
+        private String typeName;
+        @ApiModelProperty("检查内容")
+        private String content;
+        @ApiModelProperty("检查内容明细")
+        private String conDetail;
+        @ApiModelProperty("法律依据")
+        private String lawItem;
 
-            t.setId(e);
-            return t;
-        }).collect(Collectors.toList());
+        public String getTypeId() {
+            return typeId;
+        }
+
+        public void setTypeId(String typeId) {
+            this.typeId = typeId;
+        }
+
+        public String getTypeName() {
+            return typeName;
+        }
+
+        public void setTypeName(String typeName) {
+            this.typeName = typeName;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        public String getConDetail() {
+            return conDetail;
+        }
+
+        public void setConDetail(String conDetail) {
+            this.conDetail = conDetail;
+        }
+
+        public String getLawItem() {
+            return lawItem;
+        }
+
+        public void setLawItem(String lawItem) {
+            this.lawItem = lawItem;
+        }
     }
 }

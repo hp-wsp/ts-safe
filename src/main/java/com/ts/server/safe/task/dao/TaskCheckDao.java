@@ -48,12 +48,12 @@ public class TaskCheckDao {
 
     public void insert(TaskCheck t){
         final String sql = "INSERT INTO ck_task (id, num, channel_id, service_id, service_name, comp_id, comp_name, " +
-                "check_time_from, check_time_to, check_users, check_ind_ctgs, is_review, is_initial, status, update_time, create_time) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+                "check_time_from, check_time_to, check_users, is_review, is_initial, status, update_time, create_time) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getNum(), t.getChannelId(), t.getServiceId(), t.getServiceName(),
                 t.getCompId(), t.getCompName(), t.getCheckTimeFrom(), t.getCheckTimeTo(), toJson(t.getCheckUsers()),
-                toJson(t.getCheckIndCtgs()), t.isReview(), t.isInitial(), t.getStatus().name());
+                t.isReview(), t.isInitial(), t.getStatus().name());
     }
 
     private String toJson(List<?> values){
@@ -66,12 +66,11 @@ public class TaskCheckDao {
 
     public boolean update(TaskCheck t){
         final String sql = "UPDATE ck_task SET service_id = ?, service_name = ?, comp_id = ?, comp_name = ?," +
-                "check_time_from = ?, check_time_to = ?, check_users = ?, check_ind_ctgs = ?, is_review = ?, " +
+                "check_time_from = ?, check_time_to = ?, check_users = ?, is_review = ?, " +
                 "update_time = now() WHERE id = ?";
 
         return jdbcTemplate.update(sql, t.getServiceId(), t.getServiceName(), t.getCompId(), t.getCompName(),
-                t.getCheckTimeFrom(), t.getCheckTimeTo(), toJson(t.getCheckUsers()), toJson(t.getCheckIndCtgs()),
-                t.isReview(), t.getId()) > 0;
+                t.getCheckTimeFrom(), t.getCheckTimeTo(), toJson(t.getCheckUsers()), t.isReview(), t.getId()) > 0;
     }
 
     public boolean delete(String id){
@@ -84,9 +83,9 @@ public class TaskCheckDao {
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, mapper);
     }
 
-    public Optional<TaskCheck> findLast(String serviceId){
-        final String sql = "SELECT * FROM ck_task WHERE service_id = ? ORDER BY create_time DESC";
-        List<TaskCheck> tasks = jdbcTemplate.query(sql, new Object[]{serviceId}, mapper);
+    public Optional<TaskCheck> findLast(String conId, String compId){
+        final String sql = "SELECT * FROM ck_task WHERE con_id = ? AND comp_id = ? ORDER BY create_time DESC LIMIT 1";
+        List<TaskCheck> tasks = jdbcTemplate.query(sql, new Object[]{conId, compId}, mapper);
         return tasks.isEmpty()? Optional.empty(): Optional.of(tasks.get(0));
     }
 
@@ -179,14 +178,12 @@ public class TaskCheckDao {
     private static class TaskCheckMapper implements RowMapper<TaskCheck>{
         private final ObjectMapper objectMapper;
         private final JavaType usersType;
-        private final JavaType indCtgsType;
         private final boolean isParseJson;
 
         TaskCheckMapper(ObjectMapper objectMapper, boolean isParseJson){
             this.objectMapper = objectMapper;
             this.isParseJson = isParseJson;
             this.usersType = objectMapper.getTypeFactory().constructParametricType(List.class, TaskCheck.CheckUser.class);
-            this.indCtgsType = objectMapper.getTypeFactory().constructParametricType(List.class, TaskCheck.CheckIndCtg.class);
         }
 
         @Override
@@ -204,10 +201,8 @@ public class TaskCheckDao {
             t.setCheckTimeTo(r.getDate("check_time_to"));
             if(isParseJson){
                 t.setCheckUsers(toObject(r.getString("check_users"), usersType));
-                t.setCheckIndCtgs(toObject(r.getString("check_ind_ctgs"), indCtgsType));
             }else{
                 t.setCheckUsers(Collections.emptyList());
-                t.setCheckIndCtgs(Collections.emptyList());
             }
             t.setReview(r.getBoolean("is_review"));
             t.setInitial(r.getBoolean("is_initial"));

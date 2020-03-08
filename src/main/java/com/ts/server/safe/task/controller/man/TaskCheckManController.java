@@ -25,6 +25,7 @@ import javax.validation.Valid;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -34,9 +35,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 @RestController
-@RequestMapping("/man/checkTask")
+@RequestMapping("/man/task")
 @ApiACL
-@Api(value = "/man/checkTask", tags = "M-管理检查任务API接口")
+@Api(value = "/man/task", tags = "M-管理检查任务API接口")
 public class TaskCheckManController {
     private final TaskCheckService service;
     private final TaskItemService contentService;
@@ -51,10 +52,22 @@ public class TaskCheckManController {
     @ApiOperation("新增检查任务")
     public ResultVo<CheckTaskVo> save(@Valid @RequestBody TaskCheckSaveForm form){
         TaskCheck t = form.toDomain();
-        t.setChannelId(getCredential().getChannelId());
-        TaskCheck n = service.save(t, form.getContentIds());
+        ManCredential credential = getCredential();
+        t.setChannelId(credential.getChannelId());
+        List<TaskItem> items = form.getItems().stream().map(this::buildItem).collect(Collectors.toList());
+        TaskCheck n = service.save(t, items, credential.getId());
         List<TaskItem> contents = contentService.query(n.getId());
         return ResultVo.success(new CheckTaskVo(n, contents));
+    }
+
+    private TaskItem buildItem(TaskCheckSaveForm.ItemForm itemForm){
+        TaskItem t = new TaskItem();
+        t.setTypeId(itemForm.getTypeId());
+        t.setTypeName(itemForm.getTypeName());
+        t.setContent(itemForm.getContent());
+        t.setConDetail(itemForm.getConDetail());
+        t.setLawItem(itemForm.getLawItem());
+        return t;
     }
 
     public ResultVo<CheckTaskVo> update(){
@@ -65,8 +78,10 @@ public class TaskCheckManController {
     @ApiOperation("修改检查任务")
     public ResultVo<CheckTaskVo> update(@Valid @RequestBody TaskCheckUpdateForm form){
         TaskCheck t = form.toDomain();
-        t.setChannelId(getCredential().getChannelId());
-        TaskCheck n = service.update(t, form.getContentIds());
+        ManCredential credential = getCredential();
+        t.setChannelId(credential.getChannelId());
+        List<TaskItem> items = form.getItems().stream().map(this::buildItem).collect(Collectors.toList());
+        TaskCheck n = service.update(t, items, credential.getId());
         List<TaskItem> contents = contentService.query(n.getId());
         return ResultVo.success(new CheckTaskVo(n, contents));
     }
