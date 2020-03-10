@@ -46,6 +46,9 @@ public class TaskCheckService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public TaskCheck save(TaskCheck t, List<TaskItem> items, String userId){
+        if(dao.hasService(t.getServiceId())){
+            throw new BaseException("任务已经创建");
+        }
 
         t.setId(IdGenerators.uuid());
         t.setNum(buildNum());
@@ -89,6 +92,8 @@ public class TaskCheckService {
         t.setCompId(conSer.getCompId());
         t.setCompName(conSer.getCompName());
         t.setInitial(conSer.isInitial());
+        t.setLeaId(conSer.getLeaId());
+        t.setLeaName(conSer.getLeaName());
     }
 
     private void setCheckUser(TaskCheck t){

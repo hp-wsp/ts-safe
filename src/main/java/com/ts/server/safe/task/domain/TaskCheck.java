@@ -39,6 +39,10 @@ public class TaskCheck {
     private boolean review;
     @ApiModelProperty("是否是初检")
     private boolean initial;
+    @ApiModelProperty("负责人编号")
+    private String leaId;
+    @ApiModelProperty("负责人名称")
+    private String leaName;
     @ApiModelProperty("检查任务状态")
     private Status status;
     @ApiModelProperty("修改时间")
@@ -154,6 +158,22 @@ public class TaskCheck {
         this.initial = initial;
     }
 
+    public String getLeaId() {
+        return leaId;
+    }
+
+    public void setLeaId(String leaId) {
+        this.leaId = leaId;
+    }
+
+    public String getLeaName() {
+        return leaName;
+    }
+
+    public void setLeaName(String leaName) {
+        this.leaName = leaName;
+    }
+
     public Status getStatus() {
         return status;
     }
@@ -196,6 +216,8 @@ public class TaskCheck {
                 Objects.equals(checkTimeFrom, check.checkTimeFrom) &&
                 Objects.equals(checkTimeTo, check.checkTimeTo) &&
                 Objects.equals(checkUsers, check.checkUsers) &&
+                Objects.equals(leaId, check.leaId) &&
+                Objects.equals(leaName, check.leaName) &&
                 status == check.status &&
                 Objects.equals(updateTime, check.updateTime) &&
                 Objects.equals(createTime, check.createTime);
@@ -203,7 +225,7 @@ public class TaskCheck {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, channelId, conId, serviceId, serviceName, compId, compName, num, checkTimeFrom, checkTimeTo, checkUsers, review, initial, status, updateTime, createTime);
+        return Objects.hash(id, channelId, conId, serviceId, serviceName, compId, compName, num, checkTimeFrom, checkTimeTo, checkUsers, review, initial, leaId, leaName, status, updateTime, createTime);
     }
 
     @Override
@@ -222,6 +244,8 @@ public class TaskCheck {
                 .append("checkUsers", checkUsers)
                 .append("review", review)
                 .append("initial", initial)
+                .append("leaId", leaId)
+                .append("leaName", leaName)
                 .append("status", status)
                 .append("updateTime", updateTime)
                 .append("createTime", createTime)

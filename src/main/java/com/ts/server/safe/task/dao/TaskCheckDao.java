@@ -48,12 +48,12 @@ public class TaskCheckDao {
 
     public void insert(TaskCheck t){
         final String sql = "INSERT INTO ck_task (id, num, channel_id, service_id, service_name, comp_id, comp_name, " +
-                "check_time_from, check_time_to, check_users, is_review, is_initial, status, update_time, create_time) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
+                "check_time_from, check_time_to, check_users, is_review, is_initial, status, lea_id, lea_name, " +
+                "update_time, create_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
         jdbcTemplate.update(sql, t.getId(), t.getNum(), t.getChannelId(), t.getServiceId(), t.getServiceName(),
                 t.getCompId(), t.getCompName(), t.getCheckTimeFrom(), t.getCheckTimeTo(), toJson(t.getCheckUsers()),
-                t.isReview(), t.isInitial(), t.getStatus().name());
+                t.isReview(), t.isInitial(), t.getStatus().name(), t.getLeaId(), t.getLeaName());
     }
 
     private String toJson(List<?> values){
@@ -76,6 +76,12 @@ public class TaskCheckDao {
     public boolean delete(String id){
         final String sql = "DELETE FROM ck_task WHERE id = ?";
         return jdbcTemplate.update(sql, id) > 0;
+    }
+
+    public boolean hasService(String serviceId){
+        final String sql = "SELECT COUNT(id) FROM ck_task WHERE service_id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{serviceId}, Integer.class);
+        return count != null && count > 0;
     }
 
     public TaskCheck findOne(String id){
@@ -206,6 +212,8 @@ public class TaskCheckDao {
             }
             t.setReview(r.getBoolean("is_review"));
             t.setInitial(r.getBoolean("is_initial"));
+            t.setLeaId(r.getString("lea_id"));
+            t.setLeaName(r.getString("lea_name"));
             t.setStatus(TaskCheck.Status.valueOf(r.getString("status")));
             t.setUpdateTime(r.getTimestamp("update_time"));
             t.setCreateTime(r.getTimestamp("create_time"));

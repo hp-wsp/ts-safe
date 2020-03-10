@@ -35,7 +35,7 @@ public class TaskCheckSaveForm {
     private String[] checkUserIds;
     @NotEmpty
     @ApiModelProperty(value = "检查项目")
-    private List<ItemForm> items;
+    private List<@Valid ItemForm> items;
     @ApiModelProperty(value = "复查以前查出的隐患")
     private boolean review;
 
@@ -116,6 +116,7 @@ public class TaskCheckSaveForm {
         @NotBlank
         private String typeName;
         @ApiModelProperty("检查内容")
+        @NotBlank
         private String content;
         @ApiModelProperty("检查内容明细")
         private String conDetail;
