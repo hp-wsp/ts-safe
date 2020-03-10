@@ -88,37 +88,37 @@ public class CompInfoDao {
     }
 
     public Long count(String channelId, String name, String province,
-                      String city, String country, String contact, String phone){
+                      String city, String country, String contact, String mobile){
 
         final String sql = "SELECT COUNT(id) FROM c_comp_info WHERE channel_id = ? AND name LIKE ? AND province LIKE ? AND city LIKE ? " +
-                "AND country LIKE ? AND contact LIKE ? AND phone LIKE ?";
+                "AND country LIKE ? AND contact LIKE ? AND mobile LIKE ?";
 
         String nameLike = DaoUtils.like(name);
         String provinceLike = DaoUtils.like(province);
         String cityLike = DaoUtils.like(city);
         String countryLike = DaoUtils.like(country);
         String contactLike = DaoUtils.like(contact);
-        String phoneLike = DaoUtils.like(phone);
+        String mobileLike = DaoUtils.like(mobile);
 
         return jdbcTemplate.queryForObject(sql, new Object[]{channelId, nameLike, provinceLike, cityLike,
-                countryLike, contactLike, phoneLike}, Long.class);
+                countryLike, contactLike, mobileLike}, Long.class);
     }
 
     public List<CompInfo> find(String channelId, String name, String province, String city,
-                               String country, String contact, String phone, int offset, int limit){
+                               String country, String contact, String mobile, int offset, int limit){
 
         final String sql = "SELECT * FROM c_comp_info WHERE channel_id = ? AND name LIKE ? AND province LIKE ? AND city LIKE ? " +
-                "AND country LIKE ? AND contact LIKE ? AND phone LIKE ? ORDER BY create_time DESC LIMIT ? OFFSET ?";
+                "AND country LIKE ? AND contact LIKE ? AND mobile LIKE ? ORDER BY create_time DESC LIMIT ? OFFSET ?";
 
         String nameLike = DaoUtils.like(name);
         String provinceLike = DaoUtils.like(province);
         String cityLike = DaoUtils.like(city);
         String countryLike = DaoUtils.like(country);
         String contactLike = DaoUtils.like(contact);
-        String phoneLike = DaoUtils.like(phone);
+        String mobileLike = DaoUtils.like(mobile);
 
         return jdbcTemplate.query(sql, new Object[]{channelId, nameLike, provinceLike, cityLike,
-                countryLike, contactLike, phoneLike, limit, offset}, mapper);
+                countryLike, contactLike, mobileLike, limit, offset}, mapper);
     }
 
     private final RowMapper<CompInfo> mapper = (r, i) -> {

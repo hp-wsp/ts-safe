@@ -52,7 +52,7 @@ public class ContractDao {
 
     private String toJson(Object object){
         try{
-            return Objects.isNull(object)? "{}": objectMapper.writeValueAsString(object);
+            return Objects.isNull(object)? "[]": objectMapper.writeValueAsString(object);
         }catch (Exception e){
             throw new RuntimeException("Object to json fail");
         }

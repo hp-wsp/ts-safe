@@ -84,14 +84,14 @@ public class CompInfoService {
     }
 
     public Long count(String channelId, String name, String province,
-                      String city, String country,  String contact, String phone){
+                      String city, String country,  String contact, String mobile){
 
-        return dao.count(channelId, name, province, city, country, contact, phone);
+        return dao.count(channelId, name, province, city, country, contact, mobile);
     }
 
     public List<CompInfo> query(String channelId, String name, String province, String city, String country,
-                                String contact, String phone, int offset, int limit){
+                                String contact, String mobile, int offset, int limit){
 
-        return dao.find(channelId, name, province, city, country, contact, phone, offset, limit);
+        return dao.find(channelId, name, province, city, country, contact, mobile, offset, limit);
     }
 }

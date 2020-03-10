@@ -162,6 +162,7 @@ public class MemberService {
      * @param channelId 服务商编号
      * @param isActive true:激活，false:不激活
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public void activeMember(String channelId, boolean isActive){
         dao.activeMembers(channelId, isActive);
     }
@@ -172,6 +173,7 @@ public class MemberService {
      * @param id 用户编号
      * @return {@link Member}
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public Member forbid(String id){
         if(!dao.forbid(id, true)){
             throw new BaseException("禁用用户失败");
@@ -185,6 +187,7 @@ public class MemberService {
      * @param id 用户编号
      * @return {@link Member}
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     public Member active(String id){
         if(!dao.forbid(id, false)){
             throw new BaseException("激活用户失败");

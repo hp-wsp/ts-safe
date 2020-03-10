@@ -58,7 +58,7 @@ public class TaskCheckDao {
 
     private String toJson(List<?> values){
         try{
-            return values == null || values.isEmpty()? "{}": objectMapper.writeValueAsString(values);
+            return values == null || values.isEmpty()? "[]": objectMapper.writeValueAsString(values);
         }catch (Exception e){
             throw new RuntimeException("Object to json fail");
         }

@@ -156,7 +156,7 @@ public class ConServiceService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public boolean roller(String id, String userId){
+    public boolean refuse(String id, String userId){
         ConService o = get(id);
         if(!StringUtils.equals(o.getLeaId(), userId)){
             throw new BaseException("不能确认服务");
@@ -195,5 +195,13 @@ public class ConServiceService {
 
     public List<ConService> queryByCompId(String compId){
         return dao.findByCompId(compId);
+    }
+
+    public Long count(String leaId, String name){
+        return dao.count(leaId, name);
+    }
+
+    public List<ConService> query(String leaId, String name, int offset, int limit){
+        return dao.find(leaId, name, offset, limit);
     }
 }

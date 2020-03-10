@@ -14,8 +14,9 @@ public class ConServiceVo extends ConService {
     private List<ConServiceItem> items;
 
     public ConServiceVo(ConService t, List<ConServiceItem> items){
-        this.setId(t.getId());
+        setId(t.getId());
         setChannelId(t.getChannelId());
+        setName(t.getName());
         setConId(t.getConId());
         setConName(t.getConName());
         setCompId(t.getCompId());
@@ -24,6 +25,7 @@ public class ConServiceVo extends ConService {
         setLeaName(t.getLeaName());
         setStatus(t.getStatus());
         setInitial(t.isInitial());
+        setUpdateTime(t.getUpdateTime());
         setCreateTime(t.getCreateTime());
         this.items = items;
     }

@@ -110,14 +110,14 @@ public class CompInfoManController {
             @ApiParam(value = "城市") @RequestParam(required = false)String city,
             @ApiParam(value = "县区") @RequestParam(required = false)String country,
             @ApiParam(value = "联系人") @RequestParam(required = false)String contact,
-            @ApiParam(value = "联系电话") @RequestParam(required = false) String phone,
+            @ApiParam(value = "联系手机") @RequestParam(required = false) String mobile,
             @RequestParam(defaultValue = "0") @ApiParam(value = "查询页数") int page,
             @RequestParam(defaultValue = "true") @ApiParam(value = "是否得到查询记录数") boolean isCount,
             @RequestParam(defaultValue = "15") @ApiParam(value = "查询每页记录数") int rows){
 
       String channelId = getCredential().getChannelId();
-        return new ResultPageVo.Builder<>(page, rows, service.query(channelId, name, province, city, country, contact, phone, page * rows, rows))
-                .count(isCount, () -> service.count(channelId, name, province, city, country, contact, phone))
+        return new ResultPageVo.Builder<>(page, rows, service.query(channelId, name, province, city, country, contact, mobile, page * rows, rows))
+                .count(isCount, () -> service.count(channelId, name, province, city, country, contact, mobile))
                 .build();
     }
 

@@ -72,7 +72,7 @@ public class ReportService {
         t.setId(IdGenerators.uuid());
         initDao.insert(t);
 
-        return initDao.findOne(t.getId());
+        return initDao.findOne(t.getTaskId());
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

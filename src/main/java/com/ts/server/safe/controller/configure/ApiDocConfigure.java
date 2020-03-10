@@ -86,4 +86,16 @@ public class ApiDocConfigure {
                 .paths(regex("/comm/.*"))
                 .build();
     }
+
+    @Bean
+    Docket createClientRestApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .globalOperationParameters(buildHeadParameters())
+                .apiInfo(apiInfo())
+                .groupName("client")
+                .select()
+                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
+                .paths(regex("/client/.*"))
+                .build();
+    }
 }

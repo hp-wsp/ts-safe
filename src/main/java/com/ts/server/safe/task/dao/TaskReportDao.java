@@ -32,7 +32,7 @@ public class TaskReportDao<T> {
                 "comp_name, task_id, is_initial, content, update_time, create_time) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now())";
 
-        jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getServiceId(), t.getServiceId(), t.getCompId(),
+        jdbcTemplate.update(sql, t.getId(), t.getChannelId(), t.getServiceId(), t.getServiceName(), t.getCompId(),
                 t.getCompName(), t.getTaskId(), t.isInitial(), toJson(t.getContent()));
     }
 
@@ -50,7 +50,7 @@ public class TaskReportDao<T> {
     }
 
     public boolean has(String taskId){
-        final String sql = "SELECT COUNT(id) FROM ch_report WHERE task_id = ?";
+        final String sql = "SELECT COUNT(id) FROM ck_report WHERE task_id = ?";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{taskId}, Integer.class);
         return count != null && count > 0;
     }

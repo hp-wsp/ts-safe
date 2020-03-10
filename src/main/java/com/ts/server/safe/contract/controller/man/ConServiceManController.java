@@ -109,6 +109,19 @@ public class ConServiceManController {
                 .build();
     }
 
+    @GetMapping(value = "{owner}", produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("我的查询合同")
+    public ResultPageVo<ConService> queryOwner(@ApiParam(value = "服务名称") @RequestParam(required = false)String name,
+                                               @RequestParam(defaultValue = "15") @ApiParam(value = "查询每页记录数") int rows,
+                                               @RequestParam(defaultValue = "0") @ApiParam(value = "查询页数") int page,
+                                               @RequestParam(defaultValue = "true") @ApiParam(value = "是否得到查询记录数") boolean isCount){
+
+        String userId = getCredential().getId();
+        return new ResultPageVo.Builder<>(page, rows, service.query(userId, name, page* rows, rows))
+                .count(isCount, () -> service.count(userId, name))
+                .build();
+    }
+
     private ManCredential getCredential(){
         return (ManCredential) CredentialContextUtils.getCredential();
     }

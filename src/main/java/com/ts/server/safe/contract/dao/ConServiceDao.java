@@ -123,4 +123,17 @@ public class ConServiceDao {
 
         return params;
     }
+
+    public Long count(String leanId, String name){
+        final String sql = "SELECT COUNT(id) FROM oa_service WHERE lea_id = ? AND name LIKE ?";
+        String nameLike = DaoUtils.like(name);
+        return jdbcTemplate.queryForObject(sql, new Object[]{leanId, nameLike}, Long.class);
+    }
+
+    public List<ConService> find(String leaId, String name, int offset, int limit){
+        String nameLike = DaoUtils.like(name);
+        final String sql = "SELECT * FROM oa_service WHERE lea_id = ? AND name LIKE ? " +
+                "ORDER BY update_time DESC LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(sql, new Object[]{leaId, nameLike, limit, offset}, mapper);
+    }
 }
