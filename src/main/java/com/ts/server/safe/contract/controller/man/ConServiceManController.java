@@ -109,7 +109,7 @@ public class ConServiceManController {
                 .build();
     }
 
-    @GetMapping(value = "{owner}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "owner", produces = APPLICATION_JSON_VALUE)
     @ApiOperation("我的查询合同")
     public ResultPageVo<ConService> queryOwner(@ApiParam(value = "服务名称") @RequestParam(required = false)String name,
                                                @RequestParam(defaultValue = "15") @ApiParam(value = "查询每页记录数") int rows,
