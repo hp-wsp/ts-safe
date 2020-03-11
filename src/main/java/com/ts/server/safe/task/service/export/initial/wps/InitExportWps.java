@@ -1,4 +1,4 @@
-package com.ts.server.safe.task.service.export.initial.ms;
+package com.ts.server.safe.task.service.export.initial.wps;
 
 import com.ts.server.safe.task.domain.InitReportContent;
 import com.ts.server.safe.task.service.export.ExportWord;
@@ -16,22 +16,22 @@ import java.io.OutputStream;
  *
  * <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public class InitMsExportWord implements ExportWord {
-    private final PageBuilder coverBuilder;
-    private final PageBuilder entrustBuilder;
-    private final PageBuilder companyBuilder;
-    private final PageBuilder safeBuilder;
-    private final PageBuilder attachImgBuilder;
+public class InitExportWps implements ExportWord<InitReportContent> {
+    private final PageBuilder<InitReportContent> coverBuilder;
+    private final PageBuilder<InitReportContent> entrustBuilder;
+    private final PageBuilder<InitReportContent> companyBuilder;
+    private final PageBuilder<InitReportContent> safeBuilder;
+    private final PageBuilder<InitReportContent> attachImgBuilder;
 
     /**
-     * 构造{@link InitMsExportWord}
+     * 构造{@link InitExportWps}
      */
-    public InitMsExportWord(){
+    public InitExportWps(){
         this.coverBuilder = new CoverBuilder();
         this.entrustBuilder = new DetailBuilder();
         this.companyBuilder = new CompanyBuilder();
         this.safeBuilder = new SafeBuilder();
-        this.attachImgBuilder = new AttachImageBuilder();
+        this.attachImgBuilder= new AttachImageBuilder();
     }
 
     /**

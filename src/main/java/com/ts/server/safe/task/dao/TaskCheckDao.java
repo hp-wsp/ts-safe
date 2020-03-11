@@ -174,6 +174,22 @@ public class TaskCheckDao {
         return jdbcTemplate.query(sql, params, queryMapper);
     }
 
+    public Long count(String leaId, String compName){
+        final String sql = "SELECT COUNT(id) FROM ck_task WHERE lea_id = ? AND comp_name LIKE ?";
+
+        String compNameLike = DaoUtils.like(compName);
+
+        return jdbcTemplate.queryForObject(sql, new Object[]{leaId, compNameLike}, Long.class);
+    }
+
+    public List<TaskCheck> find(String leadId, String compName, int offset, int limit){
+        final String sql = "SELECT * FROM ck_task WHERE lea_id = ? AND com_name LIKE ? ORDER BY create_time DESC LIMIT ? OFFSET ?";
+
+        String compNameLike = DaoUtils.like(compName);
+
+        return jdbcTemplate.query(sql, new Object[]{leadId, compNameLike, limit, offset}, queryMapper);
+    }
+
     public List<TaskCheck> findIn(List<String> ids){
         final String sql = "SELECT * FROM ck_task WHERE id IN (:ids)";
         Map<String, List<String>> params = new LinkedHashMap<>(1,1);

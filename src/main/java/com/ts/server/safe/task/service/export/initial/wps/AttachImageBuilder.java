@@ -22,7 +22,7 @@ import java.util.Objects;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
- class AttachImageBuilder implements PageBuilder {
+ class AttachImageBuilder implements PageBuilder<InitReportContent> {
     private static final Logger LOGGER = LoggerFactory.getLogger(AttachImageBuilder.class);
 
     @Override

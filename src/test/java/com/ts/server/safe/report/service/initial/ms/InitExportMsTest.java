@@ -1,9 +1,10 @@
-package com.ts.server.safe.report.service.wps;
+package com.ts.server.safe.report.service.initial.ms;
 
 import com.ts.server.safe.company.domain.RiskChemical;
 import com.ts.server.safe.company.domain.SpePerson;
 import com.ts.server.safe.task.domain.InitReportContent;
-import com.ts.server.safe.task.service.export.initial.wps.InitWpsExportWord;
+import com.ts.server.safe.task.service.export.ExportWord;
+import com.ts.server.safe.task.service.export.initial.ms.InitExportMs;
 import org.junit.Test;
 
 import java.io.File;
@@ -14,12 +15,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class WpsExportWordTest {
+public class InitExportMsTest {
 
     @Test
     public void testExport()throws IOException {
-        InitWpsExportWord exportWord = new InitWpsExportWord();
-        try (OutputStream os = new FileOutputStream(new File("wps-word.docx"))) {
+        ExportWord exportWord = new InitExportMs();
+        try (OutputStream os = new FileOutputStream(new File("ms-word.docx"))) {
             exportWord.export(os, buildReport());
         }
     }

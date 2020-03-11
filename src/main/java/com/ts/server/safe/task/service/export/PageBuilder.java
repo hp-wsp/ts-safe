@@ -1,6 +1,5 @@
 package com.ts.server.safe.task.service.export;
 
-import com.ts.server.safe.task.domain.InitReportContent;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 /**
@@ -8,13 +7,13 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-public interface PageBuilder {
+public interface PageBuilder<T> {
 
     /**
      * 构建WORD页接口
      *
      * @param doc {@link XWPFDocument}
-     * @param report {@link InitReportContent}
+     * @param report 报表对象
      */
-    void build(XWPFDocument doc, InitReportContent report);
+    void build(XWPFDocument doc, T report);
 }

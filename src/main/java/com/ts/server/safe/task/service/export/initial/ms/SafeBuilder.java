@@ -14,7 +14,7 @@ import java.util.List;
  * <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
 
- class SafeBuilder implements PageBuilder {
+ class SafeBuilder implements PageBuilder<InitReportContent> {
     private static final String PROFILE_PATTER = "受%s安全生产隐患排查专项治理的服务委托，%s组成项目组于%s对测试企业进行安全生产社会化隐患排查技术服务";
 
     @Override

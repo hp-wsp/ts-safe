@@ -1,4 +1,4 @@
-package com.ts.server.safe.task.service.export.initial.wps;
+package com.ts.server.safe.task.service.export;
 
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
@@ -12,7 +12,7 @@ import java.util.function.BiFunction;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-class WpsUtils {
+public class WpsUtils {
     /**
      * 一厘米
      */
@@ -24,7 +24,7 @@ class WpsUtils {
      * @param doc  {@link XWPFDocument}
      * @param title 标题
      */
-    static void pageTitle(XWPFDocument doc, String title){
+    public static void pageTitle(XWPFDocument doc, String title){
         XWPFParagraph paragraph = doc.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun run = paragraph.createRun();
@@ -39,7 +39,7 @@ class WpsUtils {
      * @param col 列数
      * @return {@link XWPFTable}
      */
-    static XWPFTable createTable(XWPFDocument doc, int row, int col){
+    public static XWPFTable createTable(XWPFDocument doc, int row, int col){
         XWPFTable table = doc.createTable(row, col);
         table.setTableAlignment(TableRowAlign.CENTER);
         table.setWidth("100%");
@@ -54,7 +54,7 @@ class WpsUtils {
      * @param fromRow 开始合并行
      * @param toRow 结束合并行
      */
-    static void mergeCellsV(XWPFTable table, int col, int fromRow, int toRow) {
+    public static void mergeCellsV(XWPFTable table, int col, int fromRow, int toRow) {
         for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
             XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
             if (rowIndex == fromRow) {
@@ -75,7 +75,7 @@ class WpsUtils {
      * @param fromCol 开始合并列
      * @param toCol 结束合并列
      */
-    static void mergeCellsH(XWPFTable table, int row, int fromCol, int toCol) {
+    public static void mergeCellsH(XWPFTable table, int row, int fromCol, int toCol) {
         for (int colIndex = fromCol; colIndex <= toCol; colIndex++) {
             XWPFTableCell cell = table.getRow(row).getCell(colIndex);
             if (colIndex == fromCol) {
@@ -92,7 +92,7 @@ class WpsUtils {
      * @param label 标签
      * @param enable true：选中
      */
-    static void checkBox(XWPFParagraph paragraph, String label, boolean enable){
+    public static void checkBox(XWPFParagraph paragraph, String label, boolean enable){
         XWPFRun run = paragraph.createRun();
         run.setText(label);
         run.setFontSize(12);
@@ -119,7 +119,7 @@ class WpsUtils {
      * @param content 内容
      * @param alignment 对齐方式
      */
-    static void setCellWidth(XWPFTableCell cell, String width, String content, ParagraphAlignment alignment){
+    public static void setCellWidth(XWPFTableCell cell, String width, String content, ParagraphAlignment alignment){
         cell.setWidth(width);
         setCell(cell, content, alignment);
     }
@@ -131,7 +131,7 @@ class WpsUtils {
      * @param content 内容
      * @param alignment 对齐方式
      */
-    static void setCell(XWPFTableCell cell, String content, ParagraphAlignment alignment){
+    public static void setCell(XWPFTableCell cell, String content, ParagraphAlignment alignment){
         XWPFParagraph paragraph = cell.getParagraphArray(0);
         paragraph.setAlignment(alignment);
         XWPFRun run = paragraph.createRun();
@@ -146,7 +146,7 @@ class WpsUtils {
      * @param bold true:粗体
      * @param content 显示内容
      */
-    static void setItemRun(XWPFRun run, int fontSize, boolean bold, String content){
+    public static void setItemRun(XWPFRun run, int fontSize, boolean bold, String content){
         run.setText(content);
         run.setFontSize(fontSize);
         run.setFontFamily("宋体");
@@ -161,7 +161,7 @@ class WpsUtils {
      * @param bold true:粗体
      * @param content 显示内容
      */
-    static void setInd2Paragraph(XWPFParagraph paragraph, int fontSize, boolean bold, String content){
+    public static void setInd2Paragraph(XWPFParagraph paragraph, int fontSize, boolean bold, String content){
         paragraph.setIndentationFirstLine(CM_UNIT/2);
         XWPFRun run = paragraph.createRun();
         setItemRun(run, fontSize, bold, content);
@@ -173,7 +173,7 @@ class WpsUtils {
      * @param document {@link XWPFDocument}
      * @param number 段落数
      */
-    static void addEmptyParagraph(XWPFDocument document, int number){
+    public static void addEmptyParagraph(XWPFDocument document, int number){
         for(int i = 0; i < number; i++){
             XWPFParagraph paragraph = document.createParagraph();
             paragraph.setAlignment(ParagraphAlignment.CENTER);
@@ -188,7 +188,7 @@ class WpsUtils {
      * @param widthPix 宽
      * @param showBorders 是否显示边框
      */
-    static void setCellWidthBorder(XWPFTableCell cell, int widthPix, boolean[] showBorders){
+    public static void setCellWidthBorder(XWPFTableCell cell, int widthPix, boolean[] showBorders){
         CTTcPr tcPr = cell.getCTTc().addNewTcPr();
         CTTblWidth width = tcPr.addNewTcW();
         width.setW(BigInteger.valueOf(widthPix));
@@ -209,7 +209,7 @@ class WpsUtils {
      * @param settings 表格设置
      * @param <T>
      */
-    static <T> void renderTable(XWPFDocument doc, List<T> data, List<ColSetting<T>> settings){
+    public static <T> void renderTable(XWPFDocument doc, List<T> data, List<ColSetting<T>> settings){
         boolean isEmpty = data.isEmpty();
         int rowCount = isEmpty? 2: data.size() + 1;
         int colCount = settings.size();

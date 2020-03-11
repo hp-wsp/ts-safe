@@ -1,7 +1,7 @@
 package com.ts.server.safe.task.service.export;
 
-import com.ts.server.safe.task.service.export.initial.ms.InitMsExportWord;
-import com.ts.server.safe.task.service.export.initial.wps.InitWpsExportWord;
+import com.ts.server.safe.task.service.export.initial.ms.InitExportMs;
+import com.ts.server.safe.task.service.export.initial.wps.InitExportWps;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -18,6 +18,6 @@ public class ExportFac {
      * @return {@link ExportWord}
      */
     public static ExportWord initExport(String format){
-        return StringUtils.equals(format, "WPS")? new InitWpsExportWord(): new InitMsExportWord();
+        return StringUtils.equals(format, "WPS")? new InitExportWps(): new InitExportMs();
     }
 }

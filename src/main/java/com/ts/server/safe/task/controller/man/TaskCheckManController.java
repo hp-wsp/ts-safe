@@ -128,6 +128,20 @@ public class TaskCheckManController {
                 .build();
     }
 
+    @GetMapping(value = "owner", produces = APPLICATION_JSON_VALUE)
+    @ApiOperation("查询检查任务")
+    public ResultPageVo<TaskCheck> queryOwner(
+            @RequestParam(required = false) @ApiParam(value = "公司名称") String compName,
+            @RequestParam(defaultValue = "true") @ApiParam(value = "是否得到查询记录数") boolean isCount,
+            @RequestParam(defaultValue = "0") @ApiParam(value = "查询页数") int page,
+            @RequestParam(defaultValue = "15") @ApiParam(value = "查询每页记录数") int rows){
+
+        String userId = getCredential().getId();
+        return new ResultPageVo.Builder<>(page, rows, service.query(userId, compName, page * rows, rows))
+                .count(isCount, () -> service.count(userId, compName))
+                .build();
+    }
+
     private ManCredential getCredential(){
         return (ManCredential) CredentialContextUtils.getCredential();
     }

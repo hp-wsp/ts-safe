@@ -35,7 +35,7 @@ public class ControllerConfigure implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AuthorizationInterceptor(tokenService, authenticateService))
                 .addPathPatterns("/**")
-                .excludePathPatterns("/man/main/*", "/sys/main/*", "/code/*", "/error*");
+                .excludePathPatterns("/man/main/*", "/sys/main/*", "/client/main/*", "/code/*", "/error*");
     }
 
     @Bean

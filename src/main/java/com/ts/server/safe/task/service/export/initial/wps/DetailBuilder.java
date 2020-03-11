@@ -2,6 +2,7 @@ package com.ts.server.safe.task.service.export.initial.wps;
 
 import com.ts.server.safe.task.domain.InitReportContent;
 import com.ts.server.safe.task.service.export.PageBuilder;
+import com.ts.server.safe.task.service.export.WpsUtils;
 import org.apache.poi.xwpf.usermodel.*;
 
 import java.util.Collections;
@@ -12,7 +13,7 @@ import java.util.Objects;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-class DetailBuilder implements PageBuilder {
+class DetailBuilder implements PageBuilder<InitReportContent> {
 
     @Override
     public void build(XWPFDocument doc, InitReportContent report) {

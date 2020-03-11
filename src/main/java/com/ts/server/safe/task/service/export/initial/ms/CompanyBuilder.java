@@ -15,7 +15,7 @@ import java.util.Optional;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
- class CompanyBuilder implements PageBuilder {
+ class CompanyBuilder implements PageBuilder<InitReportContent> {
 
     @Override
     public void build(XWPFDocument doc, InitReportContent report) {

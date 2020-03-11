@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-class DetailBuilder implements PageBuilder {
+class DetailBuilder implements PageBuilder<InitReportContent> {
 
     @Override
     public void build(XWPFDocument doc, InitReportContent report) {

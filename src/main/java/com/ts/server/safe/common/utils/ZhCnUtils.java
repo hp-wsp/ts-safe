@@ -2,6 +2,10 @@ package com.ts.server.safe.common.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.stream.Collectors;
+
 /**
  * 中文帮助工具类
  *
@@ -42,5 +46,38 @@ public class ZhCnUtils {
         String s = result.toString();
 
         return StringUtils.endsWith(s, "零")? StringUtils.left(s, StringUtils.length(s) -1): s;
+    }
+
+    private static final String[] ZH_DATE_NUMBERS = { "0", "一", "二", "三", "四", "五", "六", "七", "八", "九" };
+
+    public static String getCurrentCNDate() {
+
+        Calendar cal = Calendar.getInstance(); // 使用日历类
+        String year = String.valueOf(cal.get(Calendar.YEAR)); // 得到年
+        String month = String.valueOf(cal.get(Calendar.MONTH) + 1); // 得到月，因为从0开始的，所以要加1
+        String day = String.valueOf(cal.get(Calendar.DAY_OF_MONTH)); // 得到天
+
+        StringBuilder cnDate = new StringBuilder(20);
+        year.chars().forEach(e -> cnDate.append(ZH_DATE_NUMBERS[e - 48]));
+        cnDate.append("年");
+
+        month.chars().forEach(e -> cnDate.append(ZH_DATE_NUMBERS[e - 48]));
+        cnDate.append("月");
+
+        char[] dayChars = day.toCharArray();
+        if(dayChars.length == 2){
+            if(dayChars[1] - 48 != 1){
+                cnDate.append(ZH_DATE_NUMBERS[dayChars[1] - 48]);
+            }
+            cnDate.append("十");
+            if(dayChars[0] - 48 != 0){
+                cnDate.append(ZH_DATE_NUMBERS[dayChars[0] - 48]);
+            }
+        }else{
+            cnDate.append(ZH_DATE_NUMBERS[dayChars[0] - 48]);
+        }
+        cnDate.append("日");
+
+        return cnDate.toString();
     }
 }

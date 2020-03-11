@@ -4,6 +4,7 @@ import com.ts.server.safe.company.domain.CompProduct;
 import com.ts.server.safe.company.service.CompProductKey;
 import com.ts.server.safe.task.domain.InitReportContent;
 import com.ts.server.safe.task.service.export.PageBuilder;
+import com.ts.server.safe.task.service.export.WpsUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.*;
 
@@ -15,7 +16,7 @@ import java.util.Optional;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
- class CompanyBuilder implements PageBuilder {
+ class CompanyBuilder implements PageBuilder<InitReportContent> {
 
     @Override
     public void build(XWPFDocument doc, InitReportContent report) {

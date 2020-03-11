@@ -12,7 +12,7 @@ import java.math.BigInteger;
  *
  * @author <a href="mailto:hhywangwei@gmail.com">WangWei</a>
  */
-class CoverBuilder implements PageBuilder {
+class CoverBuilder implements PageBuilder<InitReportContent> {
     private static final String[] ENT_SCALES = new String[]{"", "大型", "中型", "小型", "微型"};
 
     @Override

@@ -172,6 +172,14 @@ public class TaskCheckService {
         return dao.find(channelId, compName, status, checkTimeFrom, checkTimeTo, offset, limit);
     }
 
+    public Long count(String leaId, String compName){
+        return dao.count(leaId, compName);
+    }
+
+    public List<TaskCheck> query(String leaId, String compName, int offset, int limit){
+        return dao.find(leaId, compName, offset, limit);
+    }
+
     public List<TaskCheck> queryByServiceId(String serviceId){
         return dao.findByServiceId(serviceId);
     }

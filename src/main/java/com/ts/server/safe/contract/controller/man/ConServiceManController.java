@@ -117,7 +117,7 @@ public class ConServiceManController {
                                                @RequestParam(defaultValue = "true") @ApiParam(value = "是否得到查询记录数") boolean isCount){
 
         String userId = getCredential().getId();
-        return new ResultPageVo.Builder<>(page, rows, service.query(userId, name, page* rows, rows))
+        return new ResultPageVo.Builder<>(page, rows, service.query(userId, name, page * rows, rows))
                 .count(isCount, () -> service.count(userId, name))
                 .build();
     }
