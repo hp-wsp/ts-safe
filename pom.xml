@@ -21,7 +21,7 @@
         <swagger.version>1.5.12</swagger.version>
         <springfox.version>2.7.0</springfox.version>
         <common-io.version>2.6</common-io.version>
-        <commons-compress.version>1.19</commons-compress.version>
+        <commons-compress.version>1.21</commons-compress.version>
         <kaptcha.version>2.3.2</kaptcha.version>
         <poi.version>4.1.1</poi.version>
     </properties>
